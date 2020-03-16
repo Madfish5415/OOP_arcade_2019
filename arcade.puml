@@ -1,0 +1,322 @@
+@startuml
+
+enum LIBTYPE {
+    TEXT,
+    GRAPHIC,
+    DEBUG
+}
+
+namespace ecs {
+    ' using ComponentID = std::size_t
+    ' using GroupID = std::string
+
+    'inline ComponentID getNewComponentTypeID()
+    'template <typename T> inline ComponentID getComponentTypeID() noexcept
+
+    'inline GroupID getNewComponentTypeID()
+    'inline GroupID getComponentTypeID(GroupID groupName) noexcept
+
+    'constexpr std::size_t maxComponents = 32
+    'constexpr std::size_t maxGroups = 64
+
+    'using GroupBitset = std::bitset<maxGroups>
+    'using ComponentBitSet = std::bitset<maxComponents>
+    'using ComponentArray = std::array<ecs::AComponent*, maxComponents>
+
+    class Manager {
+        - std::vector<std::unique_ptr<Entity>> _entities
+        - std::map<GroupID, std::vector<Entity*>> _groups
+
+        + void refresh()
+        + void addToGroup(Entity* entity, GroupID group)
+        + std::vector<Entity*>& getGroup(GroupID group)
+        + template<typename... TArgs> std::vector<Entity*>& getEntities()
+        + Entity& addEntity()
+    }
+
+    class Entity {
+        - Manager& _manager
+        - bool _active = true
+        - std::set<std::unique_ptr<AComponent>> _components {}
+        - std::set<GroupID> _groups {}
+        - ComponentBitSet _componentBitSet
+        - ComponentArray _componentArray
+        - GroupBitset _groupBitSet
+
+        + Entity(Manager& Manager)
+        + bool isActive()
+        + void destroy()
+        + template <typename T> bool hasComponent()
+        + template <typename T, typename... TArgs> T& addComponent(TArgs&&... mArgs)
+        + template <typename T> T& getComponent()
+        + bool hasGroup(GroupID groupName)
+        + void addGroup(GroupID groupName)
+        + void delGroup(GroupID groupName)
+    }
+    ecs.Manager <-- Entity
+    ecs.AComponent <-- Entity
+
+    abstract AComponent {
+        # Entity *_entity
+
+        + virtual ~AComponent() = 0
+    }
+    ecs.Entity <-- AComponent
+
+    interface IAnimation {
+        + virtual ~IAnimation() = 0
+        + virtual int frame() const = 0
+        + virtual int speed() const = 0
+        + virtual int index() const = 0
+    }
+
+    class Rect {
+        - int _x
+        - int _y
+        - int _h
+        - int _w
+
+        + Rect(int x, int y, int h, int w)
+        + ~Rect()
+        + void x(int x)
+        + int x() const
+        + void y(int y)
+        + int y() const
+        + void h(int h)
+        + int h() const
+        + void w(int w)
+        + int w() const
+    }
+
+    namespace component {
+        class Position {
+            - int _x
+            - int _y
+
+            + Position(int x = 0, int y = 0)
+            + ~Position()
+            + void setPos(int x, int y)
+        }
+        ecs.AComponent <|-- Position
+
+        class Movement {
+            - ecs::component::MOVETYPE _movetype
+
+            + Movement(ecs::component::MOVETYPE movetype = ecs::component::MOVETYPE::STATIC)
+            + ecs::component::MOVETYPE getMoveType()
+            + void setMoveType(ecs::component::MOVETYPE movetype)
+        }
+        ecs.AComponent <|-- Movement
+
+        enum MOVETYPE {
+            STATIC = 0,
+            UP,
+            DOWN,
+            RIGHT,
+            LEFT
+        }
+        ecs.component.Movement <-- MOVETYPE
+
+        class Size {
+            - int _h
+            - int _w
+
+            + Size(int h, int w)
+            + ~Size()
+            + int h() const
+            + int w() const
+            + void setSize(int h, int w)
+        }
+        ecs.AComponent <|-- Size
+
+        class Collision {
+            - Rect _rectangle
+
+            + Collision(int x, int y, int h, int w)
+            + ~Collision()
+        }
+        ecs.AComponent <|-- Collision
+        Collision <-- ecs.Rect
+
+        abstract ARenderable {
+            + virtual ~Renderable = 0
+            + virtual void setTexture(std::string name) = 0
+            + virtual void setAnimation(std::string animationName, ecs::IAnimation animation) = 0
+            + virtual std::string getCurrentAnimation() = 0
+            + virtual void useAnimation(std::string animationName) = 0 
+        }
+        ecs.AComponent <|-- ARenderable
+    }
+}
+
+namespace graphical {
+    interface IGraphical {
+        + virtual ~IGraphical() = 0
+        + virtual LIBTYPE getType() = 0
+        + virtual ecs::component::ARenderable createRenderable(std::vector<std::string> paths, bool isAnimated = false) = 0
+        + virtual ecs::IAnimation createAnimation(int index, int frame, int speed) = 0
+    }
+
+    abstract AGraphical {
+        - LIBTYPE _type
+    
+        + ~AGraphical() override
+        + LIBTYPE getType() override
+        + ecs::component::ARenderable createRenderable(std::vector<std::string> paths, bool isAnimated = false) override = 0
+        + ecs::IAnimation createAnimation(int index, int frame, int speed) override
+    }
+    IGraphical <|-- AGraphical
+
+    class Animation {
+        - int _frame
+        - int _speed
+        - int _index
+
+        + Animation(int index, int frame, int speed)
+        + ~Animation()
+        + int frame() const override
+        + int speed() const override
+        + int index() const override
+    }
+    ecs.IAnimation <|-- Animation
+
+    namespace sfml {
+        namespace component {
+            enum FLIPTYPE {
+                NONE = 1,
+                VERTICAL = 2,
+                HORIZONTAL = 4
+            }
+            ' using SFML_Angle = float
+            class Renderable {
+                - sf::Texture* _texture
+                - sf::Rect _srcRect, _destRect
+                - FLIPTYPE _spriteFlip
+                - SFML_Angle _angle
+                - bool _animated
+                - int _frame
+                - int _speed
+                - int _animIndex
+                - std::map<std::string, ecs::IAnimation> _animations {}
+
+                + Sprite(std::string name, bool isAnimated = false)
+                + ~Sprite()
+                + void setTexture(std::string name) override
+                + void setAnimation(std::string animationName, ecs::IAnimation animation) override
+                + std::string getCurrentAnimation() override
+                + void useAnimation(std::string animationName) override
+            }
+            ecs.component.ARenderable <|-- Renderable
+        }
+    }
+
+    namespace sdl {
+        namespace component {
+            ' using SDL_Angle = double
+            class Renderable {
+                - SDL_Texture* _texture
+                - SDL_rect _srcRect, _destRect
+                - SDL_RenderFlip _spriteFlip
+                - SDL_Angle _angle
+                - bool _animated
+                - int _frame
+                - int _speed
+                - int _animIndex
+                - std::map<std::string, ecs::IAnimation> _animations {}
+
+
+                + Sprite(std::string name, bool isAnimated = false)
+                + ~Sprite()
+                + void setTexture(std::string name) override
+                + void setAnimation(std::string animationName, ecs::IAnimation animation) override
+                + std::string getCurrentAnimation() override
+                + void useAnimation(std::string animationName) override
+            }
+            ecs.component.ARenderable <|-- Renderable
+        }
+    }
+
+    namespace ncurses {
+        class Texture {
+            - char _character
+            - int _foreground
+            - int _background
+
+            + Texture(char c, int f, int b)
+            + ~Texture()
+            + char getCharacter()
+            + int getColorPair()
+        }
+
+        namespace component {
+            class Renderable {
+                - std::map<int, std::map<int, Texture>> _texture
+                - Rect _srcRect, _destRect
+                - bool _animated
+                - int _frame
+                - int _speed
+                - int _animIndex
+                - std::map<std::string, ecs::IAnimation> _animations {}
+
+                + Sprite(std::string name, bool isAnimated = false)
+                + ~Sprite()
+                + void setAnimation(std::string animationName, ecs::IAnimation animation) override
+                + std::string getCurrentAnimation() override
+                + void useAnimation(std::string animationName) override
+            }
+            ecs.component.ARenderable <|-- Renderable
+        }
+
+        class Rect {
+            - int _x
+            - int _y
+            - int _h
+            - int _w
+
+            + Rect(int x, int y, int h, int w)
+            + ~Rect()
+            + void x(int x)
+            + int x() const
+            + void y(int y)
+            + int y() const
+            + void h(int h)
+            + int h() const
+            + void w(int w)
+            + int w() const
+        }
+        graphical.ncurses.component.Renderable <-- Rect
+    }
+}
+
+namespace game {
+    interface IGame {
+        + virtual ~IGame() = 0
+    }
+
+    abstract AGame {
+        - Manager& _manager
+        - IGraphical& _graph
+        + AGame(Manager manager, IGraphical graph)
+        + virtual ~AGame() = 0
+    }
+    IGame <|-- AGame
+
+    namespace nibbler {
+        namespace component {
+            
+        }
+    }
+
+    namespace pacman {
+        namespace component {
+            
+        }
+    }
+}
+
+namespace core {
+    class Core {
+    }
+}
+
+@enduml
