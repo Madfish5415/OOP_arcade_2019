@@ -70,29 +70,8 @@ namespace ecs {
         + virtual int index() const = 0
     }
 
-    class Rect {
-        - int _x
-        - int _y
-        - int _h
-        - int _w
-
-        + Rect(int x, int y, int h, int w)
-        + ~Rect()
-        + void x(int x)
-        + int x() const
-        + void y(int y)
-        + int y() const
-        + void h(int h)
-        + int h() const
-        + void w(int w)
-        + int w() const
-    }
-
     namespace component {
         class Position {
-            - int _x
-            - int _y
-
             + Position(int x = 0, int y = 0)
             + ~Position()
             + int x() const
@@ -103,9 +82,6 @@ namespace ecs {
         ecs.AComponent <|-- Position
 
         class Velocity {
-            - int _x
-            - int _y
-
             + Velocity(int x = 0, int y = 0)
             + ~Velocity()
             + int x() const
@@ -116,25 +92,20 @@ namespace ecs {
         ecs.AComponent <|-- Velocity
 
         class Size {
-            - int _h
-            - int _w
-
             + Size(int h, int w)
             + ~Size()
             + int h() const
+            + void h(int h)
             + int w() const
-            + void setSize(int h, int w)
+            + void w(int w)
         }
         ecs.AComponent <|-- Size
 
         class Collision {
-            - Rect _rectangle
-
             + Collision(int x, int y, int h, int w)
             + ~Collision()
         }
         ecs.AComponent <|-- Collision
-        Collision <-- ecs.Rect
 
         abstract ARenderable {
             + virtual ~Renderable() = 0
@@ -166,10 +137,6 @@ namespace graphical {
     IGraphical <|-- AGraphical
 
     class Animation {
-        - int _frame
-        - int _speed
-        - int _index
-
         + Animation(int index, int frame, int speed)
         + ~Animation()
         + int frame() const override
@@ -180,23 +147,7 @@ namespace graphical {
 
     namespace sfml {
         namespace component {
-            enum FLIPTYPE {
-                NONE = 1,
-                VERTICAL = 2,
-                HORIZONTAL = 4
-            }
-            ' using SFML_Angle = float
             class Renderable {
-                - sf::Texture* _texture
-                - sf::Rect _srcRect, _destRect
-                - FLIPTYPE _spriteFlip
-                - SFML_Angle _angle
-                - bool _animated
-                - int _frame
-                - int _speed
-                - int _animIndex
-                - std::map<std::string, ecs::IAnimation> _animations {}
-
                 + Sprite(std::string name, bool isAnimated = false)
                 + ~Sprite()
                 + void setTexture(std::string name) override
@@ -210,19 +161,7 @@ namespace graphical {
 
     namespace sdl {
         namespace component {
-            ' using SDL_Angle = double
             class Renderable {
-                - SDL_Texture* _texture
-                - SDL_rect _srcRect, _destRect
-                - SDL_RenderFlip _spriteFlip
-                - SDL_Angle _angle
-                - bool _animated
-                - int _frame
-                - int _speed
-                - int _animIndex
-                - std::map<std::string, ecs::IAnimation> _animations {}
-
-
                 + Sprite(std::string name, bool isAnimated = false)
                 + ~Sprite()
                 + void setTexture(std::string name) override
@@ -235,27 +174,8 @@ namespace graphical {
     }
 
     namespace ncurses {
-        class Texture {
-            - char _character
-            - int _foreground
-            - int _background
-
-            + Texture(char c, int f, int b)
-            + ~Texture()
-            + char getCharacter()
-            + int getColorPair()
-        }
-
         namespace component {
             class Renderable {
-                - std::map<int, std::map<int, Texture>> _texture
-                - Rect _srcRect, _destRect
-                - bool _animated
-                - int _frame
-                - int _speed
-                - int _animIndex
-                - std::map<std::string, ecs::IAnimation> _animations {}
-
                 + Sprite(std::string name, bool isAnimated = false)
                 + ~Sprite()
                 + void setAnimation(std::string animationName, ecs::IAnimation animation) override
@@ -264,25 +184,6 @@ namespace graphical {
             }
             ecs.component.ARenderable <|-- Renderable
         }
-
-        class Rect {
-            - int _x
-            - int _y
-            - int _h
-            - int _w
-
-            + Rect(int x, int y, int h, int w)
-            + ~Rect()
-            + void x(int x)
-            + int x() const
-            + void y(int y)
-            + int y() const
-            + void h(int h)
-            + int h() const
-            + void w(int w)
-            + int w() const
-        }
-        graphical.ncurses.component.Renderable <-- Rect
     }
 }
 
