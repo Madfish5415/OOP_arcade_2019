@@ -31,23 +31,23 @@ Graph -> Anim1 **: create(0, 1, 100)
 Game <-- Graph --: createdAnimation
 
 Game -> renderable ++: setAnimation("Idle", Anim1)
-return
+Game <-- renderable --
 
 Game -> Graph ++: createAnimation(1, 5, 100)
 Graph -> Anim2 **: create(1, 5, 100)
 Game <-- Graph --: createdAnimation
 
 Game -> renderable ++: setAnimation("Move", Anim2)
-return
+Game <-- renderable --
 
 Game -> Graph ++: createAnimation(1, 3, 50)
 Graph -> Anim3 **: create(1, 3, 50)
 Game <-- Graph --: createdAnimation
 
 Game -> renderable ++: setAnimation("Die", Anim3)
-return
+Game <-- renderable --
 
-return
+Core <-- Game --
 == Game loop ==
 
 @enduml

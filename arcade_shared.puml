@@ -23,8 +23,30 @@ namespace ecs {
     'using ComponentBitSet = std::bitset<maxComponents>
     'using ComponentArray = std::array<ecs::AComponent*, maxComponents>
 
-    class Manager {
-        - std::vector<std::unique_ptr<Entity>> _entities
+    class Universe {
+        - std::vector<std::reference_wrapper<WorldManager>> _managers
+
+        + Universe()
+        + ~Universe()
+        + void addWorldManager(WorldManager& world)
+        + void delWorldManager()
+    }
+
+    class WorldManager {
+        - World& _world
+        - std::vector<std::reference_wrapper<ASystem>> _systems
+
+        + WorldManager(World& _world)
+        + ~WorldManager()
+        + void addSystem(ASystem& system)
+        + void init()
+        + void update()
+        + void render()
+    }
+    ecs.Universe <-- WorldManager
+
+    class World {
+        - std::vector<std::shared_ptr<Entity>> _entities
         - std::map<GroupID, std::vector<Entity*>> _groups
 
         + void refresh()
@@ -33,9 +55,10 @@ namespace ecs {
         + template<typename... TArgs> std::vector<Entity*>& getEntities()
         + Entity& addEntity()
     }
+    ecs.WorldManager <-- World
 
     class Entity {
-        - Manager& _manager
+        - World& _world
         - bool _active = true
         - std::set<std::unique_ptr<AComponent>> _components {}
         - std::set<GroupID> _groups {}
@@ -43,7 +66,7 @@ namespace ecs {
         - ComponentArray _componentArray
         - GroupBitset _groupBitSet
 
-        + Entity(Manager& Manager)
+        + Entity(World& world)
         + bool isActive()
         + void destroy()
         + template <typename T> bool hasComponent()
@@ -53,7 +76,7 @@ namespace ecs {
         + void addGroup(GroupID groupName)
         + void delGroup(GroupID groupName)
     }
-    ecs.Manager <-- Entity
+    ecs.World <-- Entity
     ecs.AComponent <-- Entity
 
     abstract AComponent {
@@ -70,42 +93,46 @@ namespace ecs {
         + virtual int index() const = 0
     }
 
-    namespace component {
-        class Position {
-            + Position(int x = 0, int y = 0)
-            + ~Position()
-            + int x() const
-            + void x(int x)
-            + int y() const
-            + void y(int y)
-        }
-        ecs.AComponent <|-- Position
+    class Vector2d {
+        + int x
+        + int y
+    }
 
-        class Velocity {
-            + Velocity(int x = 0, int y = 0)
-            + ~Velocity()
-            + int x() const
-            + void x(int x)
-            + int y() const
-            + void y(int y)
+    namespace component {
+        class Transform {
+            + Vector2d position
+
+            + Transform()
+            + ~Transform()
         }
-        ecs.AComponent <|-- Velocity
+        ecs.AComponent <|-- Transform
+
+        class Motion {
+            + Vector2d velocity
+            + Vector2d acceleration
+
+            + Motion()
+            + ~Motion()
+        }
+        ecs.AComponent <|-- Motion
 
         class Size {
-            + Size(int h, int w)
+            + int w
+            + int h
+
+            + Size()
             + ~Size()
-            + int h() const
-            + void h(int h)
-            + int w() const
-            + void w(int w)
         }
         ecs.AComponent <|-- Size
 
-        class Collision {
-            + Collision(int x, int y, int h, int w)
-            + ~Collision()
+        class Hitbox {
+            + int w
+            + int h
+
+            + Hitbox()
+            + ~Hitbox()
         }
-        ecs.AComponent <|-- Collision
+        ecs.AComponent <|-- Hitbox
 
         abstract ARenderable {
             + virtual ~Renderable() = 0
@@ -115,6 +142,96 @@ namespace ecs {
             + virtual void useAnimation(std::string animationName) = 0 
         }
         ecs.AComponent <|-- ARenderable
+
+        class Follow {
+            + Entity& followed
+
+            + Follow(Entity& followed)
+            + ~Follow()
+        }
+        ecs.AComponent <|-- Follow
+
+        class AI {
+            + AI()
+            + ~AI()
+        }
+        ecs.AComponent <|-- AI
+
+        class Input {
+            + Input()
+            + ~Input()
+        }
+        ecs.AComponent <|-- Input
+    }
+
+    abstract ASystem {
+        + virtual ~ASystem() = 0
+        + virtual void init() = 0
+        + virtual void update() = 0
+        + virtual void render() = 0
+    }
+    ecs.WorldManager <-- ASystem
+
+    namespace system {
+        ' Checks for collisions (use Transform and Hitbox)
+        class Physics {
+            + Physics()
+            + ~Physics()
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        ecs.ASystem <|-- Physics
+
+        ' Allow player to be moved (use Motion and Joystick)
+        abstract APlayer {
+            + APlayer()
+            + ~APlayer()
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        ecs.ASystem <|-- APlayer
+
+        ' Moves AI (use Motion and AI)
+        abstract AAI {
+            + AAI()
+            + ~AAI()
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        ecs.ASystem <|-- AAI
+
+        ' Allow entity to follow another entity (use Motion and Follow)
+        abstract AFollow {
+            + AFollow()
+            + ~AFollow()
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        ecs.ASystem <|-- AFollow
+
+        ' Update velocity and position (use Transform and Motion)
+        class Movement {
+            + Movement()
+            + ~Movement()
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        ecs.ASystem <|-- Movement
+
+        ' Draws sprites to the screen (use ARenderable, Size and Transform)
+        abstract AGraphics {
+            + AGraphics()
+            + ~AGraphics()
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        ecs.ASystem <|-- AGraphics
     }
 }
 
@@ -127,12 +244,11 @@ namespace graphical {
     }
 
     abstract AGraphical {
-        - LIBTYPE _type
-    
+        + AGraphical(LIBTYPE type, Universe& universe)
         + ~AGraphical() override
         + LIBTYPE getType() override
         + ecs::component::ARenderable createRenderable(std::vector<std::string> paths, bool isAnimated = false) override = 0
-        + ecs::IAnimation createAnimation(int index, int frame, int speed) override
+        + ecs::IAnimation createAnimation(int index, int frame, int speed) override = 0
     }
     IGraphical <|-- AGraphical
 
@@ -146,6 +262,15 @@ namespace graphical {
     ecs.IAnimation <|-- Animation
 
     namespace sfml {
+        class Graphical {
+            + Graphical(Universe& universe)
+            + ~Graphical()
+            + LIBTYPE getType() override
+            + ecs::component::ARenderable createRenderable(std::vector<std::string> paths, bool isAnimated = false) override
+            + ecs::IAnimation createAnimation(int index, int frame, int speed) override
+        }
+        graphical.AGraphical <|-- Graphical
+
         namespace component {
             class Renderable {
                 + Sprite(std::string name, bool isAnimated = false)
@@ -156,10 +281,30 @@ namespace graphical {
                 + void useAnimation(std::string animationName) override
             }
             ecs.component.ARenderable <|-- Renderable
+        }
+
+        namespace system {
+            class Graphics {
+                + Graphics()
+                + ~Graphics()
+                + void init() override
+                + void update() override
+                + void render() override
+            }
+            ecs.system.AGraphics <|-- Graphics
         }
     }
 
     namespace sdl {
+        class Graphical {
+            + Graphical(Universe& universe)
+            + ~Graphical()
+            + LIBTYPE getType() override
+            + ecs::component::ARenderable createRenderable(std::vector<std::string> paths, bool isAnimated = false) override
+            + ecs::IAnimation createAnimation(int index, int frame, int speed) override
+        }
+        graphical.AGraphical <|-- Graphical
+
         namespace component {
             class Renderable {
                 + Sprite(std::string name, bool isAnimated = false)
@@ -171,9 +316,29 @@ namespace graphical {
             }
             ecs.component.ARenderable <|-- Renderable
         }
+
+        namespace system {
+            class Graphics {
+                + Graphics()
+                + ~Graphics()
+                + void init() override
+                + void update() override
+                + void render() override
+            }
+            ecs.system.AGraphics <|-- Graphics
+        }
     }
 
     namespace ncurses {
+        class Graphical {
+            + Graphical(Universe& universe)
+            + ~Graphical()
+            + LIBTYPE getType() override
+            + ecs::component::ARenderable createRenderable(std::vector<std::string> paths, bool isAnimated = false) override
+            + ecs::IAnimation createAnimation(int index, int frame, int speed) override
+        }
+        graphical.AGraphical <|-- Graphical
+
         namespace component {
             class Renderable {
                 + Sprite(std::string name, bool isAnimated = false)
@@ -183,6 +348,17 @@ namespace graphical {
                 + void useAnimation(std::string animationName) override
             }
             ecs.component.ARenderable <|-- Renderable
+        }
+
+        namespace system {
+            class Graphics {
+                + Graphics()
+                + ~Graphics()
+                + void init() override
+                + void update() override
+                + void render() override
+            }
+            ecs.system.AGraphics <|-- Graphics
         }
     }
 }
@@ -193,28 +369,131 @@ namespace game {
     }
 
     abstract AGame {
-        - Manager& _manager
-        - IGraphical& _graph
-        + AGame(Manager manager, IGraphical graph)
+        + AGame(Universe& universe, IGraphical& graph)
         + virtual ~AGame() = 0
     }
     IGame <|-- AGame
 
     namespace nibbler {
+        class Game {
+            + Game(Universe& universe, IGraphical& graph)
+            + ~Game()
+        }
+        game.AGame <|-- Game
+
         namespace component {
             
+        }
+
+        namespace system {
+            class Player {
+                + Player()
+                + ~Player()
+                + void init() override
+                + void update() override
+                + void render() override
+            }
+            ecs.system.APlayer <|-- Player
+
+            class AI {
+                + AI()
+                + ~AI()
+                + void init() override
+                + void update() override
+                + void render() override
+            }
+            ecs.system.AAI <|-- AI
+
+            class Follow {
+                + Follow()
+                + ~Follow()
+                + void init() override
+                + void update() override
+                + void render() override
+            }
+            ecs.system.AFollow <|-- Follow
         }
     }
 
     namespace pacman {
+        class Game {
+            + Game(Universe& universe, IGraphical& graph)
+            + ~Game()
+        }
+        game.AGame <|-- Game
+
         namespace component {
             
+        }
+        namespace system {
+            class Player {
+                + Player()
+                + ~Player()
+                + void init() override
+                + void update() override
+                + void render() override
+            }
+            ecs.system.APlayer <|-- Player
+
+            class AI {
+                + AI()
+                + ~AI()
+                + void init() override
+                + void update() override
+                + void render() override
+            }
+            ecs.system.AAI <|-- AI
+
+            class Follow {
+                + Follow()
+                + ~Follow()
+                + void init() override
+                + void update() override
+                + void render() override
+            }
+            ecs.system.AFollow <|-- Follow
         }
     }
 }
 
 namespace core {
     class Core {
+    }
+}
+
+namespace event {
+    class Event {
+        + Event()
+        + ~Event()
+    }
+
+    class InputEvent {
+
+    }
+    event.Event <|-- InputEvent
+
+    class CollisionEvent {
+
+    }
+    event.Event <|-- CollisionEvent
+
+    abstract AFunctionHandler {
+        - virtual void call(Event* event) = 0
+        + void exec(Event* event)
+    }
+
+    ' template<class T, class EventType>
+    class FunctionHandler {
+        ' typedef void (T::*MemberFunction)(EventType*)
+
+        + FunctionHandler(T* instance, MemberFunction memberFunction)
+        + void call(Event* event) override
+    }
+    event.AFunctionHandler <|-- FunctionHandler
+
+    class EventBus {
+        + template<class T, class EventType> void subscribe(T * instance, void (T::*memberFunction)(EventType *))
+        + template<typename EventType> void publish(EventType* event) 
     }
 }
 
