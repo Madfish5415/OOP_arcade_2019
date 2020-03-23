@@ -1,23 +1,201 @@
 @startuml
 
-== Initialization ==
 participant Game
 participant Graph
 participant Core
 
+== Initialization ==
+
 activate Core
 
-Core -> manager **: create()
+group Universe
+    Core -> Core ++: addUniverse()
+        Core -> Universe **: create()
+        note right: class ecs::Universe
+    Core <-- Core --: createdUniverse
+end
 
-Game <- Core **: create(manager, Graph)
-activate Game
+group Graphical
+    Core -> Core ++: loadGraphicals()
+        Core -> Graph **: create(Universe)
+        note left: class IGraphical
+    Core <-- Core --
+end
+
+group Game
+    Core -> Core ++: loadGames()
+        Game <- Core **: create(Universe, Graph)
+        note left: class IGame
+    Core <-- Core --
+end
+
+group Menu
+    Core -> Core ++: createMenu()
+        Core -> Menu **: create(Universe, Graph, Game)
+        note right: class Menu
+    Core <-- Core --
+
+
+    Core -> Menu ++: init()
+        Menu -> MenuWorld **: create()
+        note right: class ecs::World
+
+        Menu -> MenuWorldManager **: create(MenuWorld)
+        note right: class ecs::WorldManager
+
+        MenuWorldManager -> MenuEventBus **: create()
+        note right: class event::EventBus
+
+        Menu -> Universe ++: addWorldManager(MenuWorldManager)
+        Menu <-- Universe --
+
+        group Systems
+            Menu -> Menu ++: createSystems()
+                Menu -> MenuWorldMovement **: create()
+                note right: class ecs::system::Movement
+
+                Menu -> MenuWorldManager ++: addSystem(MenuWorldMovement)
+                Menu <-- MenuWorldManager --
+
+                Menu -> Graph ++: createGraphics()
+                    Graph -> MenuWorldGraphics **: create()
+                    note right: class ecs::system::AGraphics
+                Menu <-- Graph --: createdSystem
+
+                Menu -> MenuWorldManager ++: addSystem(MenuWorldGraphics)
+                Menu <-- MenuWorldManager --
+
+                Menu -> Menu ++: createUser()
+                    Menu -> MenuWorldUser **: create()
+                    note right: class ecs::system::AUser
+                Menu <-- Menu --: createdSystem
+
+                Menu -> MenuWorldManager ++: addSystem(MenuWorldUser)
+                Menu <-- MenuWorldManager --
+            Menu <-- Menu --
+        end
+
+        group Entities
+            Menu -> Menu ++: createEntities()
+
+                group Button1
+                    Menu -> MenuWorld ++: addEntity()
+                        MenuWorld -> Button1 **: create()
+                        note right: ecs::Entity
+                    Menu <-- MenuWorld --: createdEntity
+
+                    Menu -> Button1 ++: addComponent<component::Transform>()
+                        Button1 -> Button1Motion **: create()
+                        note right: ecs::component::Motion
+                    Menu <-- Button1 --: createdComponent
+
+                    Menu -> Button1 ++: addComponent<component::Size>()
+                        Button1 -> Button1Size **: create(w, h)
+                        note right: ecs::component::Size
+                    Menu <-- Button1 --: createdComponent
+
+                    Menu -> Button1 ++: addComponent<component::ARenderable>({"ressources/button.txt", "ressources/button.png", "button_texture"})
+                        Button1 -> Graph ++: createRenderable({"ressources/button.txt", "ressources/button.png", "button_texture"})
+                            Graph -> Button1Renderable **: create("ressources/button.png")
+                            note right: ecs::component::ARenderable
+                        Button1 <-- Graph --: createdRenderable
+                    Menu <-- Button1 --: createdComponent
+                end
+
+                group SelectButton
+                    Menu -> MenuWorld ++: addEntity()
+                        MenuWorld -> SelectButton **: create()
+                        note right: ecs::Entity
+                    Menu <-- MenuWorld --: createdEntity
+
+                    Menu -> SelectButton ++: addComponent<component::Transform>()
+                        SelectButton -> SelectButtonTransform **: create()
+                        note right: ecs::component::Transform
+                    Menu <-- SelectButton --: createdComponent
+
+                    Menu -> SelectButton ++: addComponent<component::Size>()
+                        SelectButton -> SelectButtonSize **: create(w, h)
+                        note right: ecs::component::Size
+                    Menu <-- SelectButton --: createdComponent
+
+                    Menu -> SelectButton ++: addComponent<component::ARenderable>({"ressources/chosenbutton.txt", "ressources/chosenbutton.png", "chosenbutton_texture"})
+                        SelectButton -> Graph ++: createRenderable({"ressources/chosenbutton.txt", "ressources/chosenbutton.png", "chosenbutton_texture"})
+                            Graph -> SelectButtonRenderable **: create("ressources/button.png")
+                            note right: ecs::component::ARenderable
+                        SelectButton <-- Graph --: createdRenderable
+                    Menu <-- SelectButton --: createdComponent
+
+                    Menu -> SelectButton ++: addComponent<component::Input>()
+                        SelectButton -> SelectButtonInput **: create()
+                        note right: ecs::component:Input
+                    Menu <-- SelectButton --: createdComponent
+
+                    Menu -> SelectButton ++: addComponent<component::Motion>()
+                        SelectButton -> SelectButtonMotion **: create()
+                        note right: ecs::component::Motion
+                    Menu <-- SelectButton --: createdComponent
+                end
+            Menu <-- Menu --
+        end
+
+        group World Init
+            Menu -> MenuWorldManager ++: init()
+                MenuWorldManager -> MenuWorldMovement ++: init(EventBus)
+                MenuWorldManager <-- MenuWorldMovement --
+
+                MenuWorldManager -> MenuWorldGraphics ++: init(EventBus)
+                MenuWorldManager <-- MenuWorldGraphics --
+
+                MenuWorldManager -> MenuWorldUser ++: init(EventBus)
+                MenuWorldManager <-- MenuWorldUser --
+            Menu <-- MenuWorldManager --
+        end
+    Core <-- Menu --
+end
+
+== Loop ==
+
+Core -> Graph ++: eventHandler(EventBust)
+Core <-- Graph --
+
+group World
+    group World Update
+        Core -> MenuWorldManager ++: update()
+            MenuWorldManager -> MenuWorldMovement ++: update(World)
+            MenuWorldManager <-- MenuWorldMovement --
+
+            MenuWorldManager -> MenuWorldGraphics ++: update(World)
+            MenuWorldManager <-- MenuWorldGraphics --
+
+            MenuWorldManager -> MenuWorldUser ++: update(World)
+            MenuWorldManager <-- MenuWorldUser --
+        Core <-- MenuWorldManager --
+    end
+
+    group World Render
+        Core -> MenuWorldManager ++: render()
+            MenuWorldManager -> MenuWorldMovement ++: render(World)
+            MenuWorldManager <-- MenuWorldMovement --
+
+            MenuWorldManager -> MenuWorldGraphics ++: render(World)
+            MenuWorldManager <-- MenuWorldGraphics --
+
+            MenuWorldManager -> MenuWorldUser ++: render(World)
+            MenuWorldManager <-- MenuWorldUser --
+        Core <-- MenuWorldManager --
+    end
+end
+
+== Game Initialization ==
+
+Core -> manager **: create()
 
 Game -> manager ++: addEntity()
 manager -> pacman **: create()
 Game <-- manager --: createdEntity
 
-Game -> pacman ++: addComponent<component::Position>()
-pacman -> position **: create()
+Game -> pacman ++: addComponent<component::Motion>()
+pacman -> Motion **: create()
 Game <-- pacman --: createdComponent
 
 Game -> pacman ++: addComponent<component::ARenderable>({"ressources/pacman.txt", "ressources/pacman.png", "pacman_texture"})
