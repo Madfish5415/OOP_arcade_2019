@@ -12,12 +12,16 @@
 
 namespace ecs {
 
+namespace component {
+
 class Input : public AComponent {
    public:
-    Input(Entity& entity) : AComponent(entity) {};
+    Input(Entity& entity) : AComponent(entity){};
     ~Input() = default;
 };
 
-}
+}  // namespace component
 
-#endif // OOP_ARCADE_2019_INPUT_HPP
+}  // namespace ecs
+
+#endif  // OOP_ARCADE_2019_INPUT_HPP

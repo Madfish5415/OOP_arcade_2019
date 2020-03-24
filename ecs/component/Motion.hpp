@@ -13,16 +13,20 @@
 
 namespace ecs {
 
+namespace component {
+
 class Motion : public AComponent {
    public:
     utils::Vector2d velocity;
     utils::Vector2d acceleration;
 
    public:
-    Motion(Entity& entity) : AComponent(entity) {};
+    Motion(Entity& entity) : AComponent(entity){};
     ~Motion() = default;
 };
 
-}
+}  // namespace component
 
-#endif // OOP_ARCADE_2019_MOTION_HPP
+}  // namespace ecs
+
+#endif  // OOP_ARCADE_2019_MOTION_HPP

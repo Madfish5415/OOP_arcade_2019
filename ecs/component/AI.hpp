@@ -12,12 +12,16 @@
 
 namespace ecs {
 
+namespace component {
+
 class AI : public AComponent {
    public:
-    AI(Entity& entity) : AComponent(entity) {};
+    AI(Entity& entity) : AComponent(entity){};
     ~AI() = default;
 };
 
-}
+}  // namespace component
 
-#endif // OOP_ARCADE_2019_AI_HPP
+}  // namespace ecs
+
+#endif  // OOP_ARCADE_2019_AI_HPP

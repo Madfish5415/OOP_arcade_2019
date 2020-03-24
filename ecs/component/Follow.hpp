@@ -10,15 +10,20 @@
 
 namespace ecs {
 
+namespace component {
+
 class Input : public AComponent {
    public:
-    Entity& followed
+    Entity& followed;
 
    public:
-    Input(Entity& entity, Entity& followedP) : AComponent(entity), followed(followedP) {};
+    Input(Entity& entity, Entity& followedP)
+        : AComponent(entity), followed(followedP){};
     ~Input() = default;
 };
 
-}
+}  // namespace component
 
-#endif // OOP_ARCADE_2019_FOLLOW_HPP
+}  // namespace ecs
+
+#endif  // OOP_ARCADE_2019_FOLLOW_HPP

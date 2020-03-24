@@ -14,16 +14,21 @@
 
 namespace ecs {
 
+namespace component {
+
 class ARenderable : public AComponent {
    public:
-    ARenderable(Entity& entity) : AComponent(entity) {};
+    ARenderable(Entity& entity) : AComponent(entity){};
     ~ARenderable() = default;
     virtual void setTexture(std::string name) = 0;
-    virtual void setAnimation(std::string animationName, IAnimation animation) = 0;
+    virtual void setAnimation(
+        std::string animationName, IAnimation animation) = 0;
     virtual std::string getCurrentAnimation() = 0;
     virtual void useAnimation(std::string animationName) = 0;
 };
 
-}
+}  // namespace component
 
-#endif // OOP_ARCADE_2019_ARENDERABLE_HPP
+}  // namespace ecs
+
+#endif  // OOP_ARCADE_2019_ARENDERABLE_HPP

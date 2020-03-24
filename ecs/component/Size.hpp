@@ -10,16 +10,21 @@
 
 namespace ecs {
 
+namespace component {
+
 class Size : public AComponent {
    public:
     int w;
     int h;
 
    public:
-    Size(Entity& entity, int wParam = 0, int hParam = 0) : AComponent(entity), w(wParam), h(hParam) {};
+    Size(Entity& entity, int wParam = 0, int hParam = 0)
+        : AComponent(entity), w(wParam), h(hParam){};
     ~Size() = default;
 };
 
-}
+}  // namespace component
 
-#endif // OOP_ARCADE_2019_SIZE_HPP
+}  // namespace ecs
+
+#endif  // OOP_ARCADE_2019_SIZE_HPP

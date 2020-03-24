@@ -13,15 +13,19 @@
 
 namespace ecs {
 
+namespace component {
+
 class Transform : public AComponent {
    public:
     utils::Vector2d position;
 
    public:
-    Transform(Entity& entity) : AComponent(entity) {};
+    Transform(Entity& entity) : AComponent(entity){};
     ~Transform() = default;
 };
 
-}
+}  // namespace component
 
-#endif // OOP_ARCADE_2019_TRANSFORM_HPP
+}  // namespace ecs
+
+#endif  // OOP_ARCADE_2019_TRANSFORM_HPP
