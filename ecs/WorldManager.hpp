@@ -8,6 +8,8 @@
 #ifndef OOP_ARCADE_2019_WORLDMANAGER_HPP
 #define OOP_ARCADE_2019_WORLDMANAGER_HPP
 
+#include <vector>
+
 #include "ASystem.hpp"
 #include "EventBus.hpp"
 #include "World.hpp"
@@ -18,42 +20,38 @@ class WorldManager {
    private:
     World& _world;
     std::vector<std::reference_wrapper<ASystem>> _systems{};
-    ecs::EventBus& _eventbus;
+    EventBus _eventbus;
 
    public:
-    WorldManager(World& world) : _world(world)
-    {
-        auto* eventbus = new ecs::EventBus();
-        _eventbus = *eventbus;
-    }
+    WorldManager(World& world) : _world(world), _eventbus(EventBus()) {};
 
     ~WorldManager() = default;
 
     void addSystem(ASystem& system)
     {
         _systems.push_back(system);
-    }
+    };
 
     EventBus& getEventBus()
     {
         return _eventbus;
-    }
+    };
 
     void init()
     {
-        for (ASystem& i : _systems) i.init();
-    }
+        for (std::reference_wrapper<ASystem> i : _systems) i.init();
+    };
 
     void update()
     {
-        for (ASystem& i : _systems) i.update();
-    }
+        for (std::reference_wrapper<ASystem> i : _systems) i.update();
+    };
 
     void render()
     {
-        for (ASystem& i : _systems) i.render();
-    }
-}
+        for (std::reference_wrapper<ASystem> i : _systems) i.render();
+    };
+};
 
 }  // namespace ecs
 

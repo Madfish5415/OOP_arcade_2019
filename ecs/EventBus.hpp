@@ -8,9 +8,12 @@
 #ifndef OOP_ARCADE_2019_EVENTBUS_HPP
 #define OOP_ARCADE_2019_EVENTBUS_HPP
 
+#include <list>
+#include <typeindex>
+#include <map>
+
 #include "Event.hpp"
 
-typedef std::list<AFunctionHandler*> HandlerList;
 
 namespace ecs {
 
@@ -20,9 +23,12 @@ class AFunctionHandler {
 
    public:
     void exec(Event* event) {
-        call(evnt);
+        call(event);
     };
-}
+};
+
+typedef std::list<AFunctionHandler*> HandlerList;
+
 
 template <class T, class EventType>
 class FunctionHandler : public AFunctionHandler {
@@ -34,14 +40,14 @@ class FunctionHandler : public AFunctionHandler {
     MemberFunction _memberFunction;
 
    public:
-    FunctionHandler(T * instance, MemberFunction memberFunction) : _instance{ instance }, _memberFunction{ memberFunction } {};
+    FunctionHandler(T* instance, MemberFunction memberFunction) : _instance{ instance }, _memberFunction{ memberFunction } {};
 
     void call(Event * event) override {
-        (instance->*memberFunction)(static_cast<EventType*>(event));
-    }
-}
+        (_instance->*_memberFunction)(static_cast<EventType*>(event));
+    };
+};
 
-typedef std::list<AFunctionHandler*> HandlerList
+typedef std::list<AFunctionHandler*> HandlerList;
 
 class EventBus {
    private:
@@ -57,8 +63,8 @@ class EventBus {
             _subscribers[typeid(EventType)] = handlers;
         }
 
-        handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction));
-    }
+        handlers->push_back(new FunctionHandler<T, EventType>(instance, memberFunction));
+    };
 
     template<typename EventType>
     void publish(EventType *event) {
@@ -73,8 +79,8 @@ class EventBus {
                 handler->exec(event);
             }
         }
-    }
-}
+    };
+};
 
 }  // namespace ecs
 

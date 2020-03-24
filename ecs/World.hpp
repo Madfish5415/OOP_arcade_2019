@@ -8,14 +8,17 @@
 #ifndef OOP_ARCADE_2019_WORLD_HPP
 #define OOP_ARCADE_2019_WORLD_HPP
 
-using GroupID = std::string;
+#include <vector>
+#include <map>
+
+#include "Entity.hpp"
 
 namespace ecs {
 
 class World {
    private:
     std::vector<std::shared_ptr<Entity>> _entities {};
-    std::map<GroupID, std::vector<std::shared_ptr<Entity>>> _groups {};
+    std::map<std::string, std::vector<std::shared_ptr<Entity>>> _groups {};
 
    public:
     World() = default;
@@ -27,24 +30,28 @@ class World {
         }
 
         _entities.erase(std::remove_if(std::begin(_entities), std::end(_entities), [](const std::unique_ptr<Entity>& entity) { return !entity->isActive();}), std::end(entities));
-    }
+    };
 
-    void addToGroup(Entity* entity, GroupID group) {
+    void addToGroup(Entity* entity, std::string group) {
         _groups[group].push_back(entity);
-    }
+    };
 
-    void delFromGroup(Entity* entity, GroupID group) {
+    void delFromGroup(Entity* entity, std::string group) {
         _groups[group].erase(entity);
-    }
+    };
 
-    void hasGroup(Entity* entity, GroupID group);
+    void hasGroup(Entity* entity, std::string group) {
 
-    std::vector<std::shared_ptr<Entity>>& getGroup(GroupID group) {
+    };
+
+    std::vector<std::shared_ptr<Entity>>& getGroup(std::string group) {
         return _groups[group];
-    }
+    };
 
     template <typename... TArgs>
-    std::vector<std::shared_ptr<Entity>>& getEntities();
+    std::vector<std::shared_ptr<Entity>>& getEntities() {
+
+    };
 
     Entity& addEntity() {
         Entity* entity = new Entity(*this);
@@ -52,9 +59,10 @@ class World {
         std::shared_ptr<Entity> sPtr{entity};
         entities.emplace_back(std::move(sPtr));
         return *e;
-    }
-}
+    };
 
-}  // namespace ecs
+};
+
+};  // namespace ecs
 
 #endif  // OOP_ARCADE_2019_WORLD_HPP

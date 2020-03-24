@@ -16,7 +16,7 @@ class Vector2d {
     int y;
 
    public:
-    Vector2d(xParam = 0, yParam = 0) : x(xParam), y(yParam) {};
+    Vector2d(int xParam = 0, int yParam = 0) : x(xParam), y(yParam) {};
 };
 
 }

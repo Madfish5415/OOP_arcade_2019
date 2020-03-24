@@ -1,0 +1,17 @@
+[
+ {
+  "directory": "/home/lucas/Delivery/2019/OOP/Github/OOP_arcade_2019/ecs",
+  "arguments": [
+   "g++",
+   "-W",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-c",
+   "-o",
+   "main.o",
+   "main.cpp"
+  ],
+  "file": "main.cpp"
+ }
+]

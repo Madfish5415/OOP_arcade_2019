@@ -31,18 +31,18 @@ class Entity {
     template <typename T>
     bool hasComponent() {
 
-    }
+    };
 
     template <typename T, typename... TArgs>
     T& addComponent(TArgs&&... mArgs) {
 
-    }
+    };
 
     template <typename T>
     T& getComponent() {
          
-    }
-}
+    };
+};
 
 }
 

@@ -11,8 +11,8 @@
 namespace ecs {
 
 class Event {
-    Event();
-    ~Event();
+    Event() = default;
+    ~Event() = default;
 };
 
 }

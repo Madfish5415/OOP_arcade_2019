@@ -12,14 +12,14 @@ namespace ecs {
 
 namespace component {
 
-class Input : public AComponent {
+class Follow : public AComponent {
    public:
     Entity& followed;
 
    public:
-    Input(Entity& entity, Entity& followedP)
+    Follow(Entity& entity, Entity& followedP)
         : AComponent(entity), followed(followedP){};
-    ~Input() = default;
+    ~Follow() = default;
 };
 
 }  // namespace component

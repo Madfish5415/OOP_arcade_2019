@@ -8,9 +8,9 @@
 #ifndef OOP_ARCADE_2019_ARENDERABLE_HPP
 #define OOP_ARCADE_2019_ARENDERABLE_HPP
 
-#include <string>
-
 #include "../AComponent.hpp"
+
+#include <string>
 
 namespace ecs {
 
