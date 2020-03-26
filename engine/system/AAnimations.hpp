@@ -1,0 +1,11 @@
+/*
+** EPITECH PROJECT, 2020
+** OOP_arcade_2019
+** File description:
+** AAnimations.hpp
+*/
+
+#ifndef OOP_ARCADE_2019_AANIMATIONS_HPP
+#define OOP_ARCADE_2019_AANIMATIONS_HPP
+
+#endif // OOP_ARCADE_2019_AANIMATIONS_HPP

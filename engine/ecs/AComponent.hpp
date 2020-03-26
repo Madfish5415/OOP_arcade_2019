@@ -1,0 +1,11 @@
+/*
+** EPITECH PROJECT, 2020
+** OOP_arcade_2019
+** File description:
+** AComponent.hpp
+*/
+
+#ifndef OOP_ARCADE_2019_ACOMPONENT_HPP
+#define OOP_ARCADE_2019_ACOMPONENT_HPP
+
+#endif // OOP_ARCADE_2019_ACOMPONENT_HPP
