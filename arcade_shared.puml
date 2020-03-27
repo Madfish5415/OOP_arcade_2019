@@ -1,562 +1,858 @@
-@startuml
+@startuml Arcade
 
-enum LIBTYPE {
-    TEXT,
-    GRAPHIC,
-    DEBUG
+namespace core {
+    class Core {
+        - std::map<std::string, IGraphical> _graphicals
+        - std::map<std::string, IGame> _games
+        - std::string _currentGraphical
+        - std::string _currentGame
+        - ecs::Universe _universe
+
+        + Core()
+        + ~Core()
+
+        + void loadGames()
+        + void loadGraphics()
+
+        + engine::ecs::Universe& getUniverse() const
+
+        + bool hasGame(const std::string& name) const
+        + game::IGame& getGame(const std::string& name) const
+        + game::IGame& getCurrentGame() const
+        + void setCurrentGame(const std::string& name)
+
+        + bool hasGraphical(const std::string& name) const
+        + graphical::IGraphical& getGraphical(const std::string& name) const
+        + graphical::IGraphical& getCurrentGraphical() const
+        + void setCurrentGraphical(const std::string& name)
+    }
 }
 
-namespace ecs {
-    ' using ComponentID = std::size_t
-    ' using GroupID = std::string
+namespace engine {
 
-    'inline ComponentID getNewComponentTypeID()
-    'template <typename T> inline ComponentID getComponentTypeID() noexcept
+    namespace ecs {
+        class Universe {
+            - std::map<std::string, World> _worlds
+            - std::string _currentWorld
+            - eventbus::EventBus _eventbus
 
-    'inline GroupID getNewComponentTypeID()
-    'inline GroupID getComponentTypeID(GroupID groupName) noexcept
+            + Universe()
+            + ~Universe()
 
-    'constexpr std::size_t maxComponents = 32
-    'constexpr std::size_t maxGroups = 64
+            + void init()
+            + void update()
+            + void render()
 
-    'using ComponentBitSet = std::bitset<maxComponents>
-    'using ComponentArray = std::array<ecs::AComponent*, maxComponents>
+            + eventbus::EventBus& getEventBus()
 
-    class Universe {
-        - std::vector<std::reference_wrapper<WorldManager>> _managers
+            + World& createWorld(const std::string& name)
+            + bool hasWorld(const std::string& name) const
+            + World& getWorld(const std::string& name) const
+            + World& getCurrentWorld() const
+            + void setCurrentWorld(const std::string& name)
+            + void deleteWorld(const std::string& name)
+        }
+        World <-- Universe
 
-        + Universe()
-        + ~Universe()
-        + void addWorldManager(WorldManager& world)
-        + void delWorldManager()
+        class World {
+            - Universe& _universe
+            - std::vector<std::reference_wrapper<Entity>> _entities
+            - std::map<std::string, std::vector<std::reference_wrapper<Entity>>> _groups
+            - std::map<std::type_index, std::reference_wrapper<ASystem>> _systems
+
+            + World(Universe& universe)
+            + ~World()
+
+            + void init()
+            + void update()
+            + void render()
+
+            + Universe& getUniverse() const
+
+            + Entity& createEntity()
+            + template<typename... TArgs> std::vector<std::reference_wrapper<Entity>> getEntities() const
+            + void deleteEntity(Entity& entity)
+
+            + void addToGroup(Entity& entity, const std::string& group)
+            + bool hasGroup(Entity& entity, const std::string& group) const
+            + std::vector<std::reference_wrapper<Entity>>& getGroup(const std::string& group) const
+            + void removeFromGroup(Entity& entity, const std::string& group)
+
+            + template <typename T, typename... TArgs> T& addSystem(TArgs&&... mArgs)
+            + template <typename T = void, typename... TArgs> bool hasSystems() const
+            + template <typename T> T& getSystem() const
+            + template <typename T> void removeSystem()
+        }
+        Universe <-- World
+        Entity <-- World
+        ASystem <-- World
+
+        class Entity {
+            - World& _world
+            - std::map<std::type_index, std::reference_wrapper<AComponent>> _components
+
+            + Entity(World& world)
+            + ~Entity()
+
+            + World& getWorld() const
+
+            + template <typename T, typename... TArgs> T& addComponent(TArgs&&... mArgs)
+            + template <typename T = void, typename ...TArgs> bool hasComponents() const
+            + template <typename T> T& getComponent() const
+            + template <typename T> void removeComponent()
+        }
+        World <-- Entity
+        AComponent <-- Entity
+
+        interface IComponent {
+            + virtual ~IComponent() = 0
+
+            + Entity& getEntity() const = 0
+        }
+
+        abstract AComponent {
+            # Entity& _entity
+
+            + AComponent(Entity& entity)
+            + ~AComponent() override = 0
+
+            + Entity& getEntity() const override
+        }
+        IComponent <|-- AComponent
+        Entity <-- AComponent
+
+        interface ISystem {
+            + virtual ~ISystem() = 0
+
+            + World& getWorld() const = 0
+
+            + virtual void init() = 0
+            + virtual void update() = 0
+            + virtual void render() = 0
+        }
+
+        abstract ASystem {
+            # World& _world
+
+            + ASystem(World& world)
+            + ~ASystem() override = 0
+
+            + World& getWorld() const override
+
+            + virtual void init() = 0
+            + virtual void update() = 0
+            + virtual void render() = 0
+        }
+        ISystem <|-- ASystem
+        World <-- ASystem
     }
 
-    class WorldManager {
-        - World& _world
-        - std::vector<std::reference_wrapper<ASystem>> _systems
-        - event::EventBus& _eventbus
+}
 
-        + WorldManager(World& _world)
-        + ~WorldManager()
-        + void addSystem(ASystem& system)
-        + EventBus& getEventBus()
-        + void init()
-        + void update()
-        + void render()
-    }
-    ecs.Universe <-- WorldManager
-
-    class World {
-        - std::vector<std::shared_ptr<Entity>> _entities
-        - std::map<GroupID, std::vector<std::shared_ptr<Entity>>> _groups
-
-        + void refresh()
-        + void addToGroup(Entity* entity, GroupID group)
-        + void delFromGroup(Entity* entity, GroupID group)
-        + void hasGroup(Entity* entity, GroupID group)
-        + std::vector<std::shared_ptr<Entity>>& getGroup(GroupID group)
-        + template<typename... TArgs> std::vector<std::shared_ptr<Entity>>& getEntities()
-        + Entity& addEntity()
-    }
-    ecs.WorldManager <-- World
-
-    class Entity {
-        - World& _world
-        - bool _active = true
-        - std::set<std::unique_ptr<AComponent>> _components {}
-        - ComponentBitSet _componentBitSet
-        - ComponentArray _componentArray
-
-        + Entity(World& world)
-        + ~Entity()
-        + bool isActive()
-        + void disable()
-        + template <typename T> bool hasComponent()
-        + template <typename T, typename... TArgs> T& addComponent(TArgs&&... mArgs)
-        + template <typename T> T& getComponent()
-    }
-    ecs.World <-- Entity
-    ecs.AComponent <-- Entity
-
-    abstract AComponent {
-        # Entity& _entity
-
-        + virtual ~AComponent() = 0
-        + void setParent(Entity& entity)
-    }
-    ecs.Entity <-- AComponent
-
-    interface IAnimation {
-        + virtual ~IAnimation() = 0
-        + virtual int frame() const = 0
-        + virtual int speed() const = 0
-        + virtual int index() const = 0
-    }
-
-    class Vector2d {
-        + int x
-        + int y
-    }
+namespace engine {
 
     namespace component {
-        class Transform {
-            + Vector2d position
+        abstract AAudio {
+            + AAudio(Entity& entity, const std::vector<std::string>& paths)
+            + virtual ~AAudio() = 0
 
-            + Transform()
-            + ~Transform()
+            + const std::vector<std::string> paths
         }
-        ecs.AComponent <|-- Transform
+        engine.ecs.AComponent <|-- AAudio
 
-        class Motion {
-            + Vector2d velocity
-            + Vector2d acceleration
+        abstract ARender {
+            + ARender(Entity& entity, const std::vector<std::string>& paths)
+            + virtual ~ARender() = 0
 
-            + Motion()
-            + ~Motion()
+            + const std::vector<std::string> paths
         }
-        ecs.AComponent <|-- Motion
+        engine.ecs.AComponent <|-- ARender
 
-        class Size {
-            + int w
-            + int h
-
-            + Size()
-            + ~Size()
+        abstract AAI {
+            + AAI(Entity& entity)
+            + virtual ~AAI() = 0
         }
-        ecs.AComponent <|-- Size
+        engine.ecs.AComponent <|-- AAI
+
+        abstract AUser {
+            + AUser(Entity& entity)
+            + virtual ~AUser() = 0
+        }
+        engine.ecs.AComponent <|-- AUser
+
+        class Animations {
+            + Animations(Entity& entity, const std::map<std::string, type::Animation>& list)
+            + ~Animations()
+
+            + const std::map<std::string, type::Animation> list
+            + std::string currentAnimation
+        }
+        engine.ecs.AComponent <|-- Animations
 
         class Hitbox {
-            + int w
-            + int h
-
-            + Hitbox()
+            + Hitbox(Entity& entity, int width, int height)
             + ~Hitbox()
-        }
-        ecs.AComponent <|-- Hitbox
 
-        abstract ARenderable {
-            + virtual ~Renderable() = 0
-            + virtual void setTexture(std::string name) = 0
-            + virtual void setAnimation(std::string animationName, ecs::IAnimation animation) = 0
-            + virtual std::string getCurrentAnimation() = 0
-            + virtual void useAnimation(std::string animationName) = 0 
+            + int width
+            + int height
         }
-        ecs.AComponent <|-- ARenderable
+        engine.ecs.AComponent <|-- Hitbox
 
-        class Follow {
-            + Entity& followed
+        class Motion {
+            + Motion(Entity& entity, Vector2D velocity, Vector2D acceleration)
+            + ~Motion()
 
-            + Follow(Entity& followed)
-            + ~Follow()
+            + Vector2D velocity
+            + Vector2D acceleration
         }
-        ecs.AComponent <|-- Follow
+        engine.ecs.AComponent <|-- Motion
 
-        class AI {
-            + AI()
-            + ~AI()
+        class Size {
+            + Size(Entity& entity, int width, int height)
+            + ~Size()
+
+            + int width
+            + int height
         }
-        ecs.AComponent <|-- AI
+        engine.ecs.AComponent <|-- Size
+
+        class Transform {
+            + Transform(Entity& entity, Vector2D position, int layer)
+            + ~Transform()
+
+            + Vector2D position
+            + int layer
+        }
+        engine.ecs.AComponent <|-- Transform
+    }
+
+}
+
+namespace engine {
+
+    namespace system {
+        ' Use component.Animations and component.Size
+        abstract AAnimations {
+            + AAnimations(World& world)
+            + virtual ~AAnimations() = 0
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.ecs.ASystem <|-- AAnimations
+
+        ' Use component.AAudio
+        abstract AAudio {
+            + AAudio(World& world)
+            + virtual ~AAudio() = 0
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.ecs.ASystem <|-- AAudio
+
+        ' Use component.ARender and component.Transform
+        abstract ARender {
+            + ARender(World& world)
+            + virtual ~ARender() = 0
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.ecs.ASystem <|-- ARender
+
+        ' Use component.AAI and component.Motion
+        abstract AAI {
+            + AAI(World& world)
+            + virtual ~AAI() = 0
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.ecs.ASystem <|-- AAI
+
+        ' Use component.Motion and component.AUser
+        abstract AUser {
+            + AUser(World& world)
+            + virtual ~AUser() = 0
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.ecs.ASystem <|-- AUser
+
+        ' Use component.Motion and component.Transform
+        class Movement {
+            + Movement(World& world)
+            + ~Movement()
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.ecs.ASystem <|-- Movement
+
+        ' Use component.Hitbox and component.Transform
+        class Physics {
+            + Physics(World& world)
+            + ~Physics()
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.ecs.ASystem <|-- Physics
+    }
+
+}
+
+namespace engine {
+
+    namespace eventbus {
+        ' template <typename T, typename E>
+        ' using Callback = void (T::*)(E&)
+
+        abstract AEvent {
+            + AEvent()
+            + virtual ~AEvent() = 0
+        }
+
+        interface ICallbackHandler {
+            + virtual ~ICallbackHandler() = 0
+
+            + virtual void call(AEvent& event) = 0
+        }
+        EventBus +-- ICallbackHandler
+
+        ' template <typename T, typename E>
+        class CallbackHandler {
+            - T& _subscriber
+            - Callback _callback
+
+            + CallbackHandler(T& subscriber, Callback<T, E> callback)
+            + ~CallbackHandler() override
+
+            + void call(AEvent& event) override
+        }
+        ICallbackHandler <|-- CallbackHandler
+        EventBus +-- CallbackHandler
+
+        class EventBus {
+            - std::map<std::type_index, CallbackHandler*> _subscribers
+
+            + EventBus()
+            + ~EventBus()
+
+            + template <typename T, typename E> void subscribe(T& subscriber, Callback<T, E> callback)
+            + void unsubscribe()
+            + template <typename E> void publish(E& event)
+        }
+    }
+
+}
+
+namespace engine {
+
+    namespace event {
+        class Collision {
+            + Collision(ecs::Entity& ent1, ecs::Entity& ent2)
+            + ~Collision()
+
+            + ecs::Entity& entity1
+            + ecs::Entity& entity2
+        }
+        engine.eventbus.AEvent <|-- Collision
+
+        enum KEYCODE {
+            KEY_UNKNOWN = -1,
+            KEY_A, KEY_B, KEY_C, KEY_D, KEY_E,
+            KEY_F, KEY_G, KEY_H, KEY_I, KEY_J,
+            KEY_K, KEY_L, KEY_M, KEY_N, KEY_O,
+            KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T,
+            KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y,
+            KEY_Z,
+            KEY_0, KEY_1, KEY_2, KEY_3, KEY_4,
+            KEY_5, KEY_6, KEY_7, KEY_8, KEY_9,
+            KEY_ESCAPE, KEY_LCONTROL, KEY_LSHIFT, KEY_LALT, KEY_LSYSTEM,
+            KEY_RCONTROL, KEY_RSHIFT, KEY_RALT, KEY_RSYSTEM, KEY_MENU,
+            KEY_LBRACKET, KEY_RBRACKET, KEY_SEMICOLON, KEY_COMMA, KEY_PERIOD,
+            KEY_QUOTE, KEY_SLASH, KEY_BACKSLASH, KEY_TILDE, KEY_EQUAL,
+            KEY_HYPHEN, KEY_SPACE, KEY_ENTER, KEY_BACKSPACE, KEY_TAB,
+            KEY_PAGEUP, KEY_PAGEDOWN, KEY_END, KEY_HOME, KEY_INSERT,
+            KEY_DELETE, KEY_ADD, KEY_SUBTRACT, KEY_MULTIPLY, KEY_DIVIDE,
+            KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN,
+            KEY_NUM0, KEY_NUM1, KEY_NUM2, KEY_NUM3, KEY_NUM4,
+            KEY_NUM5, KEY_NUM6, KEY_NUM7, KEY_NUM8, KEY_NUM9,
+            KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5,
+            KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10,
+            KEY_F11, KEY_F12, KEY_F13, KEY_F14, KEY_F15,
+            KEY_PAUSE, KEY_KEYCOUNT
+        }
+        Input +-- KEYCODE
 
         class Input {
             + Input()
             + ~Input()
+
+            + KEYCODE code
         }
-        ecs.AComponent <|-- Input
+        engine.eventbus.AEvent <|-- Input
     }
 
-    abstract ASystem {
-        + virtual ~ASystem() = 0
-        + virtual void init(event::EventBus& eventbus) = 0
-        + virtual void update(World& world) = 0
-        + virtual void render(World& world) = 0
+}
+
+namespace engine {
+
+    namespace type {
+        class Animation {
+            + int row
+            + int frames
+            + int speed
+        }
+
+        class Vector2D {
+            + int x
+            + int y
+        }
     }
-    ecs.WorldManager <-- ASystem
 
-    namespace system {
-        ' Checks for collisions (use Transform and Hitbox)
-        class Physics {
-            + Physics()
-            + ~Physics()
-            + void init(event::EventBus& eventbus) override
-            + void update(World& world) override
-            + void render(World& world) override
-        }
-        ecs.ASystem <|-- Physics
-
-        ' Allow User to be moved (use Motion and Input)
-        abstract AUser {
-            + AUser()
-            + virtual ~AUser() = 0
-            + void init(event::EventBus& eventbus) override = 0
-            + void update(World& world) override = 0
-            + void render(World& world) override = 0
-        }
-        ecs.ASystem <|-- AUser
-
-        ' Moves AI (use Motion and AI)
-        abstract AAI {
-            + AAI()
-            + virtual ~AAI() = 0
-            + void init(event::EventBus& eventbus) override = 0
-            + void update(World& world) override = 0
-            + void render(World& world) override = 0
-        }
-        ecs.ASystem <|-- AAI
-
-        ' Allow entity to follow another entity (use Motion and Follow)
-        abstract AFollow {
-            + AFollow()
-            + virtual ~AFollow() = 0
-            + void init(event::EventBus& eventbus) override = 0
-            + void update(World& world) override = 0
-            + void render(World& world) override = 0
-        }
-        ecs.ASystem <|-- AFollow
-
-        ' Update velocity and position (use Transform and Motion)
-        class Movement {
-            + Movement()
-            + ~Movement()
-            + void init(event::EventBus& eventbus) override
-            + void update(World& world) override
-            + void render(World& world) override
-        }
-        ecs.ASystem <|-- Movement
-
-        ' Draws sprites to the screen (use ARenderable, Size and Transform)
-        abstract AGraphics {
-            + AGraphics()
-            + virtual ~AGraphics() = 0
-            + void init(event::EventBus& eventbus) override = 0
-            + void update(World& world) override = 0
-            + void render(World& world) override = 0
-        }
-        ecs.ASystem <|-- AGraphics
-    }
 }
 
 namespace graphical {
+    enum LIBTYPE {
+        TEXT,
+        GRAPHIC,
+        DEBUG
+    }
+
     interface IGraphical {
         + virtual ~IGraphical() = 0
-        + virtual std::string getName() = 0
-        + virtual LIBTYPE getType() = 0
-        + virtual ecs::component::ARenderable createRenderable(std::vector<std::string> paths, bool isAnimated = false) = 0
-        + virtual ecs::IAnimation createAnimation(int index, int frame, int speed) = 0
-        + virtual ecs::system::AGraphics createGraphics() = 0
-        + virtual void eventHandler(EventBus& eventbus) = 0
+
+        + virtual void init() = 0
+        + virtual void dispatchEvent() = 0
+        + virtual void destroy() = 0
+
+        + virtual std::string getName() const = 0
+        + virtual LIBTYPE getType() const = 0
+
+        + virtual engine::component::AAudio createAudio(engine::ecs::Entity& entity, const std::vector<std::string>& paths) = 0
+        + virtual engine::component::ARender createRender(engine::ecs::Entity& entity, const std::vector<std::string>& paths) = 0
+
+        + virtual engine::system::AAnimations createAnimationsSystem(engine::ecs::World& world) = 0
+        + virtual engine::system::AAudio createAudioSystem(engine::ecs::World& world) = 0
+        + virtual engine::system::ARender createRenderSystem(engine::ecs::World& world) = 0
     }
 
-    abstract AGraphical {    
-        + AGraphical(LIBTYPE type, std::string name, Universe& universe)
-        + ~AGraphical() override = 0
-        + std::string getName() override
-        + LIBTYPE getType() override
-        + ecs::component::ARenderable createRenderable(std::vector<std::string> paths, bool isAnimated = false) override = 0
-        + ecs::IAnimation createAnimation(int index, int frame, int speed) override = 0
-        + ecs::system::AGraphics createGraphics() override = 0
-        + void eventHandler(EventBus& eventbus) override = 0
+    abstract AGraphical {
+        - std::string _name
+        - LIBTYPE _type
+        # engine::eventbus::EventBus& eventBus
+
+        + AGraphical(const std::string& name, LIBTYPE type, engine::eventbus::EventBus& eventBus)
+        + virtual ~AGraphical() = 0
+
+        + void init() override = 0
+        + void dispatchEvent() override = 0
+        + void destroy() override = 0
+
+        + std::string getName() const override
+        + LIBTYPE getType() const override
+
+        + engine::component::AAudio createAudio(engine::ecs::Entity& entity, const std::vector<std::string>& paths) override = 0
+        + engine::component::ARender createRender(engine::ecs::Entity& entity, const std::vector<std::string>& paths) override = 0
+
+        + engine::system::AAnimations createAnimationsSystem(engine::ecs::World& world) override = 0
+        + engine::system::AAudio createAudioSystem(engine::ecs::World& world) override = 0
+        + engine::system::ARender createRenderSystem(engine::ecs::World& world) override = 0
     }
     IGraphical <|-- AGraphical
+}
 
-    class Animation {
-        + Animation(int index, int frame, int speed)
-        + ~Animation()
-        + int frame() const override
-        + int speed() const override
-        + int index() const override
+namespace sfml {
+    class Graphical {
+        - sf::RenderWindow _window
+
+        + Graphical(engine::eventbus::EventBus& eventBus)
+        + ~Graphical()
+
+        + void init() override
+        + void dispatchEvent() override
+        + void destroy() override
+
+        + engine::component::AAudio createAudio(engine::ecs::Entity& entity, const std::vector<std::string>& paths) override
+        + engine::component::ARender createRender(engine::ecs::Entity& entity, const std::vector<std::string>& paths) override
+
+        + engine::system::AAnimations createAnimationsSystem(engine::ecs::World& world) override
+        + engine::system::AAudio createAudioSystem(engine::ecs::World& world) override
+        + engine::system::ARender createRenderSystem(engine::ecs::World& world) override
     }
-    ecs.IAnimation <|-- Animation
+    graphical.AGraphical <|-- Graphical
 
-    namespace sfml {
-        class Graphical {
-            + Graphical(Universe& universe)
-            + ~Graphical()
-            + LIBTYPE getType() override
-            + ecs::component::ARenderable createRenderable(std::vector<std::string> paths, bool isAnimated = false) override
-            + ecs::IAnimation createAnimation(int index, int frame, int speed) override
+    namespace component {
+        class Audio {
+            + sf::RenderWindow& window
+            + sf::SoundBuffer soundbuffer
+            + sf::Sound sound
+            + sf::Music music
+
+            + Audio(engine::ecs::Entity& entity, const std::vector<std::string>& paths, sf::RenderWindow& win)
+            + ~Audio()
         }
-        graphical.AGraphical <|-- Graphical
+        engine.component.AAudio <|-- Audio
 
-        namespace component {
-            class Renderable {
-                + Sprite(std::string name, bool isAnimated = false)
-                + ~Sprite()
-                + void setTexture(std::string name) override
-                + void setAnimation(std::string animationName, ecs::IAnimation animation) override
-                + std::string getCurrentAnimation() override
-                + void useAnimation(std::string animationName) override
-            }
-            ecs.component.ARenderable <|-- Renderable
+        enum FLIPTYPE {
+            NONE = 1,
+            VERTICAL = 2,
+            HORIZONTAL = 4
         }
 
-        namespace system {
-            class Graphics {
-                + Graphics()
-                + ~Graphics()
-                + void init(event::EventBus& eventbus) override
-                + void update(World& world) override
-                + void render(World& world) override
-            }
-            ecs.system.AGraphics <|-- Graphics
-        }
-    }
+        ' using sfmlAngle = float
+        class Render {
+            + sf::RenderWindow& window
+            + sf::Sprite sprite
+            + sf::Texture texture
+            + sf::IntRect srcRect, destRect
+            + FLIPTYPE spriteFlip
+            + sfmlAngle angle
 
-    namespace sdl {
-        class Graphical {
-            + Graphical(Universe& universe)
-            + ~Graphical()
-            + LIBTYPE getType() override
-            + ecs::component::ARenderable createRenderable(std::vector<std::string> paths, bool isAnimated = false) override
-            + ecs::IAnimation createAnimation(int index, int frame, int speed) override
-            + ecs::system::AGraphics createGraphics() override
-            + void eventHandler(EventBus& eventbus) override
+            + Render(engine::ecs::Entity& entity, const std::vector<std::string>& paths, sf::RenderWindow& win)
+            + ~Render()
         }
-        graphical.AGraphical <|-- Graphical
-
-        namespace component {
-            class Renderable {
-                + Sprite(std::string name, bool isAnimated = false)
-                + ~Sprite()
-                + void setTexture(std::string name) override
-                + void setAnimation(std::string animationName, ecs::IAnimation animation) override
-                + std::string getCurrentAnimation() override
-                + void useAnimation(std::string animationName) override
-            }
-            ecs.component.ARenderable <|-- Renderable
-        }
-
-        namespace system {
-            class Graphics {
-                + Graphics()
-                + ~Graphics()
-                + void init(event::EventBus& eventbus) override
-                + void update(World& world) override
-                + void render(World& world) override
-            }
-            ecs.system.AGraphics <|-- Graphics
-        }
+        engine.component.ARender <|-- Render
     }
 
-    namespace ncurses {
-        class Graphical {
-            + Graphical(Universe& universe)
-            + ~Graphical()
-            + LIBTYPE getType() override
-            + ecs::component::ARenderable createRenderable(std::vector<std::string> paths, bool isAnimated = false) override
-            + ecs::IAnimation createAnimation(int index, int frame, int speed) override
-            + ecs::system::AGraphics createGraphics() override
-            + void eventHandler(EventBus& eventbus) override
-        }
-        graphical.AGraphical <|-- Graphical
+    namespace system {
+        class Animations {
+            + Animations(World& world)
+            + ~Animations()
 
-        namespace component {
-            class Renderable {
-                + Sprite(std::string name, bool isAnimated = false)
-                + ~Sprite()
-                + void setAnimation(std::string animationName, ecs::IAnimation animation) override
-                + std::string getCurrentAnimation() override
-                + void useAnimation(std::string animationName) override
-            }
-            ecs.component.ARenderable <|-- Renderable
+            + void init() override
+            + void update() override
+            + void render() override
         }
+        engine.system.AAnimations <|-- Animations
 
-        namespace system {
-            class Graphics {
-                + Graphics()
-                + ~Graphics()
-                + void init(event::EventBus& eventbus) override
-                + void update(World& world) override
-                + void render(World& world) override
-            }
-            ecs.system.AGraphics <|-- Graphics
+        class Audio {
+            + Audio(World& world)
+            + ~Audio()
+
+            + void init() override
+            + void update() override
+            + void render() override
         }
+        engine.system.AAudio <|-- Audio
+
+        class Render {
+            + Render(World& world)
+            + ~Render()
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.system.ARender <|-- Render
     }
 }
+
+namespace sdl {
+    class Graphical {
+        - SDL_Window _window
+
+        + Graphical(engine::eventbus::EventBus& eventBus)
+        + ~Graphical()
+
+        + void init() override
+        + void dispatchEvent() override
+        + void destroy() override
+
+        + engine::component::AAudio createAudio(engine::ecs::Entity& entity, const std::vector<std::string>& paths) override
+        + engine::component::ARender createRender(engine::ecs::Entity& entity, const std::vector<std::string>& paths) override
+
+        + engine::system::AAnimations createAnimationsSystem(engine::ecs::World& world) override
+        + engine::system::AAudio createAudioSystem(engine::ecs::World& world) override
+        + engine::system::ARender createRenderSystem(engine::ecs::World& world) override
+    }
+    graphical.AGraphical <|-- Graphical
+
+    namespace component {
+        class Audio {
+            + SDL_Window& window
+            + Mix_Music music
+
+            + Audio(engine::ecs::Entity& entity, const std::vector<std::string>& paths, SDL_Window& win)
+            + ~Audio()
+        }
+        engine.component.AAudio <|-- Audio
+
+        ' using sdlAngle = double
+        class Render {
+            + SDL_Window& window
+            + SDL_Texture _texture
+            + SDL_rect _srcRect, _destRect
+            + SDL_RenderFlip _spriteFlip
+            + sdlAngle angle
+
+            + Render(engine::ecs::Entity& entity, const std::vector<std::string>& paths, SDL_Window& win)
+            + ~Render()
+        }
+        engine.component.ARender <|-- Render
+    }
+
+    namespace system {
+        class Animations {
+            + Animations(World& world)
+            + ~Animations()
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.system.AAnimations <|-- Animations
+
+        class Audio {
+            + Audio(World& world)
+            + ~Audio()
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.system.AAudio <|-- Audio
+
+        class Render {
+            + Render(World& world)
+            + ~Render()
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.system.ARender <|-- Render
+    }
+}
+
+namespace ncurses {
+    class Graphical {
+        - WINDOW _window
+
+        + Graphical(engine::eventbus::EventBus& eventBus)
+        + ~Graphical()
+
+        + void init() override
+        + void dispatchEvent() override
+        + void destroy() override
+
+        + engine::component::AAudio createAudio(engine::ecs::Entity& entity, const std::vector<std::string>& paths) override
+        + engine::component::ARender createRender(engine::ecs::Entity& entity, const std::vector<std::string>& paths) override
+
+        + engine::system::AAnimations createAnimationsSystem(engine::ecs::World& world) override
+        + engine::system::AAudio createAudioSystem(engine::ecs::World& world) override
+        + engine::system::ARender createRenderSystem(engine::ecs::World& world) override
+    }
+    graphical.AGraphical <|-- Graphical
+
+    namespace component {
+        class Audio {
+            + WINDOW& window
+
+            + Audio(engine::ecs::Entity& entity, const std::vector<std::string>& paths, WINDOW& win)
+            + ~Audio()
+        }
+        engine.component.AAudio <|-- Audio
+
+        
+        class Texture {
+            - std::string _character
+            - int _foreground
+            - int _background
+
+            + Texture(std::string c, int f, int b)
+            + ~Texture()
+            + std::string getCharacter()
+            + int getColorPair()
+        }
+
+        class Rect {
+            + int x
+            + int y
+            + int h
+            + int w
+
+            + Rect(int x = 0, int y = 0, int h = 0, int w = 0)
+            + ~Rect()
+        }
+
+        class Render {
+            + WINDOW& window
+            + std::map<int, std::map<int, Texture>> texture
+            + Rect srcRect, destRect
+
+            + Render(engine::ecs::Entity& entity, const std::vector<std::string>& paths, SDL_Window& win)
+            + ~Render()
+        }
+        engine.component.ARender <|-- Render
+    }
+
+    namespace system {
+        class Animations {
+            + Animations(World& world)
+            + ~Animations()
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.system.AAnimations <|-- Animations
+
+        class Audio {
+            + Audio(World& world)
+            + ~Audio()
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.system.AAudio <|-- Audio
+
+        class Render {
+            + Render(World& world)
+            + ~Render()
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.system.ARender <|-- Render
+    }
+}
+
 
 namespace game {
     interface IGame {
         + virtual ~IGame() = 0
+
         + virtual std::string getName() = 0
+
         + virtual void init() = 0
-        + virtual void setGraphical(IGraphical& graph) = 0
-        + virtual ecs::system::AFollow createFollow() = 0
-        + virtual ecs::system::AAI createAI() = 0
-        + virtual ecs::system::AUser createUser() = 0
+        + virtual void destroy() = 0
     }
 
     abstract AGame {
-        + AGame(Universe& universe, IGraphical& graph, std::string name)
+        # Universe& universe
+
+        + AGame(const std::string& name, engine::ecs::Universe& universe)
         + virtual ~AGame() = 0
+
         + std::string getName() override
+
         + void init() override = 0
-        + void setGraphical(IGraphical& graph) override
-        + ecs::system::AFollow createFollow() override = 0
-        + ecs::system::AAI createAI() override = 0
-        + ecs::system::AUser createUser() override = 0
+        + void destroy() override = 0
     }
     IGame <|-- AGame
-
-    namespace nibbler {
-        class Game {
-            + Game(Universe& universe, IGraphical& graph)
-            + ~Game()
-            + void init() override
-            + ecs::system::AFollow createFollow() override
-            + ecs::system::AAI createAI() override
-            + ecs::system::AUser createUser() override
-        }
-        game.AGame <|-- Game
-
-        namespace component {
-            
-        }
-
-        namespace system {
-            class User {
-                + User()
-                + ~User()
-                + void init(event::EventBus& eventbus) override
-                + void update(World& world) override
-                + void render(World& world) override
-            }
-            ecs.system.AUser <|-- User
-
-            class AI {
-                + AI()
-                + ~AI()
-                + void init(event::EventBus& eventbus) override
-                + void update(World& world) override
-                + void render(World& world) override
-            }
-            ecs.system.AAI <|-- AI
-
-            class Follow {
-                + Follow()
-                + ~Follow()
-                + void init(event::EventBus& eventbus) override
-                + void update(World& world) override
-                + void render(World& world) override
-            }
-            ecs.system.AFollow <|-- Follow
-        }
-    }
-
-    namespace pacman {
-        class Game {
-            + Game(Universe& universe, IGraphical& graph)
-            + ~Game()
-            + void init() override
-            + ecs::system::AFollow createFollow() override
-            + ecs::system::AAI createAI() override
-            + ecs::system::AUser createUser() override
-        }
-        game.AGame <|-- Game
-
-        namespace component {
-            
-        }
-
-        namespace system {
-            class User {
-                + User()
-                + ~User()
-                + void init(event::EventBus& eventbus) override
-                + void update(World& world) override
-                + void render(World& world) override
-            }
-            ecs.system.AUser <|-- User
-
-            class AI {
-                + AI()
-                + ~AI()
-                + void init(event::EventBus& eventbus) override
-                + void update(World& world) override
-                + void render(World& world) override
-            }
-            ecs.system.AAI <|-- AI
-
-            class Follow {
-                + Follow()
-                + ~Follow()
-                + void init(event::EventBus& eventbus) override
-                + void update(World& world) override
-                + void render(World& world) override
-            }
-            ecs.system.AFollow <|-- Follow
-        }
-    }
 }
 
-' DON'T REUSE THE CORE
-namespace core {
-    class Core {
-        + Core()
-        + ~Core()
-        + Universe& addUniverse()
-        + void loadGraphicals()
-        + void loadGames()
-        + IGraphical& getCurrentGraphical()
-        + void setCurrentGraphical(std::size_t index)
-        + IGame& getCurrentGame()
-        + void setCurrentGame(std::size_t index)
-        + Menu createMenu()
-    }
+namespace nibbler {
+    class Game {
+        + Game(engine::ecs::Universe& universe)
+        + ~Game()
 
-    class Menu {
-        + Menu(Universe& universe, std::vector<IGraphical>& graphicals, std::vector<IGame>& games)
-        + ~Menu()
-        + void init()
-        - void createSystems()
-        - void createEntities()
-        + ecs::system::AUser createUser()
+        + void init() override
+        + void destroy() override
     }
-    game.IGame <|-- Menu
+    game.AGame <|-- Game
 
-    namespace system {
+    namespace component {
+        class Follow {
+            + Follow(engine::ecs::Entity& entity)
+            + ~Follow()
+
+            + engine::ecs::Entity& followed
+        }
+        engine.ecs.AComponent <|-- Follow
+
         class User {
             + User()
             + ~User()
-            + void init(event::EventBus& eventbus) override
-            + void update(World& world) override
-            + void render(World& world) override
         }
-        ecs.system.AUser <|-- User
+        engine.component.AUser <|-- User
+    }
+
+    namespace system {
+        ' Use component.Follow and component.Motion
+        class Follow {
+            + Follow()
+            + ~Follow()
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.ecs.ASystem <|-- Follow
+
+        ' Use component.Motion and component.User
+        class User {
+            + User()
+            + ~User()
+
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.system.AUser <|-- User
     }
 }
 
-namespace event {
-    class Event {
-        + Event()
-        + ~Event()
+namespace pacman {
+    class Game {
+        + Game(engine::ecs::Universe& universe)
+        + ~Game()
+
+        + void init() override
+        + void destroy() override
+    }
+    game.AGame <|-- Game
+
+    namespace component {
+        class AI {
+            + AI()
+            + ~AI()
+        }
+        engine.component.AAI <|-- AI
+
+        class User {
+            + User()
+            + ~User()
+        }
+        engine.component.AUser <|-- User
     }
 
-    class InputEvent {
+    namespace system {
+        ' Use component.AI and component.Motion
+        class AI {
+            + AI()
+            + ~AI()
 
-    }
-    event.Event <|-- InputEvent
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.system.AAI <|-- AI
 
-    class CollisionEvent {
+        ' Use component.Motion and component.User
+        class User {
+            + User()
+            + ~User()
 
-    }
-    event.Event <|-- CollisionEvent
-
-    abstract AFunctionHandler {
-        - virtual void call(Event* event) = 0
-        + void exec(Event* event)
-    }
-
-    ' template<class T, class EventType>
-    class FunctionHandler {
-        ' typedef void (T::*MemberFunction)(EventType*)
-
-        + FunctionHandler(T* instance, MemberFunction memberFunction)
-        + void call(Event* event) override
-    }
-    event.AFunctionHandler <|-- FunctionHandler
-
-    class EventBus {
-        + template<class T, class EventType> void subscribe(T * instance, void (T::*memberFunction)(EventType *))
-        + template<typename EventType> void publish(EventType* event) 
+            + void init() override
+            + void update() override
+            + void render() override
+        }
+        engine.system.AUser <|-- User
     }
 }
 
