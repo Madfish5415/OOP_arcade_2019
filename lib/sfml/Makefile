@@ -23,7 +23,12 @@ RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=
+PROJ_SRC			=		graphical/Graphical.cpp		\
+							component/Audio.cpp			\
+							component/Render.cpp		\
+							system/Animations.cpp		\
+							system/Audio.cpp			\
+							system/Render.cpp			\
 
 TEST_SRC			=
 
