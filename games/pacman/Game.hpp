@@ -12,7 +12,7 @@
 
 class Game : public AGame {
     public:
-        Game(Universe& universe, IGraphical& graph): AGame(universe, graph) {}
+        Game(Universe& universe, IGraphical& graph): AGame(universe, graph, "pacman") {}
         ~Game();
         void init() override;
         ecs::system::AFollow createFollow(): Follow() override {}
