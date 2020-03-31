@@ -5,6 +5,9 @@
 ** Graphical.cpp
 */
 
+#include <vector>
+#include <Keyboard.hpp>
+#include "../../../engine/event/"
 #include "../../graphical/AGraphical.hpp"
 #include "../component/Audio.hpp"
 #include "../component/Render.hpp"
@@ -26,7 +29,19 @@ void sfml::Graphical::init() {
 }
 
 void sfml::Graphical::dispatchEvent() {
+    std::vector<engine::event::Input::KEYCODE> keycode;
+    std::vector<sf::Keyboard::Key> vector;
 
+    for (int first = sf::Keyboard::Unknown; first != sf::Keyboard::KeyCount; first++) {
+        vector.push_back(static_cast<const sf::Keyboard::Key>(first));
+    }
+    for (int first = engine::event::Input::KEYCODE::KEY_UNKNOWN; first != engine::event::Input::KEYCODE::KEY_KEYCOUNT; first++)
+        keycode.push_back(
+                static_cast<const engine::event::Input::KEYCODE>(first));
+    for (size_t i = 0; i < vector.size(); i++) {
+        if (sf::Keyboard::isKeyPressed(vector[i]))
+            eventBus.publish(*new (engine::event::Input(keycode[i])));
+    }
 }
 
 void sfml::Graphical::destroy() {
