@@ -13,12 +13,11 @@
 class IGame {
     public:
         virtual ~IGame() = 0;
-        virtual std::string getName() = 0;
+
+        virtual const std::string getName() const = 0;
+
         virtual void init() = 0;
-        virtual void setGraphical(IGraphical& graph) = 0;
-        virtual ecs::system::AFollow createFollow() = 0;
-        virtual ecs::system::AAI createAI() = 0;
-        virtual ecs::system::AUser createUser() = 0;
+        virtual void destroy() = 0;
     protected:
     private:
 };
