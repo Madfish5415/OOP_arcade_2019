@@ -5,6 +5,7 @@
 ** Animations.cpp
 */
 
+#include <Sprite.hpp>
 #include <component/Render.hpp>
 #include "../../../engine/ecs/World.hpp"
 #include "Animations.hpp"
@@ -33,6 +34,7 @@ void sfml::system::Animations::update() {
             curr_anim.frames++;
             render.srcRect.left += render.srcRect.width;
         }
+        render.sprite.setTextureRect(render.srcRect);
     }
     //TODO IMPLEMENT SPEED
 }
