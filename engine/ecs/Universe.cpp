@@ -14,9 +14,15 @@ using namespace ecs;
 
 Universe::Universe()
 {
+    _core = nullptr;
     _currentWorld = "none";
     _worlds["none"] = new World(*this);
     _eventbus = eventbus::EventBus();
+}
+
+Universe::Universe(core::Core& core) : _core(&core)
+{
+
 }
 
 Universe::~Universe()
@@ -54,6 +60,14 @@ void Universe::render()
 eventbus::EventBus& Universe::getEventBus()
 {
     return _eventbus;
+}
+
+core::Core& Universe::getCore()
+{
+    if (_core == nullptr)
+        throw std::exception();
+
+    return *_core;
 }
 
 World& Universe::createWorld(const std::string& name)

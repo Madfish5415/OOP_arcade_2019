@@ -11,6 +11,10 @@
 #include <map>
 #include <string>
 
+namespace core {
+class Core;
+}
+
 #include "../eventbus/EventBus.hpp"
 #include "World.hpp"
 
@@ -23,9 +27,11 @@ class Universe {
     std::map<std::string, World*> _worlds {};
     std::string _currentWorld;
     eventbus::EventBus _eventbus;
+    core::Core *_core;
 
    public:
     Universe();
+    Universe(core::Core& core);
     ~Universe();
 
    public:
@@ -35,6 +41,7 @@ class Universe {
 
    public:
     eventbus::EventBus& getEventBus();
+    core::Core& getCore();
 
    public:
     World& createWorld(const std::string& name);
