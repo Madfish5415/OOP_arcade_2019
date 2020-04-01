@@ -6,21 +6,21 @@
 */
 
 #include <vector>
+#include <component/Audio.hpp>
+#include "../system/Audio.hpp"
 #include "../../graphical/AGraphical.hpp"
 #include "../component/Audio.hpp"
 #include "../component/Render.hpp"
 #include "../system/Animations.hpp"
-#include "../system/Audio.hpp"
 #include "../system/Render.hpp"
 #include "Graphical.hpp"
 
 sfml::Graphical::Graphical(engine::eventbus::EventBus &eventBus) : AGraphical("SFML", GRAPHIC, eventBus)
 {
+    _window = nullptr;
 }
 
-sfml::Graphical::~Graphical() {
-    delete _window;
-}
+sfml::Graphical::~Graphical() = default;
 
 void sfml::Graphical::init() {
     _window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Arcade");
@@ -52,7 +52,7 @@ engine::component::AAudio& sfml::Graphical::createAudio(engine::ecs::Entity &ent
 }
 
 engine::system::ARender& sfml::Graphical::createRenderSystem(engine::ecs::World &world) {
-    auto render = new system::Render(world);
+    auto render = new system::Render(world, *_window);
     return *render;
 }
 

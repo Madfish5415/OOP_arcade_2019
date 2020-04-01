@@ -15,7 +15,7 @@ namespace graphical {
     class AGraphical : public IGraphical {
     public:
         AGraphical(const std::string &name, LIBTYPE type, engine::eventbus::EventBus &eventBus);
-        virtual ~AGraphical() = 0;
+        virtual ~AGraphical() override = 0;
 
         virtual void init() = 0;
         virtual void dispatchEvent() = 0;

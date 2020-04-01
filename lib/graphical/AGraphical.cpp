@@ -18,3 +18,5 @@ std::string graphical::AGraphical::getName() {
 graphical::IGraphical::LIBTYPE graphical::AGraphical::getType() {
     return _type;
 }
+
+graphical::AGraphical::~AGraphical() = default;

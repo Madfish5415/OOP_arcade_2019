@@ -18,9 +18,9 @@ namespace sfml {
         public:
             Audio(engine::ecs::Entity& entity, const std::vector<std::string>& paths);
             ~Audio() override ;
-            sf::SoundBuffer soundbuffer;
-            sf::Sound sound;
-            sf::Music music;
+//            sf::SoundBuffer soundbuffer;
+//            sf::Sound sound;
+//            sf::Music music;
         };
     }
 }

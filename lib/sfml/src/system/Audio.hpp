@@ -5,8 +5,8 @@
 ** Audio.hpp
 */
 
-#ifndef SFML_AUDIO_HPP
-#define SFML_AUDIO_HPP
+#ifndef SFML_AUDIO_SYS__HPP
+#define SFML_AUDIO_SYS__HPP
 
 #include "../../../engine/system/AAudio.hpp"
 #include "../../../engine/ecs/World.hpp"
@@ -24,4 +24,4 @@ namespace sfml {
             };
     }
 }
-#endif // SFML_AUDIO_HPP
+#endif // SFML_AUDIO_SYS__HPP
