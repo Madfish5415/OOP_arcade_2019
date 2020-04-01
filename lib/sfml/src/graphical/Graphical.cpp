@@ -29,14 +29,13 @@ void sfml::Graphical::init() {
 }
 
 void sfml::Graphical::dispatchEvent() {
-    std::vector<engine::event::Input::KEYCODE> keycode;
-
-    for (int first = engine::event::Input::KEYCODE::KEY_UNKNOWN; first != engine::event::Input::KEYCODE::KEY_KEYCOUNT; first++)
-        keycode.push_back(
-                static_cast<const engine::event::Input::KEYCODE>(first));
-    for (size_t i = 0; i < keycode.size(); i++) {
-        if (sf::Keyboard::isKeyPressed(KEYCODE_SFML[i]))
-            eventBus.publish(*new (engine::event::Input(keycode[i])));
+    for (auto& i : KEYSCORR) {
+        if (sf::Keyboard::isKeyPressed(i.first) {
+            auto evt = new engine::event::Input();
+            evt->code = i->second;
+            eventBus.publish(*evt);
+            delete evt;
+        }
     }
 }
 
