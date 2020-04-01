@@ -8,11 +8,11 @@
 #ifndef GAME_HPP_
 #define GAME_HPP_
 
-#include "../AGame.hpp"
+#include "../../src/AGame.hpp"
 
 class Game : public AGame {
     public:
-        Game(Universe& universe)
+        Game(Universe& universe);
         ~Game();
 
         void init() override;

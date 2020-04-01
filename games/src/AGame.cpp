@@ -9,7 +9,7 @@
 
 AGame::AGame(engine::ecs::Universe& universe, const std::string name): _universe(universe), _name(name) {}
 
-const std::string AGame::getName() const
+std::string AGame::getName()
 {
     return _name;
 }
