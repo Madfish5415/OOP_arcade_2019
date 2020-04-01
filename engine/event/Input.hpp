@@ -43,7 +43,7 @@ class Input : public eventbus::AEvent {
     };
 
    public:
-    Input();
+    Input(KEYCODE code = KEY_UNKNOWN);
     ~Input() override;
 
    public:

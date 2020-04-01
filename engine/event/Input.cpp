@@ -10,7 +10,7 @@
 using namespace engine;
 using namespace event;
 
-Input::Input() : code(KEY_UNKNOWN)
+Input::Input(KEYCODE code) : code(code)
 {
 }
 
