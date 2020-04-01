@@ -10,6 +10,9 @@
 using namespace engine;
 using namespace component;
 
-Animations::Animations(ecs::Entity& entity, const std::map<std::string, type::Animation>& list) : ecs::AComponent(entity), list(list) {}
+Animations::Animations(ecs::Entity& entity, const std::map<std::string, type::Animation>& list) : ecs::AComponent(entity), list(list) {
+    currentAnimation = list.begin()->first;
+    currentFrame = 0;
+}
 
 Animations::~Animations() = default;
