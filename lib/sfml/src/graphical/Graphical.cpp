@@ -31,7 +31,7 @@ void sfml::Graphical::dispatchEvent() {
         if (sf::Keyboard::isKeyPressed(i.first)) {
             auto evt = new engine::event::Input();
             evt->code = i.second;
-            eventBus.publish(*evt);
+            _eventBus.publish(*evt);
             delete evt;
         }
     }

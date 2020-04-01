@@ -23,7 +23,8 @@ RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=		graphical/Graphical.cpp					\
+PROJ_SRC			=		../../graphical/AGraphical.cpp			\
+							graphical/Graphical.cpp					\
 							component/Audio.cpp						\
 							component/Render.cpp					\
 							system/Animations.cpp					\
@@ -34,6 +35,8 @@ TEST_SRC			=
 
 CFLAGS				+=		-I $(INCL_DIR)
 CFLAGS				+=		-W -Wall -Wextra -Werror
+CFLAGS 				+= 		-lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system
+
 
 MAIN_OBJ			=		$(MAIN_SRC:%.cpp=$(OBJ_DIR)/%.o)
 
@@ -92,8 +95,6 @@ debug_re:			re
 
 debug_sweet:		CFLAGS += -g3
 debug_sweet:		sweet
-
-CFLAGS += -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 $(LIB_NAME):		CFLAGS += -fPIC
 $(LIB_NAME):		LDFLAGS += -shared

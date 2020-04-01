@@ -29,7 +29,7 @@ namespace graphical {
         virtual engine::system::ARender& createRenderSystem(engine::ecs::World& world) override = 0;
         virtual engine::system::AAnimations& createAnimationsSystem(engine::ecs::World& world) override = 0;
     protected:
-        engine::eventbus::EventBus& eventBus;
+        engine::eventbus::EventBus& _eventBus;
     private:
         LIBTYPE _type;
         std::string _name;
