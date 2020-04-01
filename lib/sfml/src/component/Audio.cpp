@@ -11,3 +11,5 @@
 sfml::component::Audio::Audio(engine::ecs::Entity &entity, const std::vector<std::string> &paths) : engine::component::AAudio(entity, paths) {
 
 }
+
+sfml::component::Audio::~Audio() = default;

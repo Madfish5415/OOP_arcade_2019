@@ -19,7 +19,7 @@ namespace sfml {
         class Render : public engine::system::ARender {
         public:
             explicit Render(engine::ecs::World& world);
-            ~Render() = default;
+            ~Render() override;
 
             void init() override;
             void update() override;

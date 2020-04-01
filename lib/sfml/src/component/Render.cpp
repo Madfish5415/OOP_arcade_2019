@@ -8,7 +8,7 @@
 #include "../../../engine/component/ARender.hpp"
 #include "Render.hpp"
 
-sfml::component::Render::Render(engine::ecs::Entity &entity, std::vector<std::string> &paths)  : engine::component::ARender(entity, paths) {
+sfml::component::Render::Render(engine::ecs::Entity &entity, const std::vector<std::string> &paths)  : engine::component::ARender(entity, paths) {
     if (texture.loadFromFile(paths[graphical::IGraphical::GRAPHIC]))
         sprite.setTexture(texture);
     srcRect.left = 0;
@@ -22,3 +22,5 @@ sfml::component::Render::Render(engine::ecs::Entity &entity, std::vector<std::st
     spriteFlip = NONE;
     angle = 0.0;
 }
+
+sfml::component::Render::~Render() = default;

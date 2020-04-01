@@ -16,6 +16,8 @@ sfml::system::Render::Render(engine::ecs::World &world) : ARender(world) {
 
 }
 
+sfml::system::Render::~Render() = default;
+
 void sfml::system::Render::init() {
 
 }

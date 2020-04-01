@@ -6,8 +6,6 @@
 */
 
 #include <vector>
-#include <Keyboard.hpp>
-#include "../../../engine/event/"
 #include "../../graphical/AGraphical.hpp"
 #include "../component/Audio.hpp"
 #include "../component/Render.hpp"
@@ -30,9 +28,9 @@ void sfml::Graphical::init() {
 
 void sfml::Graphical::dispatchEvent() {
     for (auto& i : KEYSCORR) {
-        if (sf::Keyboard::isKeyPressed(i.first) {
+        if (sf::Keyboard::isKeyPressed(i.first)) {
             auto evt = new engine::event::Input();
-            evt->code = i->second;
+            evt->code = i.second;
             eventBus.publish(*evt);
             delete evt;
         }
@@ -43,27 +41,27 @@ void sfml::Graphical::destroy() {
     delete _window;
 }
 
-engine::component::ARender sfml::Graphical::createRender(engine::ecs::Entity &entity, const std::vector<std::string> &paths) {
+engine::component::ARender& sfml::Graphical::createRender(engine::ecs::Entity &entity, const std::vector<std::string> &paths) {
     auto rdr = new component::Render(entity, paths);
-    return rdr;
+    return *rdr;
 }
 
-engine::component::AAudio sfml::Graphical::createAudio(engine::ecs::Entity &entity, const std::vector<std::string> &paths) {
+engine::component::AAudio& sfml::Graphical::createAudio(engine::ecs::Entity &entity, const std::vector<std::string> &paths) {
     auto audio = new component::Audio(entity, paths);
-    return audio;
+    return *audio;
 }
 
-engine::system::ARender sfml::Graphical::createRenderSystem(engine::ecs::World &world) {
+engine::system::ARender& sfml::Graphical::createRenderSystem(engine::ecs::World &world) {
     auto render = new system::Render(world);
-    return render;
+    return *render;
 }
 
-engine::system::AAudio sfml::Graphical::createAudioSystem(engine::ecs::World &world) {
+engine::system::AAudio& sfml::Graphical::createAudioSystem(engine::ecs::World &world) {
     auto audio = new system::Audio(world);
-    return audio;
+    return *audio;
 }
 
-engine::system::AAnimations sfml::Graphical::createAnimationsSystem(engine::ecs::World &world) {
+engine::system::AAnimations& sfml::Graphical::createAnimationsSystem(engine::ecs::World &world) {
     auto anim = new system::Animations(world);
-    return anim;
+    return *anim;
 }

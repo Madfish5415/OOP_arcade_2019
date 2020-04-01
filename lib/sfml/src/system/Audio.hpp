@@ -16,7 +16,7 @@ namespace sfml {
         class Audio : public engine::system::AAudio {
             public:
                 explicit Audio(engine::ecs::World &world);
-                ~Audio() = default;
+                ~Audio() override;
 
                 void init() override;
                 void update() override;

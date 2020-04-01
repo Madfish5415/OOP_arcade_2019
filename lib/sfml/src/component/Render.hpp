@@ -10,7 +10,7 @@
 
 #include <map>
 #include "SFML/Graphics.hpp"
-#include "Rect.hpp"
+
 #include "../../../graphical/IGraphical.hpp"
 
 namespace sfml {
@@ -24,8 +24,8 @@ namespace sfml {
         using sfmlAngle = float;
         class Render : public engine::component::ARender {
         public:
-            Render(engine::ecs::Entity& entity, std::vector<std::string>& paths);
-            ~Render() = default;;
+            Render(engine::ecs::Entity& entity, const std::vector<std::string>& paths);
+            ~Render() override;
             sf::Sprite sprite;
             sf::Texture texture;
             sf::IntRect srcRect, destRect;

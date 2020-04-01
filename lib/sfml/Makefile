@@ -93,6 +93,8 @@ debug_re:			re
 debug_sweet:		CFLAGS += -g3
 debug_sweet:		sweet
 
+CFLAGS += -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+
 $(LIB_NAME):		CFLAGS += -fPIC
 $(LIB_NAME):		LDFLAGS += -shared
 $(LIB_NAME):		$(PROJ_OBJ)

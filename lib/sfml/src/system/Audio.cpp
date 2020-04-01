@@ -11,6 +11,8 @@ sfml::system::Audio::Audio(engine::ecs::World &world)  : engine::system::AAudio(
 
 }
 
+sfml::system::Audio::~Audio() = default;
+
 void sfml::system::Audio::init() {
 }
 

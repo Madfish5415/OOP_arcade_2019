@@ -8,13 +8,13 @@
 #ifndef SFML_GRAPHICAL_HPP
 #define SFML_GRAPHICAL_HPP
 
-#include <Keyboard.hpp>
 #include <map>
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "../../../engine/ecs/Universe.hpp"
 #include "../../../engine/ecs/World.hpp"
 #include "../../../engine/eventbus/EventBus.hpp"
 #include "../../../engine/component/AAudio.hpp"
+#include "../../../engine/event/Input.hpp"
 #include "../../graphical/AGraphical.hpp"
 
 static const std::map<sf::Keyboard::Key, engine::event::Input::KEYCODE> KEYSCORR = {
@@ -132,12 +132,12 @@ class Graphical : public graphical::AGraphical {
         void dispatchEvent() override;
         void destroy() override;
 
-        engine::component::AAudio createAudio(engine::ecs::Entity &entity, const std::vector<std::string>& paths) override;
-        engine::component::ARender createRender(engine::ecs::Entity &entity, const std::vector<std::string>& paths) override;
+        engine::component::AAudio& createAudio(engine::ecs::Entity &entity, const std::vector<std::string>& paths) override;
+        engine::component::ARender& createRender(engine::ecs::Entity &entity, const std::vector<std::string>& paths) override;
 
-        engine::system::AAudio createAudioSystem(engine::ecs::World& world) override;
-        engine::system::ARender createRenderSystem(engine::ecs::World& world) override;
-        engine::system::AAnimations createAnimationsSystem(engine::ecs::World& world) override;
+        engine::system::AAudio& createAudioSystem(engine::ecs::World& world) override;
+        engine::system::ARender& createRenderSystem(engine::ecs::World& world) override;
+        engine::system::AAnimations& createAnimationsSystem(engine::ecs::World& world) override;
     private:
         sf::RenderWindow* _window;
     };
