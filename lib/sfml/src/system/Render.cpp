@@ -5,6 +5,7 @@
 ** Render.cpp
 */
 
+#include <algorithm>
 #include "Render.hpp"
 #include "../component/Render.hpp"
 #include "../../../engine/ecs/World.hpp"
@@ -30,13 +31,15 @@ void sfml::system::Render::update() {
 }
 
 void sfml::system::Render::render() {
-    std::vector<std::shared_ptr<Entity>> entities = _world.getEntities<sfml::system::Render>();
-
+    auto entities = _world.getEntities<sfml::system::Render, engine::component::Transform>();
+    std::sort(entities.begin(), entities.end(), [](const Entity& lhs, const Entity& rhs) {
+        return lhs.getComponent<engine::component::Transform>().layer < rhs.getComponent<engine::component::Transform>().layer;
+    });
     if (!entities.empty()) {
         auto comp1 = entities[0].getComponent<ecs::sfml::component::Render>;
         dynamic_cast<component::Render>(comp1).window.clear()
     }
-    for (auto & i : entities) {
+    for (auto& i : entities) {
         auto comp = i.getComponent<sfml::component::Render>;
         comp.window.draw(comp.sprite);
     }
