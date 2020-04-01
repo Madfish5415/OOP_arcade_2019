@@ -5,7 +5,28 @@
 ** ARender.hpp
 */
 
-#ifndef OOP_ARCADE_2019_ARENDER_HPP
-#define OOP_ARCADE_2019_ARENDER_HPP
+#ifndef OOP_ARCADE_2019_ARENDER_SYSTEM_HPP
+#define OOP_ARCADE_2019_ARENDER_SYSTEM_HPP
 
-#endif // OOP_ARCADE_2019_ARENDER_HPP
+#include "../ecs/ASystem.hpp"
+
+namespace engine {
+
+namespace system {
+
+class ARender : public ecs::ASystem {
+   public:
+    explicit ARender(ecs::World& world);
+    ~ARender() override = 0;
+
+   public:
+    void init() override = 0;
+    void update() override = 0;
+    void render() override = 0;
+};
+
+}  // namespace system
+
+}  // namespace engine
+
+#endif  // OOP_ARCADE_2019_ARENDER_SYSTEM_HPP
