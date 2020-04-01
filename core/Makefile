@@ -23,7 +23,7 @@ RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=
+PROJ_SRC			=		Core.cpp
 
 TEST_SRC			=
 

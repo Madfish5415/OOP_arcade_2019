@@ -25,6 +25,8 @@ BIN_GAME_PACMAN		=			lib_arcade_pacman.so
 DIR_GAME_NIBBLER	=			./games/nibbler
 BIN_GAME_NIBBLER	=			lib_arcade_nibbler.so
 
+all:		core games graphicals
+
 core:
 			$(CD) $(DIR_CORE) && $(MAKE)
 			$(CP) $(DIR_CORE)/$(BIN_CORE) ./
@@ -42,8 +44,6 @@ games:
 			$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) lib
 			$(CP) $(DIR_GAME_PACMAN)/$(BIN_GAME_PACMAN) ./
 			$(CP) $(DIR_GAME_NIBBLER)/$(BIN_GAME_NIBBLER) ./
-
-all:		core games graphicals
 
 clean:
 			$(CD) $(DIR_CORE) && $(MAKE) clean

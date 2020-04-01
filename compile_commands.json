@@ -1,1 +1,36 @@
-[]
+[
+ {
+  "directory": "/home/lucas/Delivery/2019/OOP/Github/OOP_arcade_2019/core",
+  "arguments": [
+   "g++",
+   "-I",
+   "src",
+   "-W",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-c",
+   "src/main.cpp",
+   "-o",
+   "obj/main.o"
+  ],
+  "file": "src/main.cpp"
+ },
+ {
+  "directory": "/home/lucas/Delivery/2019/OOP/Github/OOP_arcade_2019/core",
+  "arguments": [
+   "g++",
+   "-I",
+   "src",
+   "-W",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-c",
+   "src/Core.cpp",
+   "-o",
+   "obj/Core.o"
+  ],
+  "file": "src/Core.cpp"
+ }
+]
