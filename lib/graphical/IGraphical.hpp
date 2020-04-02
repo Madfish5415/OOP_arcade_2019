@@ -25,7 +25,7 @@ namespace graphical {
             GRAPHIC,
             DEBUG
         };
-        virtual ~IGraphical() = 0;
+        virtual ~IGraphical() = default;
         virtual void init() = 0;
         virtual void dispatchEvent() = 0;
         virtual void destroy() = 0;
