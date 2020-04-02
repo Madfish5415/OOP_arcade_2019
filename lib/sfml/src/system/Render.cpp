@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "../../../engine/component/Transform.hpp"
+#include "../../../engine/component/Size.hpp"
 #include "../../../engine/ecs/Entity.hpp"
 #include "../../../engine/ecs/World.hpp"
 #include "../component/Render.hpp"
@@ -29,13 +30,17 @@ void Render::init()
 
 void Render::update()
 {
-    auto entities = _world.getEntities<component::Render, engine::component::Transform>();
+    auto entities = _world.getEntities<component::Render, engine::component::Transform, engine::component::Size>();
 
     for (auto& i : entities) {
-        auto& render = i.get().getComponent<component::Render>();
+        auto& render = i.get().getComponent<engine::component::ARender>();
         auto& pos = i.get().getComponent<engine::component::Transform>();
-
-        render.sprite.setPosition(pos.position.x, pos.position.y);
+        auto& size = i.get().getComponent<engine::component::Size>();
+        dynamic_cast<component::Render&>(render).srcRect.width = size.width;
+        dynamic_cast<component::Render&>(render).srcRect.height = size.height;
+        dynamic_cast<component::Render&>(render).sprite.setScale(dynamic_cast<component::Render&>(render).destRect.width / dynamic_cast<component::Render&>(render).srcRect.width, 
+            dynamic_cast<component::Render&>(render).destRect.height / dynamic_cast<component::Render&>(render).srcRect.height);
+        dynamic_cast<component::Render&>(render).sprite.setPosition(pos.position.x, pos.position.y);
     }
 }
 
@@ -47,18 +52,10 @@ void Render::render()
         return lhs.getComponent<engine::component::Transform>().layer < rhs.getComponent<engine::component::Transform>().layer;
     });
 
-    if (!entities.empty()) {
-        auto comp1 = entities[0].get().getComponent<component::Render>();
-        window.clear();
-    }
-
+    window.clear();
     for (auto& i : entities) {
-        auto comp = i.get().getComponent<component::Render>();
-        window.draw(comp.sprite);
+        auto& comp = i.get().getComponent<engine::component::ARender>();
+        window.draw(dynamic_cast<component::Render&>(comp).sprite);
     }
-
-    if (!entities.empty()) {
-        auto comp1 = entities[0].get().getComponent<component::Render>();
-        window.display();
-    }
+    window.display();
 }

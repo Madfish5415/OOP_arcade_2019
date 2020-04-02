@@ -36,6 +36,7 @@ PROJ_SRC			=		../../graphical/AGraphical.cpp				\
 							$(ENGINE_DIR)/component/Animations.cpp		\
 							$(ENGINE_DIR)/component/ARender.cpp			\
 							$(ENGINE_DIR)/component/Transform.cpp		\
+							$(ENGINE_DIR)/component/Size.cpp			\
 							$(ENGINE_DIR)/ecs/AComponent.cpp			\
 							$(ENGINE_DIR)/ecs/ASystem.cpp				\
 							$(ENGINE_DIR)/ecs/Entity.cpp				\
