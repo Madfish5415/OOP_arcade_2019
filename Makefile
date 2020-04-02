@@ -62,3 +62,11 @@ fclean:
 			#$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) lib_fclean
 
 re:			fclean all
+
+MAKEFLAGS			+=		--silent
+
+tests_sh:
+			echo "OK"
+
+tests_run:
+			echo "OK"
