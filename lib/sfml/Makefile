@@ -24,13 +24,14 @@ RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=		../../graphical/AGraphical.cpp			\
-							graphical/Graphical.cpp					\
-							component/Audio.cpp						\
-							component/Render.cpp					\
-							system/Animations.cpp					\
-							system/Audio.cpp						\
-							system/Render.cpp						\
+PROJ_SRC			=		../../graphical/AGraphical.cpp				\
+							graphical/Graphical.cpp						\
+							component/Audio.cpp							\
+							component/Render.cpp						\
+							system/Animations.cpp						\
+							system/Audio.cpp							\
+							system/Render.cpp							\
+							create.cpp									\
 							$(ENGINE_DIR)/component/AAudio.cpp			\
 							$(ENGINE_DIR)/component/Animations.cpp		\
 							$(ENGINE_DIR)/component/ARender.cpp			\
