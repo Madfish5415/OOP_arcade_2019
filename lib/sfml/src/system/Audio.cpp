@@ -7,18 +7,23 @@
 
 #include "Audio.hpp"
 
-sfml::system::Audio::Audio(engine::ecs::World &world)  : engine::system::AAudio(world) {
+using namespace sfml;
+using namespace system;
 
+Audio::Audio(engine::ecs::World& world) : engine::system::AAudio(world)
+{
 }
 
-sfml::system::Audio::~Audio() = default;
+Audio::~Audio() = default;
 
-void sfml::system::Audio::init() {
+void Audio::init()
+{
 }
 
-void sfml::system::Audio::update() {
+void Audio::update()
+{
 }
 
-void sfml::system::Audio::render() {
+void Audio::render()
+{
 }
-
