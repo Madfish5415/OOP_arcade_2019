@@ -23,12 +23,15 @@ RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=		Core.cpp
+PROJ_SRC			=		Core.cpp				\
+							DynamicLib.cpp
 
 TEST_SRC			=
 
 CFLAGS				+=		-I $(INCL_DIR)
 CFLAGS				+=		-W -Wall -Wextra -Werror
+
+LDFLAGS				+= 		-ldl
 
 MAIN_OBJ			=		$(MAIN_SRC:%.cpp=$(OBJ_DIR)/%.o)
 

@@ -8,38 +8,43 @@
 #ifndef OOP_ARCADE_2019_CORE_HPP
 #define OOP_ARCADE_2019_CORE_HPP
 
-#include <string>
 #include <map>
+#include <string>
 
 #include "../../engine/ecs/Universe.hpp"
+#include "../../games/game/IGame.hpp"
+#include "../../lib/graphical/IGraphical.hpp"
+#include "DynamicLib.hpp"
 
 namespace core {
-    class Core {
-       private:
-        std::map<std::string, graphical::IGraphical> _graphicals;
-        std::map<std::string, game::IGame> _games;
-        std::string _currentGraphical;
-        std::string _currentGame;
-        engine::ecs::Universe _universe;
 
-        Core();
-        ~Core();
+class Core {
+   private:
+    std::map<std::string, DynamicLib<graphical::IGraphical>*> _graphicals;
+    std::map<std::string, DynamicLib<game::IGame>*> _games;
+    std::string _currentGraphical;
+    std::string _currentGame;
+    engine::ecs::Universe _universe;
 
-        void loadGames();
-        void loadGraphics();
+    Core();
+    ~Core();
 
-        engine::ecs::Universe& getUniverse() const;
+    void loadGames();
+    void loadGraphics();
 
-        bool hasGame(const std::string& name) const;
-        game::IGame& getGame(const std::string& name) const;
-        game::IGame& getCurrentGame() const;
-        void setCurrentGame(const std::string& name);
+    engine::ecs::Universe& getUniverse() const;
 
-        bool hasGraphical(const std::string& name) const;
-        graphical::IGraphical& getGraphical(const std::string& name) const;
-        graphical::IGraphical& getCurrentGraphical() const;
-        void setCurrentGraphical(const std::string& name);
-    };
-}
+    bool hasGame(const std::string& name) const;
+    game::IGame& getGame(const std::string& name) const;
+    game::IGame& getCurrentGame() const;
+    void setCurrentGame(const std::string& name);
 
-#endif // OOP_ARCADE_2019_CORE_HPP
+    bool hasGraphical(const std::string& name) const;
+    graphical::IGraphical& getGraphical(const std::string& name) const;
+    graphical::IGraphical& getCurrentGraphical() const;
+    void setCurrentGraphical(const std::string& name);
+};
+
+}  // namespace core
+
+#endif  // OOP_ARCADE_2019_CORE_HPP

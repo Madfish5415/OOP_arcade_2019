@@ -32,5 +32,22 @@
    "obj/Core.o"
   ],
   "file": "src/Core.cpp"
+ },
+ {
+  "directory": "/home/lucas/Delivery/2019/OOP/Github/OOP_arcade_2019/core",
+  "arguments": [
+   "g++",
+   "-I",
+   "src",
+   "-W",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-c",
+   "src/DynamicLib.cpp",
+   "-o",
+   "obj/DynamicLib.o"
+  ],
+  "file": "src/DynamicLib.cpp"
  }
 ]
