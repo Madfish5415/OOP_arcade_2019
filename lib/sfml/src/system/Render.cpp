@@ -30,17 +30,23 @@ void Render::init()
 
 void Render::update()
 {
-    auto entities = _world.getEntities<component::Render, engine::component::Transform, engine::component::Size>();
+    auto entities_transform = _world.getEntities<component::Render, engine::component::Transform>();
+    auto entities_size = _world.getEntities<component::Render, engine::component::Size>();
 
-    for (auto& i : entities) {
-        auto& render = i.get().getComponent<engine::component::ARender>();
+    for (auto& i : entities_transform) {
+        auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
         auto& pos = i.get().getComponent<engine::component::Transform>();
+        
+        render.sprite.setPosition(pos.position.x, pos.position.y);
+    }
+    for (auto& i : entities_size) {
+        auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
         auto& size = i.get().getComponent<engine::component::Size>();
-        dynamic_cast<component::Render&>(render).srcRect.width = size.width;
-        dynamic_cast<component::Render&>(render).srcRect.height = size.height;
-        dynamic_cast<component::Render&>(render).sprite.setScale(dynamic_cast<component::Render&>(render).destRect.width / dynamic_cast<component::Render&>(render).srcRect.width, 
-            dynamic_cast<component::Render&>(render).destRect.height / dynamic_cast<component::Render&>(render).srcRect.height);
-        dynamic_cast<component::Render&>(render).sprite.setPosition(pos.position.x, pos.position.y);
+
+        render.srcRect.width = size.width;
+        render.srcRect.height = size.height;
+        render.sprite.setScale(dynamic_cast<component::Render&>(render).destRect.width / dynamic_cast<component::Render&>(render).srcRect.width, 
+        render.destRect.height / dynamic_cast<component::Render&>(render).srcRect.height);
     }
 }
 
@@ -48,6 +54,8 @@ void Render::render()
 {
     auto entities = _world.getEntities<Render, engine::component::Transform>();
 
+    if (!window.isOpen)
+        return;
     std::sort(entities.begin(), entities.end(), [](const engine::ecs::Entity& lhs, const engine::ecs::Entity& rhs) {
         return lhs.getComponent<engine::component::Transform>().layer < rhs.getComponent<engine::component::Transform>().layer;
     });
