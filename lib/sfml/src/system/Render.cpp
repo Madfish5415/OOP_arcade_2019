@@ -45,8 +45,8 @@ void Render::update()
 
         render.srcRect.width = size.width;
         render.srcRect.height = size.height;
-        render.sprite.setScale(dynamic_cast<component::Render&>(render).destRect.width / dynamic_cast<component::Render&>(render).srcRect.width, 
-        render.destRect.height / dynamic_cast<component::Render&>(render).srcRect.height);
+        render.sprite.setScale(render.destRect.width / render.srcRect.width, 
+        render.destRect.height / render.srcRect.height);
     }
 }
 
@@ -54,7 +54,7 @@ void Render::render()
 {
     auto entities = _world.getEntities<Render, engine::component::Transform>();
 
-    if (!window.isOpen)
+    if (!window.isOpen())
         return;
     std::sort(entities.begin(), entities.end(), [](const engine::ecs::Entity& lhs, const engine::ecs::Entity& rhs) {
         return lhs.getComponent<engine::component::Transform>().layer < rhs.getComponent<engine::component::Transform>().layer;
