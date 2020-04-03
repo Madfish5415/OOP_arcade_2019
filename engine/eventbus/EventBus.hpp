@@ -25,7 +25,7 @@ class EventBus {
    private:
     class ICallbackHandler {
        public:
-        virtual ~ICallbackHandler() = 0;
+        virtual ~ICallbackHandler() = default;
 
        public:
         virtual void call(AEvent& event) = 0;
@@ -44,7 +44,7 @@ class EventBus {
        public:
         void call(AEvent& event) override
         {
-            (_subscriber.*_callback)(static_cast<E>(event));
+            (_subscriber.*_callback)(dynamic_cast<E&>(event));
         };
     };
 

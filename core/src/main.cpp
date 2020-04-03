@@ -28,53 +28,23 @@ int main()
 
     engine::ecs::Universe& universe = core.getUniverse();
 
+
+
     core.getCurrentGraphical().init();
+    core.setCurrentGraphical("sfml");
 
-    std::string name = "menu";
+    core.getCurrentGame().init();
 
-    engine::ecs::World& world = universe.createWorld(name);
-    engine::ecs::World& worldGet = universe.getWorld(name);
-    universe.setCurrentWorld(name);
-    engine::ecs::World& worldCur = universe.getCurrentWorld();
+    universe.init();
 
-    if (&world != &worldGet)
-        throw std::exception();
+    while (core._run) {
+        core.getCurrentGraphical().dispatchEvent();
+        universe.update();
+        universe.render();
+    }
 
-    if (&world != &worldCur)
-        throw std::exception();
-
-    if (!universe.hasWorld(name))
-        throw std::exception();
-
-    engine::ecs::Entity& pacman = world.createEntity();
-
-    auto& pacmanMotion = pacman.addComponent<engine::component::Motion>();
-    auto& motionTest = pacman.getComponent<engine::component::Motion>();
-
-    if (&motionTest != &pacmanMotion)
-        throw std::exception();
-
-    world.addToGroup(pacman, "player");
-    if (!world.hasGroup(pacman, "player"))
-        throw std::exception();
-
-    world.removeFromGroup(pacman, "player");
-    if (world.hasGroup(pacman, "player"))
-        throw std::exception();
-
-    pacman.addComponent<engine::component::Hitbox>();
-    pacman.addComponent<engine::component::Size>();
-    pacman.addComponent<engine::component::Transform>();
-
-    const std::vector<std::string> paths {"./assets/pacman.jpg", "./assets/pacman.jpg", "./assets/pacman.jpg"};
-    auto &renderPacman = pacman.addComponent<engine::component::ARender>(paths);
-
-    if (&renderPacman != &pacman.getComponent<engine::component::ARender>())
-        throw std::exception();
-
-    core.setCurrentGraphical("sdl2");
-
-    universe.deleteWorld(name);
+    core.getCurrentGraphical().destroy();
+    core.getCurrentGame().destroy();
 
     return 0;
 }

@@ -24,8 +24,10 @@ RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=		core/Core.cpp					\
-							core/DynamicLib.cpp				\
+PROJ_SRC			=		core/Core.cpp				\
+							core/DynamicLib.cpp			\
+							menu/Menu.cpp				\
+							../../games/game/AGame.cpp	\
 
 ENGINE_SRC			=		component/AAI.cpp			\
 							component/AAudio.cpp		\
@@ -41,6 +43,7 @@ ENGINE_SRC			=		component/AAI.cpp			\
 							ecs/Entity.cpp				\
 							ecs/Universe.cpp			\
 							ecs/World.cpp				\
+							event/Close.cpp				\
 							event/Collision.cpp			\
 							event/Input.cpp				\
 							eventbus/AEvent.cpp			\

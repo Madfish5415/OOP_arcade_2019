@@ -9,6 +9,8 @@
 
 #include "../../../engine/component/ARender.hpp"
 
+#include <iostream>
+
 using namespace sfml;
 using namespace component;
 
@@ -17,6 +19,8 @@ Render::Render(engine::ecs::Entity& entity, const std::vector<std::string>& path
 {
     if (texture.loadFromFile(paths[graphical::GRAPHIC]))
         sprite.setTexture(texture);
+
+    std::cout << texture.getMaximumSize() << std::endl;
 
     srcRect.left = 0;
     srcRect.top = 0;
@@ -29,6 +33,8 @@ Render::Render(engine::ecs::Entity& entity, const std::vector<std::string>& path
     destRect.height = texture.getSize().y;
 
     spriteFlip = NONE;
+
+    sprite.setTextureRect(srcRect);
 
     angle = 0.0;
 }

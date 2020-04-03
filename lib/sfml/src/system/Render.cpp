@@ -8,6 +8,7 @@
 #include "Render.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 #include "../../../engine/component/Transform.hpp"
 #include "../../../engine/component/Size.hpp"
@@ -30,8 +31,8 @@ void Render::init()
 
 void Render::update()
 {
-    auto entities_transform = _world.getEntities<component::Render, engine::component::Transform>();
-    auto entities_size = _world.getEntities<component::Render, engine::component::Size>();
+    auto entities_transform = _world.getEntities<engine::component::ARender, engine::component::Transform>();
+    auto entities_size = _world.getEntities<engine::component::ARender, engine::component::Size>();
 
     for (auto& i : entities_transform) {
         auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
@@ -52,7 +53,7 @@ void Render::update()
 
 void Render::render()
 {
-    auto entities = _world.getEntities<Render, engine::component::Transform>();
+    auto entities = _world.getEntities<engine::component::ARender, engine::component::Transform>();
 
     if (!window.isOpen())
         return;
@@ -62,8 +63,8 @@ void Render::render()
 
     window.clear();
     for (auto& i : entities) {
-        auto& comp = i.get().getComponent<engine::component::ARender>();
-        window.draw(dynamic_cast<component::Render&>(comp).sprite);
+        auto& comp = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
+        window.draw(comp.sprite);
     }
     window.display();
 }

@@ -33,6 +33,18 @@ void Graphical::init()
 
 void Graphical::dispatchEvent()
 {
+    sf::Event event;
+
+    while (_window->pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed) {
+            _window->close();
+            auto evt = new engine::event::Close();
+            _eventBus.publish(*evt);
+            delete evt;
+        }
+    }
+
     for (auto& i : KEYSCORR) {
         if (sf::Keyboard::isKeyPressed(i.first)) {
             auto evt = new engine::event::Input();

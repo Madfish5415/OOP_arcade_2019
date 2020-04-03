@@ -15,6 +15,7 @@
 #include "../../../engine/ecs/Universe.hpp"
 #include "../../../engine/ecs/World.hpp"
 #include "../../../engine/event/Input.hpp"
+#include "../../../engine/event/Close.hpp"
 #include "../../../engine/eventbus/EventBus.hpp"
 #include "../../graphical/AGraphical.hpp"
 
