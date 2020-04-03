@@ -5,11 +5,11 @@
 ** World.cpp
 */
 
-#include <algorithm>
-
 #include "World.hpp"
 
-#include "../../core/src/Core.hpp"
+#include <algorithm>
+
+#include "../../core/src/core/Core.hpp"
 
 using namespace engine;
 using namespace ecs;
@@ -136,15 +136,15 @@ void World::removeFromGroup(Entity& entity, const std::string& group)
 }
 
 template <>
-system::AAudio& World::addSystem<system::AAudio>() {
-    std::type_index id = typeid(system::AAudio);
+engine::system::AAudio& World::addSystem<engine::system::AAudio>() {
+    std::type_index id = typeid(engine::system::AAudio);
 
     for (auto &s : _systems) {
         if (s.first == id)
             throw std::exception();
     }
 
-    system::AAudio* system = getUniverse().getCore().getCurrentGraphical().createAudioSystem(*this);
+    engine::system::AAudio* system = &(getUniverse().getCore().getCurrentGraphical().createAudioSystem(*this));
 
     std::reference_wrapper<ASystem> ref_wrap = std::ref(*system);
 
@@ -154,15 +154,15 @@ system::AAudio& World::addSystem<system::AAudio>() {
 }
 
 template <>
-system::AAnimations& World::addSystem<system::AAnimations>() {
-    std::type_index id = typeid(system::AAnimations);
+engine::system::AAnimations& World::addSystem<engine::system::AAnimations>() {
+    std::type_index id = typeid(engine::system::AAnimations);
 
     for (auto &s : _systems) {
         if (s.first == id)
             throw std::exception();
     }
 
-    system::AAnimations* system = getUniverse().getCore().getCurrentGraphical().createAnimationsSystem(*this);
+    engine::system::AAnimations* system = &(getUniverse().getCore().getCurrentGraphical().createAnimationsSystem(*this));
 
     std::reference_wrapper<ASystem> ref_wrap = std::ref(*system);
 
@@ -172,15 +172,15 @@ system::AAnimations& World::addSystem<system::AAnimations>() {
 }
 
 template <>
-system::ARender& World::addSystem<system::ARender>() {
-    std::type_index id = typeid(system::ARender);
+engine::system::ARender& World::addSystem<engine::system::ARender>() {
+    std::type_index id = typeid(engine::system::ARender);
 
     for (auto &s : _systems) {
         if (s.first == id)
             throw std::exception();
     }
 
-    system::ARender* system = getUniverse().getCore().getCurrentGraphical().createRenderSystem(*this);
+    engine::system::ARender* system = &(getUniverse().getCore().getCurrentGraphical().createRenderSystem(*this));
 
     std::reference_wrapper<ASystem> ref_wrap = std::ref(*system);
 
