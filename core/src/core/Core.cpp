@@ -11,6 +11,7 @@
 
 #include <filesystem>
 #include <regex>
+#include <iostream>
 
 using namespace core;
 
@@ -61,7 +62,7 @@ void Core::loadGraphics()
 
     for (auto& file : std::filesystem::directory_iterator(path)) {
         if (std::regex_match(file.path().string(), regex)) {
-            std::string name = file.path().string().substr(21, (file.path().string().length() - 24));
+            std::string name = file.path().string().substr(17, (file.path().string().length() - 20));
 
             _graphicals.emplace(name, new DynamicLib<graphical::IGraphical>(file.path().string(), &_universe->getEventBus()));
         }
@@ -132,5 +133,48 @@ void Core::setCurrentGraphical(const std::string& name)
     if (!_graphicals.count(name))
         throw std::exception();
 
+    if (name == _currentGraphical)
+        return;
+
+    auto& lib = _graphicals[name]->get();
+    auto& oldlib = _graphicals[_currentGraphical]->get();
+
     _currentGraphical = name;
+
+    lib.init();
+
+    auto entities = _universe->getCurrentWorld().getEntities<engine::component::AAudio>();
+
+    for (auto& ent_ref : entities) {
+        auto& audio = ent_ref.get().getComponent<engine::component::AAudio>();
+        const std::vector<std::string> path = audio.paths;
+        ent_ref.get().removeComponent<engine::component::AAudio>();
+        ent_ref.get().addComponent<engine::component::AAudio>(path);
+    }
+
+    entities = _universe->getCurrentWorld().getEntities<engine::component::ARender>();
+
+    for (auto& ent_ref : entities) {
+        auto& render = ent_ref.get().getComponent<engine::component::ARender>();
+        const std::vector<std::string> path = render.paths;
+        ent_ref.get().removeComponent<engine::component::ARender>();
+        ent_ref.get().addComponent<engine::component::ARender>(path);
+    }
+
+    if (_universe->getCurrentWorld().hasSystems<engine::system::AAudio>()) {
+        _universe->getCurrentWorld().removeSystem<engine::system::AAudio>();
+        _universe->getCurrentWorld().addSystem<engine::system::AAudio>();
+    }
+
+    if (_universe->getCurrentWorld().hasSystems<engine::system::AAnimations>()) {
+        _universe->getCurrentWorld().removeSystem<engine::system::AAnimations>();
+        _universe->getCurrentWorld().addSystem<engine::system::AAnimations>();
+    }
+
+    if (_universe->getCurrentWorld().hasSystems<engine::system::ARender>()) {
+        _universe->getCurrentWorld().removeSystem<engine::system::ARender>();
+        _universe->getCurrentWorld().addSystem<engine::system::ARender>();
+    }
+
+    oldlib.destroy();
 }
