@@ -62,8 +62,8 @@ void Graphical::destroy()
 
 engine::component::ARender& Graphical::createRender(engine::ecs::Entity& entity, const std::vector<std::string>& paths)
 {
-    auto rdr = new component::Render(entity, paths, _renderer);
-    return *rdr;
+    auto render = new component::Render(entity, paths, _renderer);
+    return *render;
 }
 
 engine::component::AAudio& Graphical::createAudio(engine::ecs::Entity& entity, const std::vector<std::string>& paths)
