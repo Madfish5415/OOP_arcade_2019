@@ -11,6 +11,8 @@
 #include <string>
 #include "IGame.hpp"
 
+#include "../../engine/ecs/Universe.hpp"
+
 namespace game {
     class AGame : public IGame {
         public:
