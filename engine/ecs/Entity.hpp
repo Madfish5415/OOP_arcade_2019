@@ -20,6 +20,7 @@ class World;
 #include <algorithm>
 
 #include "AComponent.hpp"
+#include "../../lib/graphical/IGraphical.hpp"
 
 namespace engine {
 

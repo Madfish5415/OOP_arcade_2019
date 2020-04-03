@@ -79,7 +79,7 @@ class World {
 
         T* system = new T(*this, mArgs...);
 
-        std::reference_wrapper<AComponent> ref_wrap = std::ref(*system);
+        std::reference_wrapper<ASystem> ref_wrap = std::ref(*system);
 
         _systems.emplace(id, ref_wrap);
 
