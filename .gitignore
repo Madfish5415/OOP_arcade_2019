@@ -1,5 +1,6 @@
 # Binaries
 a.out
+arcade
 
 # Objects
 *.o
@@ -20,3 +21,6 @@ compile_commands.json
 
 # Visual Studio Code
 .vscode/
+
+# Libraries
+lib_arcade_*.so

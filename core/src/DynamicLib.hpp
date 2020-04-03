@@ -14,17 +14,20 @@
 
 namespace core {
 
-template <typename T, typename... TArgs>
+template <typename T>
 class DynamicLib {
    public:
+    template <typename... TArgs>
     explicit DynamicLib(const std::string& path, TArgs... args) : _path(path), _lib(nullptr), _handle(nullptr) {
-        _handle = dlopen(_path, RTLD_LAZY);
+        using creator = T* (*)(TArgs... args);
+
+        _handle = dlopen(_path.c_str(), RTLD_LAZY);
 
         if (!_handle)
             throw std::exception();
 
         dlerror();
-        auto createFunc = (T*) dlsym(_handle, "create");
+        auto createFunc = reinterpret_cast<creator>(dlsym(_handle, "create"));
 
         if (dlerror()) {
             dlclose(_handle);

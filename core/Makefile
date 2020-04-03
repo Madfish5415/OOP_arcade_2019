@@ -16,15 +16,44 @@ INCL_DIR			=		src
 OBJ_DIR				=		obj
 SRC_DIR				=		src
 TEST_DIR			=		tests
+ENGINE_DIR			=		../engine
 
 AR					=		ar rcs
-CC					=		g++
+CC					=		g++ -std=c++17
 RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=		Core.cpp				\
-							DynamicLib.cpp
+PROJ_SRC			=		Core.cpp						\
+							DynamicLib.cpp					\
+
+ENGINE_SRC			=		component/AAI.cpp			\
+							component/AAudio.cpp		\
+							component/Animations.cpp	\
+							component/ARender.cpp		\
+							component/AUser.cpp			\
+							component/Hitbox.cpp		\
+							component/Motion.cpp		\
+							component/Size.cpp			\
+							component/Transform.cpp		\
+							ecs/AComponent.cpp			\
+							ecs/ASystem.cpp				\
+							ecs/Entity.cpp				\
+							ecs/Universe.cpp			\
+							ecs/World.cpp				\
+							event/Collision.cpp			\
+							event/Input.cpp				\
+							eventbus/AEvent.cpp			\
+							eventbus/EventBus.cpp		\
+							system/AAI.cpp				\
+							system/AAnimations.cpp		\
+							system/AAudio.cpp			\
+							system/ARender.cpp			\
+							system/AUser.cpp			\
+							system/Movement.cpp			\
+							system/Physics.cpp			\
+							type/Animation.cpp			\
+							type/Vector2D.cpp			\
 
 TEST_SRC			=
 
@@ -36,6 +65,8 @@ LDFLAGS				+= 		-ldl
 MAIN_OBJ			=		$(MAIN_SRC:%.cpp=$(OBJ_DIR)/%.o)
 
 PROJ_OBJ			=		$(PROJ_SRC:%.cpp=$(OBJ_DIR)/%.o)
+
+ENGINE_OBJ			=		$(ENGINE_SRC:%.cpp=$(ENGINE_DIR)/%.o)
 
 TEST_OBJ			=		$(TEST_SRC:%.cpp=$(OBJ_DIR)/%.o)
 
@@ -65,8 +96,14 @@ $(OBJ_DIR)/%.o:		$(TEST_DIR)/%.cpp
 					&& echo "$< $(GREEN_COLOR)successfully compiled$(NO_COLOR)" \
 					|| { echo "$< $(RED_COLOR)couldn't be compiled$(NO_COLOR)"; exit 1; }
 
-$(NAME):			$(MAIN_OBJ) $(PROJ_OBJ)
-					$(CC) $(MAIN_OBJ) $(PROJ_OBJ) -o $(NAME) $(LDFLAGS) $(LDLIBS) \
+$(ENGINE_DIR)/%.o:	$(ENGINE_DIR)/%.cpp
+					mkdir -p $(@D)
+					$(CC) $(CFLAGS) -c $< -o $@ \
+					&& echo "$< $(GREEN_COLOR)successfully compiled$(NO_COLOR)" \
+					|| { echo "$< $(RED_COLOR)couldn't be compiled$(NO_COLOR)"; exit 1; }
+
+$(NAME):			$(MAIN_OBJ) $(PROJ_OBJ) $(ENGINE_OBJ)
+					$(CC) $(MAIN_OBJ) $(PROJ_OBJ) $(ENGINE_OBJ) -o $(NAME) $(LDFLAGS) $(LDLIBS) \
 					&& echo "$(GREEN_B_COLOR)$(NAME) successfully created$(NO_COLOR)" \
 					|| { echo "$(RED_B_COLOR)$(NAME) couldn't be created$(NO_COLOR)"; exit 1; }
 

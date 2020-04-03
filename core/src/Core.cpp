@@ -7,63 +7,121 @@
 
 #include "Core.hpp"
 
+#include <filesystem>
+#include <regex>
+#include <dlfcn.h>
+
 using namespace core;
 
 Core::Core()
 {
+    _currentGame = "";
+    _currentGraphical = "";
+    _universe = new engine::ecs::Universe(*this);
 }
 
 Core::~Core()
 {
+    for (auto& pair : _games) {
+        delete pair.second;
+    }
+    _games.clear();
+
+    for (auto& pair : _graphicals) {
+        delete pair.second;
+    }
+    _graphicals.clear();
+
+    delete _universe;
 }
 
 void Core::loadGames()
 {
+    std::string path = "./games/";
+    std::regex regex(R"((^./games/lib_arcade_.*\.so))");
+
+    for (auto& file : std::filesystem::directory_iterator(path)) {
+        if (std::regex_match(file.path().string(), regex)) {
+            std::string name = file.path().string().substr(23, (file.path().string().length() - 26));
+
+            _games.emplace(name, new DynamicLib<game::IGame>(file.path().string(), *_universe));
+        }
+    }
 }
 
 void Core::loadGraphics()
 {
+    std::string path = "./lib/";
+    std::regex regex(R"((^./lib/lib_arcade_.*\.so))");
+
+    for (auto& file : std::filesystem::directory_iterator(path)) {
+        if (std::regex_match(file.path().string(), regex)) {
+            std::string name = file.path().string().substr(21, (file.path().string().length() - 24));
+
+            _graphicals.emplace(name, new DynamicLib<graphical::IGraphical>(file.path().string(), _universe->getEventBus()));
+        }
+    }
 }
 
 engine::ecs::Universe& Core::getUniverse() const
 {
-    return <#initializer #>;
+    return *_universe;
 }
 
 bool Core::hasGame(const std::string& name) const
 {
-    return false;
+    return _games.count(name) != 0;
 }
 
 game::IGame& Core::getGame(const std::string& name) const
 {
-    return <#initializer #>;
+    if (hasGame(name))
+        return _games.at(name)->get();
+
+    throw std::exception();
 }
 
 game::IGame& Core::getCurrentGame() const
 {
-    return <#initializer #>;
+    if (hasGame(_currentGame))
+        return _games.at(_currentGame)->get();
+
+    throw std::exception();
 }
 
 void Core::setCurrentGame(const std::string& name)
 {
+    if (!_games.count(name))
+        throw std::exception();
+
+    _currentGame = name;
 }
 
 bool Core::hasGraphical(const std::string& name) const
 {
-    return false;
+    return _graphicals.count(name) != 0;
 }
 
 graphical::IGraphical& Core::getGraphical(const std::string& name) const
 {
-    return <#initializer #>;
+    if (hasGame(name))
+        return _graphicals.at(name)->get();
+
+    throw std::exception();
 }
 
 graphical::IGraphical& Core::getCurrentGraphical() const
 {
-    return <#initializer #>;
+    if (hasGame(_currentGraphical))
+        return _graphicals.at(_currentGraphical)->get();
+
+    throw std::exception();
 }
 
 void Core::setCurrentGraphical(const std::string& name)
 {
+    if (!_graphicals.count(name))
+        throw std::exception();
+
+    _currentGraphical = name;
 }
