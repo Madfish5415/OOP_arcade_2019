@@ -5,9 +5,9 @@
 ## Makefile
 ##
 
-NAME				=		lib_arcade_sfml
-LIB_NAME			=		lib_arcade_sfml.so
-LIB_ST_NAME			=		lib_arcade_sfml.a
+NAME				=		lib_arcade_sdl2
+LIB_NAME			=		lib_arcade_sdl2.so
+LIB_ST_NAME			=		lib_arcade_sdl2.a
 TEST_NAME			=		tests/unit_tests
 TEST_SH_NAME		=		tests/tests.sh
 
@@ -19,7 +19,7 @@ TEST_DIR			=		tests
 ENGINE_DIR			= 		../../../engine
 
 AR					=		ar rcs
-CC					=		g++
+CC					=		g++ -std=c++17
 RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp

@@ -19,7 +19,7 @@ TEST_DIR			=		tests
 ENGINE_DIR			= 		../../../engine
 
 AR					=		ar rcs
-CC					=		g++
+CC					=		g++ -std=c++17
 RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
