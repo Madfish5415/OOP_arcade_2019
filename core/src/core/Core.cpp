@@ -72,7 +72,8 @@ void Core::loadGraphics()
     }
 
     if (!_graphicals.empty()) {
-        _currentGraphical = _graphicals.begin()->first;
+        for (auto& graph : _graphicals)
+            _currentGraphical = graph.first;
     }
 }
 

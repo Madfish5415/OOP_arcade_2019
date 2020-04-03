@@ -20,8 +20,6 @@ Render::Render(engine::ecs::Entity& entity, const std::vector<std::string>& path
     if (texture.loadFromFile(paths[graphical::GRAPHIC]))
         sprite.setTexture(texture);
 
-    std::cout << texture.getMaximumSize() << std::endl;
-
     srcRect.left = 0;
     srcRect.top = 0;
     srcRect.width = texture.getSize().x;

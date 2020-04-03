@@ -57,6 +57,8 @@ void Graphical::dispatchEvent()
 
 void Graphical::destroy()
 {
+    if (_window->isOpen())
+        _window->close();
     delete _window;
 }
 

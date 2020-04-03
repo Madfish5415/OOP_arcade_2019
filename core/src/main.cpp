@@ -28,11 +28,7 @@ int main()
 
     engine::ecs::Universe& universe = core.getUniverse();
 
-
-
     core.getCurrentGraphical().init();
-    core.setCurrentGraphical("sfml");
-
     core.getCurrentGame().init();
 
     universe.init();

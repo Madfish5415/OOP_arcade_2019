@@ -27,8 +27,6 @@ Menu::~Menu() = default;
 
 void Menu::init()
 {
-    std::cout << "HAAAN" << std::endl;
-
     auto& world = _universe.createWorld("menu");
 
     int i = 0;
@@ -41,7 +39,7 @@ void Menu::init()
         const std::vector<std::string> paths {"./assets/button.png", "./assets/button.png", "ressource_button"};
         entity.addComponent<engine::component::ARender>(paths);
         entity.addComponent<engine::component::Size>(200, 100);
-        entity.addComponent<engine::component::Transform>(engine::type::Vector2D(100, 100 * i + 50), 1);
+        entity.addComponent<engine::component::Transform>(engine::type::Vector2D(800, 100 * i + i * 50 + 400), 1);
 
         world.addToGroup(entity, "graph");
         i++;
@@ -57,7 +55,7 @@ void Menu::init()
         const std::vector<std::string> paths {"./assets/button.png", "./assets/button.png", "ressource_button"};
         entity.addComponent<engine::component::ARender>(paths);
         entity.addComponent<engine::component::Size>(200, 100);
-        entity.addComponent<engine::component::Transform>(engine::type::Vector2D(600, 100 * i + 50), 1);
+        entity.addComponent<engine::component::Transform>(engine::type::Vector2D(1200, 100 * i + i * 50 + 400), 1);
 
         world.addToGroup(entity, "game");
         i++;

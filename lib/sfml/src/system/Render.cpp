@@ -44,10 +44,13 @@ void Render::update()
         auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
         auto& size = i.get().getComponent<engine::component::Size>();
 
-        render.srcRect.width = size.width;
-        render.srcRect.height = size.height;
-        render.sprite.setScale(render.destRect.width / render.srcRect.width, 
-        render.destRect.height / render.srcRect.height);
+        render.destRect.width = size.width;
+        render.destRect.height = size.height;
+        std::cout << "Size : " << size.width << " " << size.height << std::endl;
+        std::cout << "Size 1: " << render.srcRect.width << " " << render.srcRect.height << std::endl;
+        std::cout << "Size 2 : " << float(render.destRect.width) / float(render.srcRect.width) << " " << float(render.destRect.height) / float(render.srcRect.height) << std::endl;
+        render.sprite.setScale(float(render.destRect.width) / float(render.srcRect.width),
+                               float(render.destRect.height) / float(render.srcRect.height));
     }
 }
 
@@ -63,6 +66,8 @@ void Render::render()
 
     window.clear();
     for (auto& i : entities) {
+        auto& transform = i.get().getComponent<engine::component::Transform>();
+        std::cout << transform.position.x << " " << transform.position.y << std::endl;
         auto& comp = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
         window.draw(comp.sprite);
     }
