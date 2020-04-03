@@ -8,7 +8,7 @@
 #ifndef GAME_HPP_
 #define GAME_HPP_
 
-#include "../../src/AGame.hpp"
+#include "../../game/AGame.hpp"
 #include "../../../engine/ecs/Universe.hpp"
 
 namespace pacman {

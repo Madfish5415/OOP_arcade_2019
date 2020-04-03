@@ -22,7 +22,9 @@
 #include "../system/AI.hpp"
 #include "../system/User.hpp"
 #include "../component/AI.hpp"
-// #include "../component/User.hpp"
+#include "../component/User.hpp"
+#include "../../../engine/type/Vector2D.hpp"
+#include "../../../engine/type/Animation.hpp"
 
 using namespace pacman;
 
@@ -42,29 +44,29 @@ void Game::init()
     engine::ecs::Entity& orange_ghost = main_game.createEntity();
 
     std::vector<std::string> paths_pacman;
-    std::vector<std::vector<int>> pacman_velocity {{2}, {2}};
-    std::vector<std::vector<int>> pacman_acceleration {{0}, {0}};
-    std::vector<std::vector<int>> pacman_position {{0}, {0}};
+    engine::type::Vector2D pacman_velocity(2, 2);
+    engine::type::Vector2D pacman_acceleration(0, 0);
+    engine::type::Vector2D pacman_position(0, 0);
 
     std::vector<std::string> paths_red;
-    std::vector<std::vector<int>> red_velocity {{2}, {2}};
-    std::vector<std::vector<int>> red_acceleration {{0}, {0}};
-    std::vector<std::vector<int>> red_position {{100}, {100}};
+    engine::type::Vector2D red_velocity(2, 2);
+    engine::type::Vector2D red_acceleration(0, 0);
+    engine::type::Vector2D red_position(100, 100);
 
     std::vector<std::string> paths_blue;
-    std::vector<std::vector<int>> blue_velocity {{2}, {2}};
-    std::vector<std::vector<int>> blue_acceleration {{0}, {0}};
-    std::vector<std::vector<int>> blue_position {{200}, {200}};
+    engine::type::Vector2D blue_velocity(2, 2);
+    engine::type::Vector2D blue_acceleration(0, 0);
+    engine::type::Vector2D blue_position(200, 200);
 
     std::vector<std::string> paths_pink;
-    std::vector<std::vector<int>> pink_velocity {{2}, {2}};
-    std::vector<std::vector<int>> pink_acceleration {{0}, {0}};
-    std::vector<std::vector<int>> pink_position {{300}, {300}};
+    engine::type::Vector2D pink_velocity(2, 2);
+    engine::type::Vector2D pink_acceleration(0, 0);
+    engine::type::Vector2D pink_position(300, 300);
 
     std::vector<std::string> paths_orange;
-    std::vector<std::vector<int>> orange_velocity {{2}, {2}};
-    std::vector<std::vector<int>> orange_acceleration {{0}, {0}};
-    std::vector<std::vector<int>> orange_position {{400}, {400}};
+    engine::type::Vector2D orange_velocity(2, 2);
+    engine::type::Vector2D orange_acceleration(0, 0);
+    engine::type::Vector2D orange_position(400, 400);
 
     paths_pacman.push_back("assets/test_pacman.png");
     paths_red.push_back("assets/test_red.png");
