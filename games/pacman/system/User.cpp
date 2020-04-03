@@ -10,9 +10,7 @@
 using namespace pacman;
 using namespace system;
 
-User::User()
-{
-}
+User::User(engine::ecs::World& world): AUser(world) {}
 
 User::~User()
 {

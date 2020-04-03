@@ -10,9 +10,7 @@
 using namespace pacman;
 using namespace system;
 
-AI::AI()
-{
-}
+AI::AI(engine::ecs::World& world): AAI(world) {}
 
 AI::~AI()
 {

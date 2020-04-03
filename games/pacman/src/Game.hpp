@@ -9,11 +9,12 @@
 #define GAME_HPP_
 
 #include "../../src/AGame.hpp"
+#include "../../../engine/ecs/Universe.hpp"
 
 namespace pacman {
-    class Game : public AGame {
+    class Game : public game::AGame {
         public:
-            Game(Universe& universe);
+            Game(engine::ecs::Universe& universe);
             ~Game();
     
             void init() override;

@@ -10,9 +10,7 @@
 using namespace pacman;
 using namespace component;
 
-User::User()
-{
-}
+User::User(engine::ecs::Entity& entity): AUser(entity) {}
 
 User::~User()
 {

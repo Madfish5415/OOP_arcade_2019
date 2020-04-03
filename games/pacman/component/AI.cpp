@@ -10,9 +10,7 @@
 using namespace pacman;
 using namespace component;
 
-AI::AI()
-{
-}
+AI::AI(engine::ecs::Entity& entity): AAI(entity) {}
 
 AI::~AI()
 {

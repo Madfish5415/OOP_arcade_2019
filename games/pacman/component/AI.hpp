@@ -9,12 +9,13 @@
 #define AI_HPP_
 
 #include "../../../engine/component/AAI.hpp"
+#include "../../../engine/ecs/Entity.hpp"
 
 namespace pacman {
     namespace component {
         class AI : public engine::component::AAI {
             public:
-                AI();
+                AI(engine::ecs::Entity& entity);
                 ~AI();
     
             protected:

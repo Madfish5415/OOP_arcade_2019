@@ -8,11 +8,14 @@
 #ifndef USER_HPP_
 #define USER_HPP_
 
+#include "../../../engine/system/AUser.hpp"
+#include "../../../engine/ecs/World.hpp"
+
 namespace pacman {
     namespace system {
         class User : public engine::system::AUser {
             public:
-                User();
+                User(engine::ecs::World& world);
                 ~User();
     
                 void init() override;

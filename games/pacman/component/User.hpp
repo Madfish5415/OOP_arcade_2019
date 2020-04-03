@@ -8,11 +8,14 @@
 #ifndef USER_HPP_
 #define USER_HPP_
 
+#include "../../../engine/component/AUser.hpp"
+#include "../../../engine/ecs/Entity.hpp"
+
 namespace pacman {
     namespace component {
         class User : public engine::component::AUser {
             public:
-                User();
+                User(engine::ecs::Entity& entity);
                 ~User();
     
             protected:
