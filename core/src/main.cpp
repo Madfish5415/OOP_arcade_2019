@@ -28,7 +28,7 @@ int main()
 
     engine::ecs::Universe& universe = core.getUniverse();
 
-    //core.getCurrentGraphical().init();
+    core.getCurrentGraphical().init();
 
     engine::ecs::World& main_game = universe.createWorld("main_game");
     engine::ecs::Entity& my_pacman = main_game.createEntity();
@@ -37,13 +37,14 @@ int main()
     engine::ecs::Entity& pink_ghost = main_game.createEntity();
     engine::ecs::Entity& orange_ghost = main_game.createEntity();
 
-    //main_game.addSystem<engine::system::AAnimations>();
-    //main_game.addSystem<engine::system::AAudio>();
-    //main_game.addSystem<engine::system::ARender>();
+    main_game.addSystem<engine::system::AAnimations>();
+    main_game.addSystem<engine::system::AAudio>();
+    main_game.addSystem<engine::system::ARender>();
     main_game.addSystem<engine::system::Movement>();
     main_game.addSystem<engine::system::Physics>();
 
-    //my_pacman.addComponent<engine::component::ARender>();
+    const std::vector<std::string> pacmanTexture {"./assets/pacman.jpg", "./assets/pacman.jpg", "./assets/pacman.jpg"};
+    my_pacman.addComponent<engine::component::ARender>(pacmanTexture);
     my_pacman.addComponent<engine::component::Hitbox>();
     my_pacman.addComponent<engine::component::Motion>();
     my_pacman.addComponent<engine::component::Size>();
