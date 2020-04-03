@@ -69,10 +69,10 @@ int main()
     const std::vector<std::string> paths {"./assets/pacman.jpg", "./assets/pacman.jpg", "./assets/pacman.jpg"};
     auto &renderPacman = pacman.addComponent<engine::component::ARender>(paths);
 
-    core.setCurrentGraphical("sfml");
-
     if (&renderPacman != &pacman.getComponent<engine::component::ARender>())
         throw std::exception();
+
+    core.setCurrentGraphical("sdl2");
 
     universe.deleteWorld(name);
 
