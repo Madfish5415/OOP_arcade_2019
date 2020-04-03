@@ -23,6 +23,8 @@ Core::Core()
 
 Core::~Core()
 {
+    delete _universe;
+
     for (auto& pair : _games) {
         delete pair.second;
     }
@@ -32,8 +34,6 @@ Core::~Core()
         delete pair.second;
     }
     _graphicals.clear();
-
-    delete _universe;
 }
 
 void Core::loadGames()
