@@ -16,19 +16,48 @@ INCL_DIR			=		src
 OBJ_DIR				=		obj
 SRC_DIR				=		src
 TEST_DIR			=		tests
+ENGINE_DIR			= 		../../../engine
 
 AR					=		ar rcs
-CC					=		g++
+CC					=		g++ -std=c++17
 RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=
+PROJ_SRC			=		../../graphical/AGraphical.cpp				\
+							graphical/Graphical.cpp						\
+							component/Audio.cpp							\
+							component/Render.cpp						\
+							system/Animations.cpp						\
+							system/Audio.cpp							\
+							system/Render.cpp							\
+							create.cpp									\
+							$(ENGINE_DIR)/component/AAudio.cpp			\
+							$(ENGINE_DIR)/component/Animations.cpp		\
+							$(ENGINE_DIR)/component/ARender.cpp			\
+							$(ENGINE_DIR)/component/Transform.cpp		\
+							$(ENGINE_DIR)/component/Size.cpp			\
+							$(ENGINE_DIR)/ecs/AComponent.cpp			\
+							$(ENGINE_DIR)/ecs/ASystem.cpp				\
+							$(ENGINE_DIR)/ecs/Entity.cpp				\
+							$(ENGINE_DIR)/ecs/Universe.cpp				\
+							$(ENGINE_DIR)/ecs/World.cpp					\
+							$(ENGINE_DIR)/event/Input.cpp				\
+							$(ENGINE_DIR)/eventbus/AEvent.cpp			\
+							$(ENGINE_DIR)/eventbus/EventBus.cpp			\
+							$(ENGINE_DIR)/system/AAnimations.cpp		\
+							$(ENGINE_DIR)/system/AAudio.cpp				\
+							$(ENGINE_DIR)/system/ARender.cpp			\
+							$(ENGINE_DIR)/type/Animation.cpp			\
+							$(ENGINE_DIR)/type/Vector2D.cpp				\
+
 
 TEST_SRC			=
 
 CFLAGS				+=		-I $(INCL_DIR)
 CFLAGS				+=		-W -Wall -Wextra -Werror
+LDFLAGS 			+= 		-lSDL2 -lSDL2 -lSDL2_image
+
 
 MAIN_OBJ			=		$(MAIN_SRC:%.cpp=$(OBJ_DIR)/%.o)
 
@@ -107,6 +136,9 @@ lib_re:				lib_fclean lib
 
 lib_sweet:			lib lib_clean
 
+lib_debug:			CFLAGS += -g3
+lib_debug:			lib
+
 $(LIB_ST_NAME):		$(PROJ_OBJ)
 					$(AR) $(LIB_ST_NAME) $(PROJ_OBJ) \
 					&& echo "$(GREEN_B_COLOR)$(LIB_ST_NAME) successfully created$(NO_COLOR)" \
@@ -173,7 +205,7 @@ full_sweet:			sweet lib_sweet lib_st_sweet
 
 .PHONY:				all clean fclean re sweet											\
 					debug debug_re debug_sweet											\
-					lib lib_clean lib_fclean lib_re lib_sweet							\
+					lib lib_clean lib_fclean lib_re lib_sweet lib_debug					\
 					lib_st lib_st_clean lib_st_fclean lib_st_re lib_st_sweet			\
 					tests_run tests_clean tests_fclean tests_re tests_sweet tests_sh	\
 					full full_clean full_fclean full_re full_sweet						\

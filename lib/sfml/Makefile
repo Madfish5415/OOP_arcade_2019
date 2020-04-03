@@ -19,7 +19,7 @@ TEST_DIR			=		tests
 ENGINE_DIR			= 		../../../engine
 
 AR					=		ar rcs
-CC					=		g++
+CC					=		g++ -std=c++17
 RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
@@ -136,6 +136,9 @@ lib_re:				lib_fclean lib
 
 lib_sweet:			lib lib_clean
 
+lib_debug:			CFLAGS += -g3
+lib_debug:			lib
+
 $(LIB_ST_NAME):		$(PROJ_OBJ)
 					$(AR) $(LIB_ST_NAME) $(PROJ_OBJ) \
 					&& echo "$(GREEN_B_COLOR)$(LIB_ST_NAME) successfully created$(NO_COLOR)" \
@@ -202,7 +205,7 @@ full_sweet:			sweet lib_sweet lib_st_sweet
 
 .PHONY:				all clean fclean re sweet											\
 					debug debug_re debug_sweet											\
-					lib lib_clean lib_fclean lib_re lib_sweet							\
+					lib lib_clean lib_fclean lib_re lib_sweet lib_debug					\
 					lib_st lib_st_clean lib_st_fclean lib_st_re lib_st_sweet			\
 					tests_run tests_clean tests_fclean tests_re tests_sweet tests_sh	\
 					full full_clean full_fclean full_re full_sweet						\

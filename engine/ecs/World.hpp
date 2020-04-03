@@ -123,6 +123,13 @@ class World {
     };
 };
 
+template <>
+engine::system::AAudio& World::addSystem<engine::system::AAudio>();
+template <>
+engine::system::AAnimations& World::addSystem<engine::system::AAnimations>();
+template <>
+engine::system::ARender& World::addSystem<engine::system::ARender>();
+
 }  // namespace ecs
 
 }  // namespace engine
