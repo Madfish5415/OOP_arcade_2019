@@ -25,7 +25,7 @@ BIN_GAME_PACMAN		=			lib_arcade_pacman.so
 DIR_GAME_NIBBLER	=			./games/nibbler
 BIN_GAME_NIBBLER	=			lib_arcade_nibbler.so
 
-all:		core games graphicals
+all:		games graphicals core
 
 core:
 			$(CD) $(DIR_CORE) && $(MAKE)
@@ -61,12 +61,16 @@ fclean:
 			#$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib_fclean
 			#$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) lib_fclean
 
-re:			fclean all
+debug:		games graphicals
+			$(CD) $(DIR_CORE) && $(MAKE) debug
+			$(CP) $(DIR_CORE)/$(BIN_CORE) ./
 
-MAKEFLAGS			+=		--silent
+re:			fclean all
 
 tests_sh:
 			echo "OK"
 
 tests_run:
 			echo "OK"
+
+.PHONY: all core graphicals games debug re tests_sh tests_run

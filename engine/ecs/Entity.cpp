@@ -7,7 +7,7 @@
 
 #include "Entity.hpp"
 
-#include "../../core/src/Core.hpp"
+#include "../../core/src/core/Core.hpp"
 
 using namespace engine;
 using namespace ecs;
@@ -29,15 +29,15 @@ World& Entity::getWorld() const
 }
 
 template <>
-component::AAudio& Entity::addComponent<component::AAudio>(const std::vector<std::string>& paths) {
-    std::type_index id = typeid(component::AAudio);
+engine::component::AAudio& Entity::addComponent<engine::component::AAudio>(const std::vector<std::string>& paths) {
+    std::type_index id = typeid(engine::component::AAudio);
 
     for (auto &c : _components) {
         if (c.first == id)
             throw std::exception();
     }
 
-    component::AAudio* component = _world.getUniverse().getCore().getCurrentGraphical().createAudio(*this, paths);
+    engine::component::AAudio* component = &(_world.getUniverse().getCore().getCurrentGraphical().createAudio(*this, paths));
 
     std::reference_wrapper<AComponent> ref_wrap = std::ref(*component);
 
@@ -47,15 +47,15 @@ component::AAudio& Entity::addComponent<component::AAudio>(const std::vector<std
 }
 
 template <>
-component::ARender& Entity::addComponent<component::ARender>(const std::vector<std::string>& paths) {
-    std::type_index id = typeid(component::ARender);
+engine::component::ARender& Entity::addComponent<engine::component::ARender>(const std::vector<std::string>& paths) {
+    std::type_index id = typeid(engine::component::ARender);
 
     for (auto &c : _components) {
         if (c.first == id)
             throw std::exception();
     }
 
-    component::ARender* component = _world.getUniverse().getCore().getCurrentGraphical().createRender(*this, paths);
+    engine::component::ARender* component = &(_world.getUniverse().getCore().getCurrentGraphical().createRender(*this, paths));
 
     std::reference_wrapper<AComponent> ref_wrap = std::ref(*component);
 
