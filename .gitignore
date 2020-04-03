@@ -1,0 +1,25 @@
+# Binaries
+a.out
+
+# Objects
+*.o
+
+# Tests
+*.gcda
+*.gcno
+
+# Resources
+resources/
+
+# ClangFormat
+.clang-format
+
+# Jetbrains
+compile_commands.json
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+#libs
+lib_arcade*
