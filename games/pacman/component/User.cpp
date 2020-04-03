@@ -7,6 +7,9 @@
 
 #include "User.hpp"
 
+using namespace pacman;
+using namespace component;
+
 User::User()
 {
 }

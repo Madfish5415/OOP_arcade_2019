@@ -8,17 +8,19 @@
 #ifndef USER_HPP_
 #define USER_HPP_
 
-namespace system {
-    class User : public engine::system::AUser {
-        public:
-            User();
-            ~User();
-
-            void init() override;
-            void update() override;
-            void render() override;
-        protected:
-        private:
+namespace pacman {
+    namespace system {
+        class User : public engine::system::AUser {
+            public:
+                User();
+                ~User();
+    
+                void init() override;
+                void update() override;
+                void render() override;
+            protected:
+            private:
+        };
     };
 };
 

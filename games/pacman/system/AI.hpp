@@ -8,17 +8,19 @@
 #ifndef AI_HPP_
 #define AI_HPP_
 
-namespace system {
-    class AI : public engine::system::AAI {
-        public:
-            AI();
-            ~AI();
-
-            void init() override;
-            void update() override;
-            void render() override;
-        protected:
-        private:
+namespace pacman {
+    namespace system {
+        class AI : public engine::system::AAI {
+            public:
+                AI();
+                ~AI();
+    
+                void init() override;
+                void update() override;
+                void render() override;
+            protected:
+            private:
+        };
     };
 };
 

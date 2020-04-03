@@ -7,6 +7,9 @@
 
 #include "AI.hpp"
 
+using namespace pacman;
+using namespace component;
+
 AI::AI()
 {
 }

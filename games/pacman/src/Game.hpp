@@ -10,15 +10,17 @@
 
 #include "../../src/AGame.hpp"
 
-class Game : public AGame {
-    public:
-        Game(Universe& universe);
-        ~Game();
-
-        void init() override;
-        void destroy() override;
-    protected:
-    private:
+namespace pacman {
+    class Game : public AGame {
+        public:
+            Game(Universe& universe);
+            ~Game();
+    
+            void init() override;
+            void destroy() override;
+        protected:
+        private:
+    };
 };
 
 #endif /* !GAME_HPP_ */

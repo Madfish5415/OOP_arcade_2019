@@ -8,14 +8,16 @@
 #ifndef USER_HPP_
 #define USER_HPP_
 
-namespace component {
-    class User : public engine::component::AUser {
-        public:
-            User();
-            ~User();
-
-        protected:
-        private:
+namespace pacman {
+    namespace component {
+        class User : public engine::component::AUser {
+            public:
+                User();
+                ~User();
+    
+            protected:
+            private:
+        };
     };
 };
 

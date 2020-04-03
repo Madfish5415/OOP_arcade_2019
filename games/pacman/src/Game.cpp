@@ -7,6 +7,8 @@
 
 #include "Game.hpp"
 
+using namespace pacman;
+
 Game::Game(Universe& universe): AGame(universe, "pacman") {}
 
 Game::~Game()
@@ -16,7 +18,7 @@ Game::~Game()
 void Game::init()
 {
     engine::ecs::World& main_game = this->_universe.createWorld("main_game");
-    engine::ecs::Entity& pacman = main_game.createEntity();
+    engine::ecs::Entity& my_pacman = main_game.createEntity();
     engine::ecs::Entity& red_ghost = main_game.createEntity();
     engine::ecs::Entity& blue_ghost = main_game.createEntity();
     engine::ecs::Entity& pink_ghost = main_game.createEntity();
@@ -30,14 +32,14 @@ void Game::init()
     main_game.addSystem<engine::system::Movement>();
     main_game.addSystem<engine::system::Physics>();
 
-    pacman.addComponent<engine::component::Render>();
-    pacman.addComponent<engine::component::Hitbox>(20, 20);
-    pacman.addComponent<engine::component::Motion>();
-    pacman.addComponent<engine::component::Size>();
-    pacman.addComponent<engine::component::Transform>();
-    pacman.addComponent<engine::component::Animation>();
-    pacman.addComponent<engine::component::Audio>();
-    pacman.addComponent<engine::component::User>();
+    my_pacman.addComponent<engine::component::Render>();
+    my_pacman.addComponent<engine::component::Hitbox>(20, 20);
+    my_pacman.addComponent<engine::component::Motion>(2, 0);
+    my_pacman.addComponent<engine::component::Size>(20, 20);
+    my_pacman.addComponent<engine::component::Transform>(0, 1);
+    my_pacman.addComponent<engine::component::Animation>();
+    my_pacman.addComponent<engine::component::Audio>();
+    my_pacman.addComponent<engine::component::User>();
 
     red_ghost.addComponent<engine::component::Render>();
     red_ghost.addComponent<engine::component::Hitbox>(20, 20);
@@ -75,7 +77,7 @@ void Game::init()
     orange_ghost.addComponent<engine::component::Audio>();
     orange_ghost.addComponent<engine::component::AI>();
 
-    main_game.addToGroup(pacman, "pacman");
+    main_game.addToGroup(my_pacman, "pacman");
     main_game.addToGroup(red_ghost, "ghost");
     main_game.addToGroup(blue_ghost, "ghost");
     main_game.addToGroup(pink_ghost, "ghost");

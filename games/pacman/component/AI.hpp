@@ -8,14 +8,18 @@
 #ifndef AI_HPP_
 #define AI_HPP_
 
-namespace component {
-    class AI : public engine::component::AAI {
-        public:
-            AI();
-            ~AI();
+#include "../../../engine/component/AAI.hpp"
 
-        protected:
-        private:
+namespace pacman {
+    namespace component {
+        class AI : public engine::component::AAI {
+            public:
+                AI();
+                ~AI();
+    
+            protected:
+            private:
+        };
     };
 };
 
