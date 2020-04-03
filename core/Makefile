@@ -24,8 +24,8 @@ RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=		Core.cpp						\
-							DynamicLib.cpp					\
+PROJ_SRC			=		core/Core.cpp					\
+							core/DynamicLib.cpp				\
 
 ENGINE_SRC			=		component/AAI.cpp			\
 							component/AAudio.cpp		\
@@ -110,7 +110,7 @@ $(NAME):			$(MAIN_OBJ) $(PROJ_OBJ) $(ENGINE_OBJ)
 all:				$(NAME)
 
 clean:
-					$(RM) $(MAIN_OBJ) $(PROJ_OBJ)
+					$(RM) $(MAIN_OBJ) $(PROJ_OBJ) $(ENGINE_OBJ)
 
 fclean:				clean
 					$(RM) $(NAME)

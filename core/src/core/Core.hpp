@@ -11,9 +11,9 @@
 #include <map>
 #include <string>
 
-#include "../../engine/ecs/Universe.hpp"
-#include "../../games/game/IGame.hpp"
-#include "../../lib/graphical/IGraphical.hpp"
+#include "../../../engine/ecs/Universe.hpp"
+#include "../../../games/game/IGame.hpp"
+#include "../../../lib/graphical/IGraphical.hpp"
 #include "DynamicLib.hpp"
 
 namespace core {

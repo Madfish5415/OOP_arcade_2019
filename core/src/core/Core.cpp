@@ -7,9 +7,10 @@
 
 #include "Core.hpp"
 
+#include <dlfcn.h>
+
 #include <filesystem>
 #include <regex>
-#include <dlfcn.h>
 
 using namespace core;
 
@@ -44,8 +45,12 @@ void Core::loadGames()
         if (std::regex_match(file.path().string(), regex)) {
             std::string name = file.path().string().substr(23, (file.path().string().length() - 26));
 
-            _games.emplace(name, new DynamicLib<game::IGame>(file.path().string(), *_universe));
+            _games.emplace(name, new DynamicLib<game::IGame>(file.path().string(), _universe));
         }
+    }
+
+    if (_games.size()) {
+        _currentGame = _games.begin()->first;
     }
 }
 
@@ -58,8 +63,12 @@ void Core::loadGraphics()
         if (std::regex_match(file.path().string(), regex)) {
             std::string name = file.path().string().substr(21, (file.path().string().length() - 24));
 
-            _graphicals.emplace(name, new DynamicLib<graphical::IGraphical>(file.path().string(), _universe->getEventBus()));
+            _graphicals.emplace(name, new DynamicLib<graphical::IGraphical>(file.path().string(), &_universe->getEventBus()));
         }
+    }
+
+    if (_graphicals.size()) {
+        _currentGraphical = _graphicals.begin()->first;
     }
 }
 
@@ -112,7 +121,7 @@ graphical::IGraphical& Core::getGraphical(const std::string& name) const
 
 graphical::IGraphical& Core::getCurrentGraphical() const
 {
-    if (hasGame(_currentGraphical))
+    if (hasGraphical(_currentGraphical))
         return _graphicals.at(_currentGraphical)->get();
 
     throw std::exception();

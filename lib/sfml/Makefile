@@ -119,8 +119,8 @@ debug_sweet:		sweet
 
 $(LIB_NAME):		CFLAGS += -fPIC
 $(LIB_NAME):		LDFLAGS += -shared
-$(LIB_NAME):		$(PROJ_OBJ)
-					$(CC) $(PROJ_OBJ) -o $(LIB_NAME) $(LDFLAGS) $(LDLIBS) \
+$(LIB_NAME):		$(PROJ_OBJ) $(ENGINE_OBJ)
+					$(CC) $(PROJ_OBJ) $(ENGINE_OBJ) -o $(LIB_NAME) $(LDFLAGS) $(LDLIBS) \
 					&& echo "$(GREEN_B_COLOR)$(LIB_NAME) successfully created$(NO_COLOR)" \
 					|| { echo "$(RED_B_COLOR)$(LIB_NAME) couldn't be created$(NO_COLOR)"; exit 1; }
 

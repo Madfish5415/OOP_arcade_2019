@@ -9,7 +9,7 @@
 #include "../../graphical/IGraphical.hpp"
 #include "graphical/Graphical.hpp"
 
-extern "C" graphical::IGraphical* create(engine::eventbus::EventBus& eventbus)
+extern "C" graphical::IGraphical* create(engine::eventbus::EventBus* eventbus)
 {
-    return new sfml::Graphical(eventbus);
+    return new sfml::Graphical(*eventbus);
 }

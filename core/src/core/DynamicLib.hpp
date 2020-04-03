@@ -8,9 +8,10 @@
 #ifndef OOP_ARCADE_2019_DYNAMICLIB_HPP
 #define OOP_ARCADE_2019_DYNAMICLIB_HPP
 
-#include <string>
-#include <exception>
 #include <dlfcn.h>
+
+#include <exception>
+#include <string>
 
 namespace core {
 
