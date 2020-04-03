@@ -5,6 +5,8 @@
 ** Game
 */
 
+#include <string>
+#include <vector>
 #include "Game.hpp"
 #include "../../../engine/system/AAI.hpp"
 #include "../../../engine/system/AAnimations.hpp"
@@ -39,6 +41,37 @@ void Game::init()
     engine::ecs::Entity& pink_ghost = main_game.createEntity();
     engine::ecs::Entity& orange_ghost = main_game.createEntity();
 
+    std::vector<std::string> paths_pacman;
+    std::vector<std::vector<int>> pacman_velocity {{2}, {2}};
+    std::vector<std::vector<int>> pacman_acceleration {{0}, {0}};
+    std::vector<std::vector<int>> pacman_position {{0}, {0}};
+
+    std::vector<std::string> paths_red;
+    std::vector<std::vector<int>> red_velocity {{2}, {2}};
+    std::vector<std::vector<int>> red_acceleration {{0}, {0}};
+    std::vector<std::vector<int>> red_position {{100}, {100}};
+
+    std::vector<std::string> paths_blue;
+    std::vector<std::vector<int>> blue_velocity {{2}, {2}};
+    std::vector<std::vector<int>> blue_acceleration {{0}, {0}};
+    std::vector<std::vector<int>> blue_position {{200}, {200}};
+
+    std::vector<std::string> paths_pink;
+    std::vector<std::vector<int>> pink_velocity {{2}, {2}};
+    std::vector<std::vector<int>> pink_acceleration {{0}, {0}};
+    std::vector<std::vector<int>> pink_position {{300}, {300}};
+
+    std::vector<std::string> paths_orange;
+    std::vector<std::vector<int>> orange_velocity {{2}, {2}};
+    std::vector<std::vector<int>> orange_acceleration {{0}, {0}};
+    std::vector<std::vector<int>> orange_position {{400}, {400}};
+
+    paths_pacman.push_back("assets/test_pacman.png");
+    paths_red.push_back("assets/test_red.png");
+    paths_blue.push_back("assets/test_blue.png");
+    paths_pink.push_back("assets/test_pink.png");
+    paths_orange.push_back("assets/test_orange.png");
+
     main_game.addSystem<system::AI>();
     main_game.addSystem<engine::system::AAnimations>();
     main_game.addSystem<engine::system::AAudio>();
@@ -47,47 +80,47 @@ void Game::init()
     main_game.addSystem<engine::system::Movement>();
     main_game.addSystem<engine::system::Physics>();
 
-    my_pacman.addComponent<engine::component::ARender>();
-    my_pacman.addComponent<engine::component::Hitbox>(20, 20);
-    my_pacman.addComponent<engine::component::Motion>(2, 0);
-    my_pacman.addComponent<engine::component::Size>(20, 20);
-    my_pacman.addComponent<engine::component::Transform>(0, 1);
+    my_pacman.addComponent<engine::component::ARender>(paths_pacman);
+    my_pacman.addComponent<engine::component::Hitbox>(40, 40);
+    my_pacman.addComponent<engine::component::Motion>(pacman_velocity, pacman_acceleration);
+    my_pacman.addComponent<engine::component::Size>(40, 40);
+    my_pacman.addComponent<engine::component::Transform>(pacman_position, 1);
     my_pacman.addComponent<engine::component::Animations>();
     my_pacman.addComponent<engine::component::AAudio>();
     my_pacman.addComponent<component::User>();
     
-    red_ghost.addComponent<engine::component::ARender>();
-    red_ghost.addComponent<engine::component::Hitbox>(20, 20);
-    red_ghost.addComponent<engine::component::Motion>();
-    red_ghost.addComponent<engine::component::Size>();
-    red_ghost.addComponent<engine::component::Transform>();
+    red_ghost.addComponent<engine::component::ARender>(paths_red);
+    red_ghost.addComponent<engine::component::Hitbox>(40, 40);
+    red_ghost.addComponent<engine::component::Motion>(red_velocity, red_acceleration);
+    red_ghost.addComponent<engine::component::Size>(40, 40);
+    red_ghost.addComponent<engine::component::Transform>(red_position, 1);
     red_ghost.addComponent<engine::component::Animations>();
     red_ghost.addComponent<engine::component::AAudio>();
     red_ghost.addComponent<component::AI>();
 
-    blue_ghost.addComponent<engine::component::ARender>();
-    blue_ghost.addComponent<engine::component::Hitbox>(20, 20);
-    blue_ghost.addComponent<engine::component::Motion>();
-    blue_ghost.addComponent<engine::component::Size>();
-    blue_ghost.addComponent<engine::component::Transform>();
+    blue_ghost.addComponent<engine::component::ARender>(paths_blue);
+    blue_ghost.addComponent<engine::component::Hitbox>(40, 40);
+    blue_ghost.addComponent<engine::component::Motion>(blue_velocity, blue_acceleration);
+    blue_ghost.addComponent<engine::component::Size>(40, 40);
+    blue_ghost.addComponent<engine::component::Transform>(blue_position, 1);
     blue_ghost.addComponent<engine::component::Animations>();
     blue_ghost.addComponent<engine::component::AAudio>();
     blue_ghost.addComponent<engine::component::AAI>();
 
-    pink_ghost.addComponent<engine::component::ARender>();
-    pink_ghost.addComponent<engine::component::Hitbox>(20, 20);
-    pink_ghost.addComponent<engine::component::Motion>();
-    pink_ghost.addComponent<engine::component::Size>();
-    pink_ghost.addComponent<engine::component::Transform>();
+    pink_ghost.addComponent<engine::component::ARender>(paths_pink);
+    pink_ghost.addComponent<engine::component::Hitbox>(40, 40);
+    pink_ghost.addComponent<engine::component::Motion>(pink_velocity, pink_acceleration);
+    pink_ghost.addComponent<engine::component::Size>(40, 40);
+    pink_ghost.addComponent<engine::component::Transform>(pink_position, 1);
     pink_ghost.addComponent<engine::component::Animations>();
     pink_ghost.addComponent<engine::component::AAudio>();
     pink_ghost.addComponent<engine::component::AAI>();
 
-    orange_ghost.addComponent<engine::component::ARender>();
-    orange_ghost.addComponent<engine::component::Hitbox>(20, 20);
-    orange_ghost.addComponent<engine::component::Motion>();
-    orange_ghost.addComponent<engine::component::Size>();
-    orange_ghost.addComponent<engine::component::Transform>();
+    orange_ghost.addComponent<engine::component::ARender>(paths_orange);
+    orange_ghost.addComponent<engine::component::Hitbox>(40, 40);
+    orange_ghost.addComponent<engine::component::Motion>(orange_velocity, orange_acceleration);
+    orange_ghost.addComponent<engine::component::Size>(40, 40);
+    orange_ghost.addComponent<engine::component::Transform>(orange_position, 1);
     orange_ghost.addComponent<engine::component::Animations>();
     orange_ghost.addComponent<engine::component::AAudio>();
     orange_ghost.addComponent<engine::component::AAI>();
