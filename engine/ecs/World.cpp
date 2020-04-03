@@ -9,6 +9,8 @@
 
 #include "World.hpp"
 
+#include "../../core/src/Core.hpp"
+
 using namespace engine;
 using namespace ecs;
 
@@ -131,4 +133,58 @@ void World::removeFromGroup(Entity& entity, const std::string& group)
     });
 
     if (ent_it != _groups.at(group).end()) _groups.at(group).erase(ent_it);
+}
+
+template <>
+system::AAudio& World::addSystem<system::AAudio>() {
+    std::type_index id = typeid(system::AAudio);
+
+    for (auto &s : _systems) {
+        if (s.first == id)
+            throw std::exception();
+    }
+
+    system::AAudio* system = getUniverse().getCore().getCurrentGraphical().createAudioSystem(*this);
+
+    std::reference_wrapper<ASystem> ref_wrap = std::ref(*system);
+
+    _systems.emplace(id, ref_wrap);
+
+    return *system;
+}
+
+template <>
+system::AAnimations& World::addSystem<system::AAnimations>() {
+    std::type_index id = typeid(system::AAnimations);
+
+    for (auto &s : _systems) {
+        if (s.first == id)
+            throw std::exception();
+    }
+
+    system::AAnimations* system = getUniverse().getCore().getCurrentGraphical().createAnimationsSystem(*this);
+
+    std::reference_wrapper<ASystem> ref_wrap = std::ref(*system);
+
+    _systems.emplace(id, ref_wrap);
+
+    return *system;
+}
+
+template <>
+system::ARender& World::addSystem<system::ARender>() {
+    std::type_index id = typeid(system::ARender);
+
+    for (auto &s : _systems) {
+        if (s.first == id)
+            throw std::exception();
+    }
+
+    system::ARender* system = getUniverse().getCore().getCurrentGraphical().createRenderSystem(*this);
+
+    std::reference_wrapper<ASystem> ref_wrap = std::ref(*system);
+
+    _systems.emplace(id, ref_wrap);
+
+    return *system;
 }

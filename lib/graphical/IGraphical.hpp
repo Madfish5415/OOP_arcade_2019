@@ -13,21 +13,17 @@
 
 #include "../../engine/component/AAudio.hpp"
 #include "../../engine/component/ARender.hpp"
+#include "../../engine/system/AAnimations.hpp"
 #include "../../engine/system/AAudio.hpp"
 #include "../../engine/system/ARender.hpp"
-#include "../../engine/system/AAnimations.hpp"
 
 namespace graphical {
 
-enum LIBTYPE {
-    TEXT = 0,
-    GRAPHIC,
-    DEBUG
-};
+enum LIBTYPE { TEXT = 0, GRAPHIC, DEBUG };
 
 class IGraphical {
    public:
-    virtual ~IGraphical() = 0;
+    virtual ~IGraphical() = default;
 
    public:
     virtual void init() = 0;
@@ -39,13 +35,14 @@ class IGraphical {
     virtual LIBTYPE getType() = 0;
 
    public:
-    virtual engine::component::AAudio& createAudio(engine::ecs::Entity &entity, const std::vector<std::string>& paths) = 0;
-    virtual engine::component::ARender& createRender(engine::ecs::Entity &entity, const std::vector<std::string>& paths) = 0;
+    virtual engine::component::AAudio& createAudio(engine::ecs::Entity& entity, const std::vector<std::string>& paths) = 0;
+    virtual engine::component::ARender& createRender(engine::ecs::Entity& entity, const std::vector<std::string>& paths) = 0;
 
    public:
     virtual engine::system::AAudio& createAudioSystem(engine::ecs::World& world) = 0;
     virtual engine::system::ARender& createRenderSystem(engine::ecs::World& world) = 0;
     virtual engine::system::AAnimations& createAnimationsSystem(engine::ecs::World& world) = 0;
 };
-}
-#endif // OOP_ARCADE_2019_IGRAPHICAL_HPP
+
+}  // namespace graphical
+#endif  // OOP_ARCADE_2019_IGRAPHICAL_HPP

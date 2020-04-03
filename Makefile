@@ -32,33 +32,41 @@ core:
 			$(CP) $(DIR_CORE)/$(BIN_CORE) ./
 
 graphicals:
-			$(CD) $(DIR_LIB_SDL) && $(MAKE) lib
+			#$(CD) $(DIR_LIB_SDL) && $(MAKE) lib
 			$(CD) $(DIR_LIB_SFML) && $(MAKE) lib
-			$(CD) $(DIR_LIB_NCURSES) && $(MAKE) lib
-			$(CP) $(DIR_LIB_SDL)/$(BIN_LIB_SDL) ./lib/
+			#$(CD) $(DIR_LIB_NCURSES) && $(MAKE) lib
+			#$(CP) $(DIR_LIB_SDL)/$(BIN_LIB_SDL) ./lib/
 			$(CP) $(DIR_LIB_SFML)/$(BIN_LIB_SFML) ./lib/
-			$(CP) $(DIR_LIB_NCURSES)/$(BIN_LIB_NCURSES) ./lib/
+			#$(CP) $(DIR_LIB_NCURSES)/$(BIN_LIB_NCURSES) ./lib/
 
 games:
-			$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib
-			$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) lib
-			$(CP) $(DIR_GAME_PACMAN)/$(BIN_GAME_PACMAN) ./
-			$(CP) $(DIR_GAME_NIBBLER)/$(BIN_GAME_NIBBLER) ./
+			#$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib
+			#$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) lib
+			#$(CP) $(DIR_GAME_PACMAN)/$(BIN_GAME_PACMAN) ./
+			#$(CP) $(DIR_GAME_NIBBLER)/$(BIN_GAME_NIBBLER) ./
 
 clean:
 			$(CD) $(DIR_CORE) && $(MAKE) clean
-			$(CD) $(DIR_LIB_SDL) && $(MAKE) clean
-			$(CD) $(DIR_LIB_SFML) && $(MAKE) clean
-			$(CD) $(DIR_LIB_NCURSES) && $(MAKE) clean
-			$(CD) $(DIR_GAME_PACMAN) && $(MAKE) clean
-			$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) clean
+			#$(CD) $(DIR_LIB_SDL) && $(MAKE) lib_clean
+			$(CD) $(DIR_LIB_SFML) && $(MAKE) lib_clean
+			#$(CD) $(DIR_LIB_NCURSES) && $(MAKE) lib_clean
+			#$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib_clean
+			#$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) lib_clean
 
 fclean:
 			$(CD) $(DIR_CORE) && $(MAKE) fclean
-			$(CD) $(DIR_LIB_SDL) && $(MAKE) fclean
-			$(CD) $(DIR_LIB_SFML) && $(MAKE) fclean
-			$(CD) $(DIR_LIB_NCURSES) && $(MAKE) fclean
-			$(CD) $(DIR_GAME_PACMAN) && $(MAKE) fclean
-			$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) fclean
+			#$(CD) $(DIR_LIB_SDL) && $(MAKE) lib_fclean
+			$(CD) $(DIR_LIB_SFML) && $(MAKE) lib_fclean
+			#$(CD) $(DIR_LIB_NCURSES) && $(MAKE) lib_fclean
+			#$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib_fclean
+			#$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) lib_fclean
 
 re:			fclean all
+
+MAKEFLAGS			+=		--silent
+
+tests_sh:
+			echo "OK"
+
+tests_run:
+			echo "OK"
