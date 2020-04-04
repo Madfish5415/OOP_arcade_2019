@@ -65,6 +65,7 @@ TEST_SRC			=
 
 CFLAGS				+=		-I $(INCL_DIR)
 CFLAGS				+=		-W -Wall -Wextra -Werror
+CFLAGS				+=		-fPIC
 
 LDFLAGS				+= 		-ldl
 

@@ -8,6 +8,7 @@
 #include "Render.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 #include "../../../engine/component/Transform.hpp"
 #include "../../../engine/component/Size.hpp"
@@ -32,20 +33,6 @@ void Render::update()
     auto entities_transform = _world.getEntities<engine::component::Transform>();
     auto entities_size = _world.getEntities<engine::component::Size>();
 
-    for (auto& i : entities_transform) {
-        if (i.get().hasComponents<engine::component::ARender>()) {
-            auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
-            auto& pos = i.get().getComponent<engine::component::Transform>();
-
-            render.sprite.setPosition(pos.position.x, pos.position.y);
-        }
-        if (i.get().hasComponents<engine::component::AText>()) {
-            auto& text = dynamic_cast<component::Text&>(i.get().getComponent<engine::component::AText>());
-            auto& pos = i.get().getComponent<engine::component::Transform>();
-
-            text.sfText.setPosition((float)pos.position.x, (float)pos.position.y);
-        }
-    }
     for (auto& i : entities_size) {
         if (i.get().hasComponents<engine::component::ARender>()) {
             auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
@@ -56,13 +43,34 @@ void Render::update()
             render.sprite.setScale(float(render.destRect.width) / float(render.srcRect.width),
                                    float(render.destRect.height) / float(render.srcRect.height));
         }
+
         if (i.get().hasComponents<engine::component::AText>()) {
             auto &text = dynamic_cast<component::Text &>(i.get().getComponent<engine::component::AText>());
             auto &size = i.get().getComponent<engine::component::Size>();
+            text.sfText.setCharacterSize(static_cast<unsigned int>(size.height));
+
             sf::FloatRect bounds = text.sfText.getLocalBounds();
 
-            text.sfText.setScale((float) size.width / bounds.width,
-                                 (float) size.height / bounds.height);
+            if (bounds.width > float(size.width)) {
+                text.sfText.setCharacterSize(static_cast<unsigned int>(float(size.height * size.width) / bounds.width));
+            }
+            text.sfText.setOrigin((bounds.width - float(size.width)) / 2 + bounds.left, (bounds.height - float(size.height)) / 2 + bounds.top);
+        }
+    }
+
+    for (auto& i : entities_transform) {
+        if (i.get().hasComponents<engine::component::ARender>()) {
+            auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
+            auto& pos = i.get().getComponent<engine::component::Transform>();
+
+            render.sprite.setPosition(float(pos.position.x), float(pos.position.y));
+        }
+
+        if (i.get().hasComponents<engine::component::AText>()) {
+            auto& text = dynamic_cast<component::Text&>(i.get().getComponent<engine::component::AText>());
+            auto& pos = i.get().getComponent<engine::component::Transform>();
+
+            text.sfText.setPosition(float(pos.position.x), float(pos.position.y));
         }
     }
 }

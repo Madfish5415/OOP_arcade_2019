@@ -25,6 +25,8 @@ BIN_GAME_PACMAN		=			lib_arcade_pacman.so
 DIR_GAME_NIBBLER	=			./games/nibbler
 BIN_GAME_NIBBLER	=			lib_arcade_nibbler.so
 
+MAKEFLAGS			+=		--silent
+
 all:		games graphicals core
 
 core:

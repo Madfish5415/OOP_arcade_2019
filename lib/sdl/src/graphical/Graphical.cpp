@@ -21,7 +21,7 @@
 
 using namespace sdl;
 
-Graphical::Graphical(engine::eventbus::EventBus& eventBus) : AGraphical("SFML", graphical::GRAPHIC, eventBus)
+Graphical::Graphical(engine::eventbus::EventBus& eventBus) : AGraphical("SDL", graphical::GRAPHIC, eventBus)
 {
     _window = nullptr;
     _renderer = nullptr;
