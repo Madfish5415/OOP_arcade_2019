@@ -85,12 +85,6 @@ engine::system::ARender& Graphical::createRenderSystem(engine::ecs::World& world
     return *render;
 }
 
-engine::system::AText& Graphical::createTextSystem(engine::ecs::World& world)
-{
-    auto text = new system::Text(world, _renderer);
-    return *text;
-}
-
 engine::system::AAudio& Graphical::createAudioSystem(engine::ecs::World& world)
 {
     auto audio = new system::Audio(world);
