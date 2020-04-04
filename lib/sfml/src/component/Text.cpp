@@ -21,6 +21,7 @@ Text::Text(engine::ecs::Entity& entity, const std::string& text, const std::vect
         throw std::exception();
     sfText.setFont(font);
     sfText.setString(text);
+    sfText.setCharacterSize(0);
 }
 
 Text::~Text() = default;

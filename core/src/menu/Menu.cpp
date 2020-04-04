@@ -24,7 +24,7 @@
 
 using namespace menu;
 
-Menu::Menu(engine::ecs::Universe& universe) : game::AGame(universe, "menu")
+Menu::Menu(engine::ecs::Universe& universe) : game::AGame(universe, "Menu")
 {
 }
 
@@ -32,25 +32,26 @@ Menu::~Menu() = default;
 
 void Menu::init()
 {
-    auto& world = _universe.createWorld("menu");
+    auto& world = _universe.createWorld("Menu");
 
     int i = 0;
 
     for (auto& graph : _universe.getCore().getGraphicals()) {
-        (void) graph;
-
         auto &entity = world.createEntity();
         int x = 0;
         int y = 0;
-        int lib_size = _universe.getCore().getGraphicals().size();
-        int offset = (lib_size > 4) ? 30 : 75;
-        int gridSize = (150 * lib_size + offset * lib_size);
+        int libSize = _universe.getCore().getGraphicals().size();
+        int offset = (libSize > 4) ? 30 : 75;
+        int gridSize = (150 * libSize + offset * libSize);
 
-        const std::vector<std::string> paths {"./assets/button.png", "./assets/button.png", "ressource_button"};
-        entity.addComponent<engine::component::ARender>(paths);
+        const std::vector<std::string> pathsRender {"./assets/button.png", "./assets/button.png", "ressource_button"};
+        entity.addComponent<engine::component::ARender>(pathsRender);
+        const std::vector<std::string> pathsText {"./assets/game_over.ttf", "./assets/game_over.ttf", "font_button"};
+        const std::string text = graph.second->get().getName();
+        entity.addComponent<engine::component::AText>(text, pathsText);
         entity.addComponent<engine::component::Size>(400, 150);
         x = 440;
-        y = (1080 - gridSize) / 2 + (gridSize / lib_size) / 2 - 150 / 2 + (gridSize / lib_size * (i));
+        y = (1080 - gridSize) / 2 + (gridSize / libSize) / 2 - 150 / 2 + (gridSize / libSize * (i));
         entity.addComponent<engine::component::Transform>(engine::type::Vector2D(x, y), 1);
 
         world.addToGroup(entity, "graph");
@@ -67,20 +68,21 @@ void Menu::init()
     }
 
     for (auto& game : games) {
-        (void) game;
-
         auto &entity = world.createEntity();
         int x = 0;
         int y = 0;
-        int lib_size = games.size();
-        int offset = (lib_size > 4) ? 30 : 75;
-        int gridSize = (150 * lib_size + offset * lib_size);
+        int libSize = games.size();
+        int offset = (libSize > 4) ? 30 : 75;
+        int gridSize = (150 * libSize + offset * libSize);
 
-        const std::vector<std::string> paths {"./assets/button.png", "./assets/button.png", "ressource_button"};
-        entity.addComponent<engine::component::ARender>(paths);
+        const std::vector<std::string> pathsRender {"./assets/button.png", "./assets/button.png", "ressource_button"};
+        entity.addComponent<engine::component::ARender>(pathsRender);
+        const std::vector<std::string> pathsText {"./assets/game_over.ttf", "./assets/game_over.ttf", "font_button"};
+        const std::string text = game.second->get().getName();
+        entity.addComponent<engine::component::AText>(text, pathsText);
         entity.addComponent<engine::component::Size>(400, 150);
         x = 1920 - 440 - 400;
-        y = (1080 - gridSize) / 2 + (gridSize / lib_size) / 2 - 150 / 2 + (gridSize / lib_size * (i));
+        y = (1080 - gridSize) / 2 + (gridSize / libSize) / 2 - 150 / 2 + (gridSize / libSize * (i));
         entity.addComponent<engine::component::Transform>(engine::type::Vector2D(x, y), 1);
 
         world.addToGroup(entity, "game");
@@ -107,10 +109,10 @@ void Menu::init()
     world.addSystem<engine::system::Movement>();
     world.addSystem<engine::system::Physics>();
 
-    _universe.setCurrentWorld("menu");
+    _universe.setCurrentWorld("Menu");
 }
 
 void Menu::destroy()
 {
-    _universe.deleteWorld("menu");
+    _universe.deleteWorld("Menu");
 }
