@@ -5,11 +5,12 @@
 ** User
 */
 
-#ifndef USER_HPP_
-#define USER_HPP_
+#ifndef USER_SYS_HPP_
+#define USER_SYS_HPP_
 
 #include "../../../engine/system/AUser.hpp"
 #include "../../../engine/ecs/World.hpp"
+#include "../../../engine/event/Input.hpp"
 
 namespace pacman {
     namespace system {
@@ -21,6 +22,7 @@ namespace pacman {
                 void init() override;
                 void update() override;
                 void render() override;
+                void inputSubscriber(engine::event::Input& event);
             protected:
             private:
         };

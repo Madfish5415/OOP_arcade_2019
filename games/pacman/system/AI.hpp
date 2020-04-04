@@ -5,8 +5,8 @@
 ** AI
 */
 
-#ifndef AI_HPP_
-#define AI_HPP_
+#ifndef AI_SYS_HPP_
+#define AI_SYS_HPP_
 
 #include "../../../engine/system/AAI.hpp"
 #include "../../../engine/ecs/World.hpp"

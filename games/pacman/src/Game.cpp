@@ -36,47 +36,39 @@ Game::~Game()
 
 void Game::init()
 {
-    engine::ecs::World& main_game = this->_universe.createWorld("main_game");
+    engine::ecs::World& main_game = this->_universe.createWorld("main_game_pacman");
     engine::ecs::Entity& my_pacman = main_game.createEntity();
     engine::ecs::Entity& red_ghost = main_game.createEntity();
     engine::ecs::Entity& blue_ghost = main_game.createEntity();
     engine::ecs::Entity& pink_ghost = main_game.createEntity();
     engine::ecs::Entity& orange_ghost = main_game.createEntity();
 
-    std::vector<std::string> paths_pacman;
-    engine::type::Vector2D pacman_velocity(2, 2);
+    std::vector<std::string> paths_pacman {("assets/test_pacman.png")};
+    engine::type::Vector2D pacman_velocity(1, 0);
     engine::type::Vector2D pacman_acceleration(0, 0);
     engine::type::Vector2D pacman_position(0, 0);
 
-    std::vector<std::string> paths_red;
-    engine::type::Vector2D red_velocity(2, 2);
+    std::vector<std::string> paths_red {("assets/test_red.png")};
+    engine::type::Vector2D red_velocity(0, 1);
     engine::type::Vector2D red_acceleration(0, 0);
-    engine::type::Vector2D red_position(100, 100);
+    engine::type::Vector2D red_position(200, 400);
 
-    std::vector<std::string> paths_blue;
-    engine::type::Vector2D blue_velocity(2, 2);
+    std::vector<std::string> paths_blue {("assets/test_blue.png")};
+    engine::type::Vector2D blue_velocity(0, 1);
     engine::type::Vector2D blue_acceleration(0, 0);
-    engine::type::Vector2D blue_position(200, 200);
+    engine::type::Vector2D blue_position(500, 800);
 
-    std::vector<std::string> paths_pink;
-    engine::type::Vector2D pink_velocity(2, 2);
+    std::vector<std::string> paths_pink {("assets/test_pink.png")};
+    engine::type::Vector2D pink_velocity(0, 1);
     engine::type::Vector2D pink_acceleration(0, 0);
-    engine::type::Vector2D pink_position(300, 300);
+    engine::type::Vector2D pink_position(1400, 300);
 
-    std::vector<std::string> paths_orange;
-    engine::type::Vector2D orange_velocity(2, 2);
+    std::vector<std::string> paths_orange {("assets/test_orange.png")};
+    engine::type::Vector2D orange_velocity(0, 1);
     engine::type::Vector2D orange_acceleration(0, 0);
-    engine::type::Vector2D orange_position(400, 400);
-
-    paths_pacman.push_back("assets/test_pacman.png");
-    paths_red.push_back("assets/test_red.png");
-    paths_blue.push_back("assets/test_blue.png");
-    paths_pink.push_back("assets/test_pink.png");
-    paths_orange.push_back("assets/test_orange.png");
+    engine::type::Vector2D orange_position(1100, 900);
 
     main_game.addSystem<system::AI>();
-    main_game.addSystem<engine::system::AAnimations>();
-    main_game.addSystem<engine::system::AAudio>();
     main_game.addSystem<engine::system::ARender>();
     main_game.addSystem<system::User>();
     main_game.addSystem<engine::system::Movement>();
@@ -87,8 +79,6 @@ void Game::init()
     my_pacman.addComponent<engine::component::Motion>(pacman_velocity, pacman_acceleration);
     my_pacman.addComponent<engine::component::Size>(40, 40);
     my_pacman.addComponent<engine::component::Transform>(pacman_position, 1);
-    my_pacman.addComponent<engine::component::Animations>();
-    my_pacman.addComponent<engine::component::AAudio>();
     my_pacman.addComponent<component::User>();
     
     red_ghost.addComponent<engine::component::ARender>(paths_red);
@@ -96,8 +86,6 @@ void Game::init()
     red_ghost.addComponent<engine::component::Motion>(red_velocity, red_acceleration);
     red_ghost.addComponent<engine::component::Size>(40, 40);
     red_ghost.addComponent<engine::component::Transform>(red_position, 1);
-    red_ghost.addComponent<engine::component::Animations>();
-    red_ghost.addComponent<engine::component::AAudio>();
     red_ghost.addComponent<component::AI>();
 
     blue_ghost.addComponent<engine::component::ARender>(paths_blue);
@@ -105,27 +93,21 @@ void Game::init()
     blue_ghost.addComponent<engine::component::Motion>(blue_velocity, blue_acceleration);
     blue_ghost.addComponent<engine::component::Size>(40, 40);
     blue_ghost.addComponent<engine::component::Transform>(blue_position, 1);
-    blue_ghost.addComponent<engine::component::Animations>();
-    blue_ghost.addComponent<engine::component::AAudio>();
-    blue_ghost.addComponent<engine::component::AAI>();
+    blue_ghost.addComponent<component::AI>();
 
     pink_ghost.addComponent<engine::component::ARender>(paths_pink);
     pink_ghost.addComponent<engine::component::Hitbox>(40, 40);
     pink_ghost.addComponent<engine::component::Motion>(pink_velocity, pink_acceleration);
     pink_ghost.addComponent<engine::component::Size>(40, 40);
     pink_ghost.addComponent<engine::component::Transform>(pink_position, 1);
-    pink_ghost.addComponent<engine::component::Animations>();
-    pink_ghost.addComponent<engine::component::AAudio>();
-    pink_ghost.addComponent<engine::component::AAI>();
+    pink_ghost.addComponent<component::AI>();
 
     orange_ghost.addComponent<engine::component::ARender>(paths_orange);
     orange_ghost.addComponent<engine::component::Hitbox>(40, 40);
     orange_ghost.addComponent<engine::component::Motion>(orange_velocity, orange_acceleration);
     orange_ghost.addComponent<engine::component::Size>(40, 40);
     orange_ghost.addComponent<engine::component::Transform>(orange_position, 1);
-    orange_ghost.addComponent<engine::component::Animations>();
-    orange_ghost.addComponent<engine::component::AAudio>();
-    orange_ghost.addComponent<engine::component::AAI>();
+    orange_ghost.addComponent<component::AI>();
 
     main_game.addToGroup(my_pacman, "pacman");
     main_game.addToGroup(red_ghost, "ghost");
@@ -136,4 +118,5 @@ void Game::init()
 
 void Game::destroy()
 {
+    this->_universe.deleteWorld("main_game_pacman");
 }
