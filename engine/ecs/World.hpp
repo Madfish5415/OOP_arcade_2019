@@ -22,7 +22,6 @@ class Universe;
 
 #include "ASystem.hpp"
 #include "Entity.hpp"
-#include "../../core/src/core/Core.hpp"
 
 namespace engine {
 

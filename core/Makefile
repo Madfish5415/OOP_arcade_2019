@@ -55,7 +55,6 @@ ENGINE_SRC			=		component/AAI.cpp			\
 							system/AAnimations.cpp		\
 							system/AAudio.cpp			\
 							system/ARender.cpp			\
-							system/AText.cpp			\
 							system/AUser.cpp			\
 							system/Movement.cpp			\
 							system/Physics.cpp			\

@@ -11,11 +11,11 @@
 #include <map>
 #include <string>
 
+#include "DynamicLib.hpp"
 #include "../../../engine/ecs/Universe.hpp"
 #include "../../../engine/event/Close.hpp"
 #include "../../../games/game/IGame.hpp"
 #include "../../../lib/graphical/IGraphical.hpp"
-#include "DynamicLib.hpp"
 
 namespace core {
 
