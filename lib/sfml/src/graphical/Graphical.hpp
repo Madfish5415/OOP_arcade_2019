@@ -89,10 +89,12 @@ class Graphical : public graphical::AGraphical {
    public:
     engine::component::AAudio& createAudio(engine::ecs::Entity& entity, const std::vector<std::string>& paths) override;
     engine::component::ARender& createRender(engine::ecs::Entity& entity, const std::vector<std::string>& paths) override;
+    engine::component::AText& createText(engine::ecs::Entity& entity, const std::string& text, const std::vector<std::string>& paths) override;
 
    public:
     engine::system::AAudio& createAudioSystem(engine::ecs::World& world) override;
     engine::system::ARender& createRenderSystem(engine::ecs::World& world) override;
+    engine::system::AText& createTextSystem(engine::ecs::World& world) override;
     engine::system::AAnimations& createAnimationsSystem(engine::ecs::World& world) override;
 
    private:

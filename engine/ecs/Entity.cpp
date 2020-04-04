@@ -63,3 +63,22 @@ engine::component::ARender& Entity::addComponent<engine::component::ARender>(con
 
     return *component;
 }
+
+template <>
+engine::component::AText& Entity::addComponent<engine::component::AText>(const std::string& text, const std::vector<std::string>& paths)
+{
+    std::type_index id = typeid(engine::component::AText);
+
+    for (auto &c : _components) {
+        if (c.first == id)
+            throw std::exception();
+    }
+
+    engine::component::AText* component = &(_world.getUniverse().getCore().getCurrentGraphical().createText(*this, text, paths));
+
+    std::reference_wrapper<AComponent> ref_wrap = std::ref(*component);
+
+    _components.emplace(id, ref_wrap);
+
+    return *component;
+}

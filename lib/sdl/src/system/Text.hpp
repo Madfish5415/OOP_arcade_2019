@@ -1,30 +1,29 @@
 /*
 ** EPITECH PROJECT, 2020
-** sfml
+** OOP_arcade_2019
 ** File description:
-** Renderr.hpp
+** Text.hpp
 */
 
-#ifndef SFML_RENDERR_HPP
-#define SFML_RENDERR_HPP
+#ifndef OOP_ARCADE_2019_TEXT_SYSTEM_HPP
+#define OOP_ARCADE_2019_TEXT_SYSTEM_HPP
 
 #include <SDL2/SDL.h>
-
 #include <memory>
 
 #include "../../../../engine/ecs/Entity.hpp"
 #include "../../../../engine/ecs/World.hpp"
-#include "../../../../engine/system/ARender.hpp"
+#include "../../../../engine/system/AText.hpp"
 #include "../../../graphical/AGraphical.hpp"
 
 namespace sdl {
 
 namespace system {
 
-class Render : public engine::system::ARender {
+class Text : public engine::system::AText {
    public:
-    Render(engine::ecs::World& world, SDL_Renderer* win);
-    ~Render() override;
+    Text(engine::ecs::World& world, SDL_Renderer *win);
+    ~Text() override;
 
    public:
     void init() override;
@@ -37,6 +36,6 @@ class Render : public engine::system::ARender {
 
 }  // namespace system
 
-}  // namespace sdl
+}  // namespace sfml
 
-#endif  // SFML_RENDERR_HPP
+#endif  // OOP_ARCADE_2019_TEXT_SYSTEM_HPP

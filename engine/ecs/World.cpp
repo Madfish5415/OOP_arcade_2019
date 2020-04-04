@@ -188,3 +188,21 @@ engine::system::ARender& World::addSystem<engine::system::ARender>() {
 
     return *system;
 }
+
+template <>
+engine::system::AText& World::addSystem<engine::system::AText>() {
+    std::type_index id = typeid(engine::system::AText);
+
+    for (auto &s : _systems) {
+        if (s.first == id)
+            throw std::exception();
+    }
+
+    engine::system::AText* system = &(getUniverse().getCore().getCurrentGraphical().createTextSystem(*this));
+
+    std::reference_wrapper<ASystem> ref_wrap = std::ref(*system);
+
+    _systems.emplace(id, ref_wrap);
+
+    return *system;
+}

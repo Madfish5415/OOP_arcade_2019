@@ -9,15 +9,16 @@
 
 #include <SDL2/SDL_image.h>
 
-#include <component/Audio.hpp>
 #include <vector>
 
 #include "../../graphical/AGraphical.hpp"
 #include "../component/Audio.hpp"
 #include "../component/Render.hpp"
+#include "../component/Text.hpp"
 #include "../system/Animations.hpp"
 #include "../system/Audio.hpp"
 #include "../system/Render.hpp"
+#include "../system/Text.hpp"
 
 using namespace sdl;
 
@@ -72,10 +73,22 @@ engine::component::AAudio& Graphical::createAudio(engine::ecs::Entity& entity, c
     return *audio;
 }
 
+engine::component::AText& Graphical::createText(engine::ecs::Entity& entity, const std::string& text, const std::vector<std::string>& paths)
+{
+    auto cmptext = new component::Text(entity, text, paths);
+    return *cmptext;
+}
+
 engine::system::ARender& Graphical::createRenderSystem(engine::ecs::World& world)
 {
     auto render = new system::Render(world, _renderer);
     return *render;
+}
+
+engine::system::AText& Graphical::createTextSystem(engine::ecs::World& world)
+{
+    auto text = new system::Text(world, _renderer);
+    return *text;
 }
 
 engine::system::AAudio& Graphical::createAudioSystem(engine::ecs::World& world)

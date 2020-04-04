@@ -28,6 +28,7 @@ PROJ_SRC			=		../../graphical/AGraphical.cpp				\
 							graphical/Graphical.cpp						\
 							component/Audio.cpp							\
 							component/Render.cpp						\
+							component/Text.cpp							\
 							system/Animations.cpp						\
 							system/Audio.cpp							\
 							system/Render.cpp							\
@@ -35,6 +36,7 @@ PROJ_SRC			=		../../graphical/AGraphical.cpp				\
 							$(ENGINE_DIR)/component/AAudio.cpp			\
 							$(ENGINE_DIR)/component/Animations.cpp		\
 							$(ENGINE_DIR)/component/ARender.cpp			\
+							$(ENGINE_DIR)/component/AText.cpp			\
 							$(ENGINE_DIR)/component/Transform.cpp		\
 							$(ENGINE_DIR)/component/Size.cpp			\
 							$(ENGINE_DIR)/ecs/AComponent.cpp			\
@@ -48,6 +50,7 @@ PROJ_SRC			=		../../graphical/AGraphical.cpp				\
 							$(ENGINE_DIR)/system/AAnimations.cpp		\
 							$(ENGINE_DIR)/system/AAudio.cpp				\
 							$(ENGINE_DIR)/system/ARender.cpp			\
+							$(ENGINE_DIR)/system/AText.cpp				\
 							$(ENGINE_DIR)/type/Animation.cpp			\
 							$(ENGINE_DIR)/type/Vector2D.cpp				\
 

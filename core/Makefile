@@ -27,12 +27,15 @@ MAIN_SRC			=		main.cpp
 PROJ_SRC			=		core/Core.cpp				\
 							core/DynamicLib.cpp			\
 							menu/Menu.cpp				\
+							menu/component/User.cpp		\
+							menu/system/User.cpp		\
 							../../games/game/AGame.cpp	\
 
 ENGINE_SRC			=		component/AAI.cpp			\
 							component/AAudio.cpp		\
 							component/Animations.cpp	\
 							component/ARender.cpp		\
+							component/AText.cpp			\
 							component/AUser.cpp			\
 							component/Hitbox.cpp		\
 							component/Motion.cpp		\
@@ -52,6 +55,7 @@ ENGINE_SRC			=		component/AAI.cpp			\
 							system/AAnimations.cpp		\
 							system/AAudio.cpp			\
 							system/ARender.cpp			\
+							system/AText.cpp			\
 							system/AUser.cpp			\
 							system/Movement.cpp			\
 							system/Physics.cpp			\
