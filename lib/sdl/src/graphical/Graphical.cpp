@@ -18,7 +18,6 @@
 #include "../system/Animations.hpp"
 #include "../system/Audio.hpp"
 #include "../system/Render.hpp"
-#include "../system/Text.hpp"
 
 using namespace sdl;
 

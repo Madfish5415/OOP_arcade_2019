@@ -50,7 +50,6 @@ PROJ_SRC			=		../../graphical/AGraphical.cpp				\
 							$(ENGINE_DIR)/system/AAnimations.cpp		\
 							$(ENGINE_DIR)/system/AAudio.cpp				\
 							$(ENGINE_DIR)/system/ARender.cpp			\
-							$(ENGINE_DIR)/system/AText.cpp				\
 							$(ENGINE_DIR)/type/Animation.cpp			\
 							$(ENGINE_DIR)/type/Vector2D.cpp				\
 
