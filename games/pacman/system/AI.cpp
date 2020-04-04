@@ -27,41 +27,41 @@ void AI::init()
 void AI::update()
 {
     auto& playerList = _world.getGroup("pacman");
-    auto iaList = _world.getEntities<component::AI>();
+    auto aiList = _world.getEntities<component::AI>();
 
     for (auto& player : playerList) {
         auto& pacmanEntity = player.get(); 
         auto& pacmanPosition = pacmanEntity.getComponent<engine::component::Transform>();
 
-        for (auto& iaRefWrap : iaList) {
-            auto& iaEntity = iaRefWrap.get();
-            auto& iaEntityPosition = iaEntity.getComponent<engine::component::Transform>();
-            auto& iaEntityMotion = iaEntity.getComponent<engine::component::Motion>();
+        for (auto& aiRefWrap : aiList) {
+            auto& aiEntity = aiRefWrap.get();
+            auto& aiEntityPosition = aiEntity.getComponent<engine::component::Transform>();
+            auto& aiEntityMotion = aiEntity.getComponent<engine::component::Motion>();
 
-            int diffX = pacmanPosition.position.x - iaEntityPosition.position.x;
-            int diffY = pacmanPosition.position.y - iaEntityPosition.position.y;
+            int diffX = pacmanPosition.position.x - aiEntityPosition.position.x;
+            int diffY = pacmanPosition.position.y - aiEntityPosition.position.y;
 
             int absDiffX = (diffX < 0) ? diffX - ( 2 * diffX) : diffX;
             int absDiffY = (diffY < 0) ? diffY - ( 2 * diffY) : diffY;
 
             if (absDiffX > absDiffY) {
                 if (diffX > 0) {
-                    iaEntityMotion.velocity.x = 1;
-                    iaEntityMotion.velocity.y = 0;
+                    aiEntityMotion.velocity.x = 1;
+                    aiEntityMotion.velocity.y = 0;
                 }
                 else {
-                    iaEntityMotion.velocity.x = -1;
-                    iaEntityMotion.velocity.y = 0;
+                    aiEntityMotion.velocity.x = -1;
+                    aiEntityMotion.velocity.y = 0;
                 }
             }
             else {
                 if (diffY > 0) {
-                    iaEntityMotion.velocity.x = 0;
-                    iaEntityMotion.velocity.y = 1;
+                    aiEntityMotion.velocity.x = 0;
+                    aiEntityMotion.velocity.y = 1;
                 }
                 else {
-                    iaEntityMotion.velocity.x = 0;
-                    iaEntityMotion.velocity.y = -1;
+                    aiEntityMotion.velocity.x = 0;
+                    aiEntityMotion.velocity.y = -1;
                 }
             }
         }

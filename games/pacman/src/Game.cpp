@@ -59,14 +59,11 @@ void Game::init()
         mainGame.addToGroup(wall, "wall");
     }
 
-    std::vector<std::string> pathsPacman {("assets/test_pacman.png")};
-    std::vector<std::string> pathsRed {("assets/test_red.png")};
-    std::vector<std::string> pathsBlue {("assets/test_blue.png")};
-    std::vector<std::string> pathsPink {("assets/test_pink.png")};
-    std::vector<std::string> pathsOrange {("assets/test_orange.png")};
-    engine::type::Vector2D orangeVelocity(0, 1);
-    engine::type::Vector2D orangeAcceleration(0, 0);
-    engine::type::Vector2D orangePosition(1100, 900);
+    std::vector<std::string> pathsPacman{"assets/test_pacman.png", "assets/test_pacman.png", "ressource_pacman"};
+    std::vector<std::string> pathsRed{"assets/test_red.png", "assets/test_red.png", "ressource_red_ghost"};
+    std::vector<std::string> pathsBlue{"assets/test_blue.png", "assets/test_blue.png", "ressource_blue_ghost"};
+    std::vector<std::string> pathsPink{"assets/test_pink.png", "assets/test_pink.png", "ressource_pink_ghost"};
+    std::vector<std::string> pathsOrange{"assets/test_orange.png", "assets/test_orange.png", "ressource_orange_ghost"};
 
     mainGame.addSystem<system::AI>();
     mainGame.addSystem<engine::system::ARender>();
