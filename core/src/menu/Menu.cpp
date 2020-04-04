@@ -47,7 +47,11 @@ void Menu::init()
         const std::vector<std::string> pathsRender {"./assets/button.png", "./assets/button.png", "ressource_button"};
         entity.addComponent<engine::component::ARender>(pathsRender);
         const std::vector<std::string> pathsText {"./assets/game_over.ttf", "./assets/game_over.ttf", "font_button"};
-        const std::string text = graph.second->get().getName();
+        std::string name = graph.first;
+        std::for_each(name.begin(), name.end(), [](char & c) {
+          c = ::toupper(c);
+        });
+        const std::string text = name;
         entity.addComponent<engine::component::AText>(text, pathsText);
         entity.addComponent<engine::component::Size>(400, 150);
         x = 440;
@@ -78,7 +82,11 @@ void Menu::init()
         const std::vector<std::string> pathsRender {"./assets/button.png", "./assets/button.png", "ressource_button"};
         entity.addComponent<engine::component::ARender>(pathsRender);
         const std::vector<std::string> pathsText {"./assets/game_over.ttf", "./assets/game_over.ttf", "font_button"};
-        const std::string text = game.second->get().getName();
+        std::string name = game.first;
+        std::for_each(name.begin(), name.end(), [](char & c) {
+          c = ::toupper(c);
+        });
+        const std::string text = name;
         entity.addComponent<engine::component::AText>(text, pathsText);
         entity.addComponent<engine::component::Size>(400, 150);
         x = 1920 - 440 - 400;
