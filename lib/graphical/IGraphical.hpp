@@ -17,7 +17,6 @@
 #include "../../engine/system/AAnimations.hpp"
 #include "../../engine/system/AAudio.hpp"
 #include "../../engine/system/ARender.hpp"
-#include "../../engine/system/AText.hpp"
 
 namespace graphical {
 
@@ -44,7 +43,6 @@ class IGraphical {
    public:
     virtual engine::system::AAudio& createAudioSystem(engine::ecs::World& world) = 0;
     virtual engine::system::ARender& createRenderSystem(engine::ecs::World& world) = 0;
-    virtual engine::system::AText& createTextSystem(engine::ecs::World& world) = 0;
     virtual engine::system::AAnimations& createAnimationsSystem(engine::ecs::World& world) = 0;
 };
 

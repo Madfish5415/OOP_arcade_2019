@@ -9,7 +9,6 @@
 
 #include <component/Audio.hpp>
 #include <vector>
-#include <iostream>
 
 #include "../../graphical/AGraphical.hpp"
 #include "../component/Audio.hpp"
@@ -18,7 +17,6 @@
 #include "../system/Animations.hpp"
 #include "../system/Audio.hpp"
 #include "../system/Render.hpp"
-#include "../system/Text.hpp"
 
 using namespace sfml;
 
@@ -93,12 +91,6 @@ engine::system::ARender& Graphical::createRenderSystem(engine::ecs::World& world
 {
     auto render = new system::Render(world, *_window);
     return *render;
-}
-
-engine::system::AText& Graphical::createTextSystem(engine::ecs::World& world)
-{
-    auto text = new system::Text(world, *_window);
-    return *text;
 }
 
 engine::system::AAudio& Graphical::createAudioSystem(engine::ecs::World& world)

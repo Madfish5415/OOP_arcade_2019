@@ -34,7 +34,6 @@ class AGraphical : public IGraphical {
    public:
     engine::system::AAudio& createAudioSystem(engine::ecs::World& world) override = 0;
     engine::system::ARender& createRenderSystem(engine::ecs::World& world) override = 0;
-    engine::system::AText& createTextSystem(engine::ecs::World& world) override = 0;
     engine::system::AAnimations& createAnimationsSystem(engine::ecs::World& world) override = 0;
 
    protected:

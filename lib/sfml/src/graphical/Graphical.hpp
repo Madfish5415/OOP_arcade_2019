@@ -94,7 +94,6 @@ class Graphical : public graphical::AGraphical {
    public:
     engine::system::AAudio& createAudioSystem(engine::ecs::World& world) override;
     engine::system::ARender& createRenderSystem(engine::ecs::World& world) override;
-    engine::system::AText& createTextSystem(engine::ecs::World& world) override;
     engine::system::AAnimations& createAnimationsSystem(engine::ecs::World& world) override;
 
    private:

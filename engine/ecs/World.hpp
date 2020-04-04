@@ -22,7 +22,7 @@ class Universe;
 
 #include "ASystem.hpp"
 #include "Entity.hpp"
-#include "../system/AText.hpp"
+#include "../../core/src/core/Core.hpp"
 
 namespace engine {
 
@@ -130,8 +130,6 @@ template <>
 engine::system::AAnimations& World::addSystem<engine::system::AAnimations>();
 template <>
 engine::system::ARender& World::addSystem<engine::system::ARender>();
-template <>
-engine::system::AText& World::addSystem<engine::system::AText>();
 
 }  // namespace ecs
 
