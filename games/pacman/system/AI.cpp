@@ -26,48 +26,42 @@ void AI::init()
 
 void AI::update()
 {
-    auto& pacmans = _world.getGroup("pacman");
-    auto ia_list = _world.getEntities<component::AI>();
+    auto& playerList = _world.getGroup("pacman");
+    auto iaList = _world.getEntities<component::AI>();
 
-    for (auto& my_pacman : pacmans) {
-        auto &the_pacman = my_pacman.get(); 
-        auto& pacman_position = the_pacman.getComponent<engine::component::Transform>();
+    for (auto& player : playerList) {
+        auto& pacmanEntity = player.get(); 
+        auto& pacmanPosition = pacmanEntity.getComponent<engine::component::Transform>();
 
-        for (auto& ia_ref_wrap : ia_list) {
-            auto& ia_entity = ia_ref_wrap.get();
-            auto& ia_entity_position = ia_entity.getComponent<engine::component::Transform>();
-            auto& ia_entity_motion = ia_entity.getComponent<engine::component::Motion>();
+        for (auto& iaRefWrap : iaList) {
+            auto& iaEntity = iaRefWrap.get();
+            auto& iaEntityPosition = iaEntity.getComponent<engine::component::Transform>();
+            auto& iaEntityMotion = iaEntity.getComponent<engine::component::Motion>();
 
-            int diff_x = pacman_position.position.x - ia_entity_position.position.x;
-            int diff_y = pacman_position.position.y - ia_entity_position.position.y;
+            int diffX = pacmanPosition.position.x - iaEntityPosition.position.x;
+            int diffY = pacmanPosition.position.y - iaEntityPosition.position.y;
 
-            int abs_diff_x = diff_x;
-            int abs_diff_y = diff_y;
+            int absDiffX = (diffX < 0) ? diffX - ( 2 * diffX) : diffX;
+            int absDiffY = (diffY < 0) ? diffY - ( 2 * diffY) : diffY;
 
-            if (diff_x < 0)
-                abs_diff_x = diff_x - (2 * diff_x);
-
-            if (diff_y < 0)
-                abs_diff_y = diff_y - (2 * diff_y);
-
-            if (abs_diff_x > abs_diff_y) {
-                if (diff_x > 0) {
-                    ia_entity_motion.velocity.x = 1;
-                    ia_entity_motion.velocity.y = 0;
+            if (absDiffX > absDiffY) {
+                if (diffX > 0) {
+                    iaEntityMotion.velocity.x = 1;
+                    iaEntityMotion.velocity.y = 0;
                 }
                 else {
-                    ia_entity_motion.velocity.x = -1;
-                    ia_entity_motion.velocity.y = 0;
+                    iaEntityMotion.velocity.x = -1;
+                    iaEntityMotion.velocity.y = 0;
                 }
             }
             else {
-                if (diff_y > 0) {
-                    ia_entity_motion.velocity.x = 0;
-                    ia_entity_motion.velocity.y = 1;
+                if (diffY > 0) {
+                    iaEntityMotion.velocity.x = 0;
+                    iaEntityMotion.velocity.y = 1;
                 }
                 else {
-                    ia_entity_motion.velocity.x = 0;
-                    ia_entity_motion.velocity.y = -1;
+                    iaEntityMotion.velocity.x = 0;
+                    iaEntityMotion.velocity.y = -1;
                 }
             }
         }

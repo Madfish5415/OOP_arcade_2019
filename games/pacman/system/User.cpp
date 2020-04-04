@@ -33,26 +33,26 @@ void User::render()
 
 void User::inputSubscriber(engine::event::Input& event)
 {
-    auto& pacmans = _world.getGroup("pacman");
+    auto& playerList = _world.getGroup("pacman");
 
-    for (auto& my_pacman : pacmans) {
-        auto &the_pacman = my_pacman.get();
-        auto& pacman_motion = the_pacman.getComponent<engine::component::Motion>();
+    for (auto& player : playerList) {
+        auto& pacmanEntity = player.get();
+        auto& pacmanMotion = pacmanEntity.getComponent<engine::component::Motion>();
         if (event.code == event.KEY_LEFT) {
-            pacman_motion.velocity.x = -1;
-            pacman_motion.velocity.y = 0;
+            pacmanMotion.velocity.x = -1;
+            pacmanMotion.velocity.y = 0;
         }
         else if (event.code == event.KEY_UP) {
-            pacman_motion.velocity.x = 0;
-            pacman_motion.velocity.y = -1;
+            pacmanMotion.velocity.x = 0;
+            pacmanMotion.velocity.y = -1;
         }
         else if (event.code == event.KEY_RIGHT) {
-            pacman_motion.velocity.x = 1;
-            pacman_motion.velocity.y = 0;
+            pacmanMotion.velocity.x = 1;
+            pacmanMotion.velocity.y = 0;
         }
         else if (event.code == event.KEY_DOWN) {
-            pacman_motion.velocity.x = 0;
-            pacman_motion.velocity.y = 1;
+            pacmanMotion.velocity.x = 0;
+            pacmanMotion.velocity.y = 1;
         }
     }
 }
