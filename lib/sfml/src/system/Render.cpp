@@ -11,9 +11,8 @@
 
 #include "../../../engine/component/Transform.hpp"
 #include "../../../engine/component/Size.hpp"
-#include "../../../engine/ecs/Entity.hpp"
-#include "../../../engine/ecs/World.hpp"
 #include "../component/Render.hpp"
+#include "../component/Text.hpp"
 
 using namespace sfml;
 using namespace system;
@@ -30,29 +29,47 @@ void Render::init()
 
 void Render::update()
 {
-    auto entities_transform = _world.getEntities<component::Render, engine::component::Transform>();
-    auto entities_size = _world.getEntities<component::Render, engine::component::Size>();
+    auto entities_transform = _world.getEntities<engine::component::Transform>();
+    auto entities_size = _world.getEntities<engine::component::Size>();
 
     for (auto& i : entities_transform) {
-        auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
-        auto& pos = i.get().getComponent<engine::component::Transform>();
-        
-        render.sprite.setPosition(pos.position.x, pos.position.y);
+        if (i.get().hasComponents<engine::component::ARender>()) {
+            auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
+            auto& pos = i.get().getComponent<engine::component::Transform>();
+
+            render.sprite.setPosition(pos.position.x, pos.position.y);
+        }
+        if (i.get().hasComponents<engine::component::AText>()) {
+            auto& text = dynamic_cast<component::Text&>(i.get().getComponent<engine::component::AText>());
+            auto& pos = i.get().getComponent<engine::component::Transform>();
+
+            text.sfText.setPosition((float)pos.position.x, (float)pos.position.y);
+        }
     }
     for (auto& i : entities_size) {
-        auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
-        auto& size = i.get().getComponent<engine::component::Size>();
+        if (i.get().hasComponents<engine::component::ARender>()) {
+            auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
+            auto& size = i.get().getComponent<engine::component::Size>();
 
-        render.srcRect.width = size.width;
-        render.srcRect.height = size.height;
-        render.sprite.setScale(render.destRect.width / render.srcRect.width, 
-        render.destRect.height / render.srcRect.height);
+            render.destRect.width = size.width;
+            render.destRect.height = size.height;
+            render.sprite.setScale(float(render.destRect.width) / float(render.srcRect.width),
+                                   float(render.destRect.height) / float(render.srcRect.height));
+        }
+        if (i.get().hasComponents<engine::component::AText>()) {
+            auto &text = dynamic_cast<component::Text &>(i.get().getComponent<engine::component::AText>());
+            auto &size = i.get().getComponent<engine::component::Size>();
+            sf::FloatRect bounds = text.sfText.getLocalBounds();
+
+            text.sfText.setScale((float) size.width / bounds.width,
+                                 (float) size.height / bounds.height);
+        }
     }
 }
 
 void Render::render()
 {
-    auto entities = _world.getEntities<Render, engine::component::Transform>();
+    auto entities = _world.getEntities<engine::component::Transform>();
 
     if (!window.isOpen())
         return;
@@ -62,8 +79,14 @@ void Render::render()
 
     window.clear();
     for (auto& i : entities) {
-        auto& comp = i.get().getComponent<engine::component::ARender>();
-        window.draw(dynamic_cast<component::Render&>(comp).sprite);
+        if (i.get().hasComponents<engine::component::ARender>()) {
+            auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
+            window.draw(render.sprite);
+        }
+        if (i.get().hasComponents<engine::component::AText>()) {
+            auto& text = dynamic_cast<component::Text&>(i.get().getComponent<engine::component::AText>());
+            window.draw(text.sfText);
+        }
     }
     window.display();
 }

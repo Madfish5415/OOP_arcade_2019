@@ -14,7 +14,7 @@ namespace game {
 
 class IGame {
    public:
-    virtual ~IGame() = 0;
+    virtual ~IGame() = default;
 
     virtual std::string getName() = 0;
 
