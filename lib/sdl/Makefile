@@ -58,7 +58,7 @@ TEST_SRC			=
 
 CFLAGS				+=		-I $(INCL_DIR)
 CFLAGS				+=		-W -Wall -Wextra -Werror
-LDFLAGS 			+= 		-lSDL2 -lSDL2 -lSDL2_image
+LDFLAGS 			+= 		-lSDL2 -lSDL2 -lSDL2_image -lSDL2_ttf
 
 
 MAIN_OBJ			=		$(MAIN_SRC:%.cpp=$(OBJ_DIR)/%.o)

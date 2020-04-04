@@ -8,7 +8,7 @@
 #include "Graphical.hpp"
 
 #include <SDL2/SDL_image.h>
-
+#include <SDL2/SDL_ttf.h>
 #include <vector>
 
 #include "../../graphical/AGraphical.hpp"
@@ -32,6 +32,7 @@ void Graphical::init()
 {
     IMG_Init(IMG_INIT_PNG);
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    TTF_Init();
     _window = SDL_CreateWindow("Arcade", 0, 0, 1920, 1080, 0);
     _renderer = SDL_CreateRenderer(_window, -1, 0);
 }
@@ -57,6 +58,7 @@ void Graphical::destroy()
     SDL_DestroyWindow(_window);
     SDL_DestroyRenderer(_renderer);
     IMG_Quit();
+    TTF_Quit();
     SDL_Quit();
 }
 
@@ -74,7 +76,7 @@ engine::component::AAudio& Graphical::createAudio(engine::ecs::Entity& entity, c
 
 engine::component::AText& Graphical::createText(engine::ecs::Entity& entity, const std::string& text, const std::vector<std::string>& paths)
 {
-    auto cmptext = new component::Text(entity, text, paths);
+    auto cmptext = new component::Text(entity, text, paths, _renderer);
     return *cmptext;
 }
 
