@@ -12,9 +12,15 @@ namespace engine {
 
 namespace eventbus {
 
+    /** \brief The Abstract Class used to represent all the events that may happens during the execution */
 class AEvent {
    public:
+    /** \brief Constructor of the AEvent abstract class */
     AEvent();
+
+    /** \brief Destructor of the abstract component
+     * Set as default
+     **/
     virtual ~AEvent() = 0;
 };
 

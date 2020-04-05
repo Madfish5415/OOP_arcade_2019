@@ -14,9 +14,13 @@ namespace engine {
 
 namespace event {
 
+    /** \brief The class used to signal that the user closed the window */
 class Close : public eventbus::AEvent {
    public:
+    /** \brief Constructor of the Close class used to signal that the user closed the window */
     Close();
+
+    /** \brief Destructor of Close set as default*/
     ~Close() override;
 };
 

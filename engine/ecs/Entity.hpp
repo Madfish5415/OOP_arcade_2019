@@ -26,19 +26,33 @@ namespace engine {
 
 namespace ecs {
 
+    /** \brief The class used to represent every Entity (everything used on the game) that can have different components */
 class Entity {
    private:
     World& _world;
     std::map<std::type_index, std::reference_wrapper<AComponent>> _components;
 
    public:
+    /** \brief Constructor of the entity
+    * \param world The world which the entity belongs to
+    **/
     Entity(World& world);
+
+    /** \brief Destructor of the entity
+     * Delete the components that the entity contains
+     **/
     ~Entity();
 
    public:
+    /** \brief Return the world which the entity belongs to
+    * \return A Reference to the world
+    * */
     World& getWorld() const;
 
    public:
+    /** \brief Add the component based on the typename to the entity
+    *  \return A reference to the component
+    * */
     template <typename T, typename... TArgs>
     T& addComponent(TArgs&&... mArgs) {
         std::type_index id = typeid(T);
@@ -56,6 +70,10 @@ class Entity {
 
         return *component;
     };
+
+    /** \brief Return a boolean defining if the entity has a component specified by the typename
+    * \return true if the entity got the component, false otherwise
+    * */
     template <typename T = void, typename... TArgs>
     bool hasComponents() const {
         std::type_index id = typeid(T);
@@ -66,6 +84,10 @@ class Entity {
 
         return has;
     };
+
+    /** \brief Return the component specified by the typename
+    * \return A reference to the component asked
+    * */
     template <typename T>
     T& getComponent() const {
         std::type_index id = typeid(T);
@@ -77,6 +99,9 @@ class Entity {
 
         throw std::exception();
     };
+
+    /** \brief Delete the component specified by the typename
+    * */
     template <typename T>
     void removeComponent() {
         std::type_index id = typeid(T);
@@ -94,10 +119,35 @@ class Entity {
     };
 };
 
+/** \brief Add the component Render to the entity
+* \param paths a vector of std::string that represent all the paths to the texture where:
+* paths[0] is the path for the text libraries (Ncurses)
+* paths[1] is the path for the graphic libraries (SFML / SDL)
+* paths[2] is the path for the debug librarie
+\return A reference to the component
+* */
 template <>
 engine::component::ARender& Entity::addComponent<engine::component::ARender>(const std::vector<std::string>& paths);
+
+/** \brief Add the component Audio to the entity
+* \param paths a vector of std::string that represent all the paths to the music where:
+* paths[0] is the path for the text libraries (Ncurses)
+* paths[1] is the path for the graphic libraries (SFML / SDL)
+* paths[2] is the path for the debug librarie
+\return A reference to the component
+* */
+
 template <>
 engine::component::AAudio& Entity::addComponent<engine::component::AAudio>(const std::vector<std::string>& paths);
+
+/** \brief Add the component Text to the entity
+* \param text an std::string representing the text to display
+* \param paths a vector of std::string that represent all the paths to the text where:
+* paths[0] is the path for the text libraries (Ncurses)
+* paths[1] is the path for the graphic libraries (SFML / SDL)
+* paths[2] is the path for the debug librarie
+\return A reference to the component
+* */
 template <>
 engine::component::AText& Entity::addComponent<engine::component::AText>(const std::string& text, const std::vector<std::string>& paths);
 
