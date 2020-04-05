@@ -57,6 +57,20 @@ void Game::init()
                                                         {560, 710}, {760, 710}, {800, 710}, {840, 710}, {880, 710}, {920, 710}, {1000, 710}, {1040, 710}, {1080, 710}, {1120, 710}, {1160, 710}, {1360, 710},
                                                         {640, 750}, {680, 750}, {1240, 750}, {1280, 750}};
 
+    std::vector<std::pair<int, int>> pacgumsPosition = {{495, 325}, {535, 325}, {615, 325}, {655, 325}, {695, 325}, {735, 325}, {775, 325}, {815, 325}, {855, 325}, {895, 325}, {935, 325}, {975, 325}, {1015, 325}, {1055, 325}, {1095, 325}, {1135, 325}, {1175, 325}, {1215, 325}, {1255, 325}, {1295, 325}, {1335, 325}, {1375, 325},
+                                                        {495, 365}, {615, 365}, {735, 365}, {935, 365}, {1135, 365}, {1255, 365}, {1375, 365},
+                                                        {495, 405}, {615, 405}, {695, 405}, {735, 405}, {775, 405}, {815, 405}, {855, 405}, {895, 405}, {935, 405}, {975, 405}, {1015, 405}, {1055, 405}, {1095, 405}, {1135, 405}, {1255, 405}, {1375, 405},
+                                                        {495, 445}, {535, 445}, {575, 445}, {615, 445}, {695, 445}, {775, 445}, {935, 445}, {1095, 445}, {1175, 445}, {1255, 445}, {1295, 445}, {1335, 445}, {1375, 445},
+                                                        {615, 485}, {655, 485}, {695, 485}, {775, 485}, {1095, 485}, {1175, 485}, {1215, 485}, {1255, 485},
+                                                        {615, 525}, {695, 525}, {735, 525}, {775, 525}, {1095, 525}, {1135, 525}, {1175, 525}, {1255, 525},
+                                                        {615, 565}, {695, 565}, {775, 565}, {1095, 565}, {1175, 565}, {1255, 565},
+                                                        {615, 605}, {695, 605}, {775, 605}, {1095, 605}, {1175, 605}, {1215, 605}, {1255, 605},
+                                                        {495, 645}, {535, 645}, {575, 645}, {615, 645}, {695, 645}, {735, 645}, {775, 645}, {1095, 645}, {1135, 645}, {1175, 645}, {1255, 645}, {1295, 645}, {1335, 645}, {1375, 645},
+                                                        {495, 685}, {615, 685}, {775, 685}, {815, 685}, {855, 685}, {895, 685}, {935, 685}, {975, 685}, {1015, 685}, {1055, 685}, {1095, 685}, {1255, 685}, {1375, 685},
+                                                        {495, 725}, {575, 725}, {615, 725}, {655, 725}, {695, 725}, {935, 725}, {1175, 725}, {1215, 725}, {1255, 725}, {1295, 725}, {1375, 725},
+                                                        {495, 765}, {535, 765}, {575, 765}, {695, 765}, {735, 765}, {775, 765}, {815, 765}, {855, 765}, {895, 765}, {935, 765}, {975, 765}, {1015, 765}, {1055, 765}, {1095, 765}, {1135, 765}, {1175, 765}, {1335, 765}, {1375, 765}};
+
+    std::vector<std::pair<int, int>> pacgumsSpecialPosition = {{575, 325}, {1175, 405}, {655, 605}, {1295, 765}};
 
     engine::ecs::World& mainGame = this->_universe.createWorld("mainGamePacman");
     mainGame.addSystem<system::AI>();
@@ -118,6 +132,26 @@ void Game::init()
         wall.addComponent<engine::component::Size>(40, 40);
         wall.addComponent<engine::component::Transform>(engine::type::Vector2D(wallsPosition[i].first, wallsPosition[i].second), 1);
         mainGame.addToGroup(wall, "wall");
+    }
+
+    const std::vector<std::string> pathsPacgums {"assets/little_dat.png", "assets/little_dat.png", "ressource_pacgum"};
+    for (size_t i = 0; i < pacgumsPosition.size(); i++) {
+        engine::ecs::Entity& pacgum = mainGame.createEntity();
+        pacgum.addComponent<engine::component::ARender>(pathsPacgums);
+        pacgum.addComponent<engine::component::Hitbox>(10, 10);
+        pacgum.addComponent<engine::component::Size>(10, 10);
+        pacgum.addComponent<engine::component::Transform>(engine::type::Vector2D(pacgumsPosition[i].first, pacgumsPosition[i].second), 1);
+        mainGame.addToGroup(pacgum, "pacgum");
+    }
+
+    const std::vector<std::string> pathsPacgumsSpecial {"assets/big_dat.png", "assets/big_dat.png", "ressource_pacgum_special"};
+    for (size_t i = 0; i < pacgumsSpecialPosition.size(); i++) {
+        engine::ecs::Entity& pacgumSpecial = mainGame.createEntity();
+        pacgumSpecial.addComponent<engine::component::ARender>(pathsPacgumsSpecial);
+        pacgumSpecial.addComponent<engine::component::Hitbox>(10, 10);
+        pacgumSpecial.addComponent<engine::component::Size>(10, 10);
+        pacgumSpecial.addComponent<engine::component::Transform>(engine::type::Vector2D(pacgumsSpecialPosition[i].first, pacgumsSpecialPosition[i].second), 1);
+        mainGame.addToGroup(pacgumSpecial, "pacgumSpecial");
     }
 
     mainGame.addToGroup(pacmanEntity, "pacman");
