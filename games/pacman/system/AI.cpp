@@ -41,10 +41,7 @@ void AI::update()
             int diffX = pacmanPosition.position.x - aiEntityPosition.position.x;
             int diffY = pacmanPosition.position.y - aiEntityPosition.position.y;
 
-            int absDiffX = (diffX < 0) ? diffX - ( 2 * diffX) : diffX;
-            int absDiffY = (diffY < 0) ? diffY - ( 2 * diffY) : diffY;
-
-            if (absDiffX > absDiffY) {
+            if (std::abs(diffX) > std::abs(diffY)) {
                 if (diffX > 0) {
                     aiEntityMotion.velocity.x = 1;
                     aiEntityMotion.velocity.y = 0;
