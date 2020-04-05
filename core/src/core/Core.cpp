@@ -56,9 +56,9 @@ void Core::loadGames()
         }
     }
 
-    _games.emplace("test1", new DynamicLib<game::IGame>(_universe));
-    _games.emplace("test2", new DynamicLib<game::IGame>(_universe));
-    _games.emplace("Menu", new DynamicLib<game::IGame>(_universe));
+    _games.emplace("test1", new DynamicLib<game::IGame>(_universe, "test1"));
+    _games.emplace("test2", new DynamicLib<game::IGame>(_universe, "test2"));
+    _games.emplace("Menu", new DynamicLib<game::IGame>(_universe, "Menu"));
 
     _currentGame = "Menu";
 }
@@ -111,15 +111,17 @@ void Core::setCurrentGame(const std::string& name)
 
     if (_currentGame == name) return;
 
-    _universe->getEventBus().unsubscribe();
     _games[_currentGame]->get().destroy();
 
+    _currentGame = name;
+
+    _universe->getEventBus().unsubscribe();
     _universe->getEventBus().subscribe(*this, &Core::closeSubscriber);
     _universe->getEventBus().subscribe(*this, &Core::switchSubscriber);
 
     _games[name]->get().init();
 
-    _currentGame = name;
+    _universe->init();
 }
 
 std::map<std::string, DynamicLib<game::IGame>*>& Core::getGames()

@@ -14,8 +14,8 @@ namespace menu {
 
 class Menu : public game::AGame {
    public:
-    Menu(engine::ecs::Universe& universe);
-    virtual ~Menu();
+    Menu(engine::ecs::Universe& universe, std::string name);
+    ~Menu() override;
 
    public:
     void init() override;

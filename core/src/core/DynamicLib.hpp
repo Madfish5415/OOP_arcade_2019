@@ -38,10 +38,10 @@ class DynamicLib {
 
         _lib = createFunc(args...);
     };
-    DynamicLib(engine::ecs::Universe* universe) {
+    DynamicLib(engine::ecs::Universe* universe, std::string name) {
         _handle = nullptr;
         _path = "";
-        _lib = new menu::Menu(*universe);
+        _lib = new menu::Menu(*universe, name);
     };
 
     ~DynamicLib() {

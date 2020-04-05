@@ -24,7 +24,7 @@
 
 using namespace menu;
 
-Menu::Menu(engine::ecs::Universe& universe) : game::AGame(universe, "Menu")
+Menu::Menu(engine::ecs::Universe& universe, std::string name) : game::AGame(universe, name)
 {
 }
 
@@ -32,7 +32,7 @@ Menu::~Menu() = default;
 
 void Menu::init()
 {
-    auto& world = _universe.createWorld("Menu");
+    auto& world = _universe.createWorld(getName());
 
     int i = 0;
 
@@ -117,10 +117,10 @@ void Menu::init()
     world.addSystem<engine::system::Movement>();
     world.addSystem<engine::system::Physics>();
 
-    _universe.setCurrentWorld("Menu");
+    _universe.setCurrentWorld(getName());
 }
 
 void Menu::destroy()
 {
-    _universe.deleteWorld("Menu");
+    _universe.deleteWorld(getName());
 }
