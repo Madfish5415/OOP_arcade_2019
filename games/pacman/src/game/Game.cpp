@@ -72,6 +72,17 @@ void Game::init()
 
     std::vector<std::pair<int, int>> pacgumsSpecialPosition = {{575, 325}, {1175, 405}, {655, 605}, {1295, 765}};
 
+    std::vector<std::pair<int, int>> intersectionsPosition = {{640, 310}, {760, 310}, {960, 310}, {1160, 310}, {1280, 310},
+                                                                {760, 390}, {800, 390}, {960, 390}, {1120, 390}, {1160, 390},
+                                                                {640, 430}, {1280, 430},
+                                                                {640, 470}, {720, 470}, {960, 470}, {1200, 470}, {1280, 470},
+                                                                {720, 510}, {800, 510}, {1120, 510}, {1200, 510},
+                                                                {640, 590}, {720, 590}, {1200, 590}, {1280, 590},
+                                                                {640, 630}, {800, 630}, {1120, 630}, {1280, 630},
+                                                                {960, 670},
+                                                                {640, 710}, {1280, 710},
+                                                                {960, 750}};
+
     engine::ecs::World& mainGame = this->_universe.createWorld("mainGamePacman");
     mainGame.addSystem<system::AI>();
     mainGame.addSystem<engine::system::ARender>();
@@ -152,6 +163,14 @@ void Game::init()
         pacgumSpecial.addComponent<engine::component::Size>(10, 10);
         pacgumSpecial.addComponent<engine::component::Transform>(engine::type::Vector2D(pacgumsSpecialPosition[i].first, pacgumsSpecialPosition[i].second), 1);
         mainGame.addToGroup(pacgumSpecial, "pacgumSpecial");
+    }
+
+    for (size_t i = 0; i < intersectionsPosition.size(); i++) {
+        engine::ecs::Entity& intersect = mainGame.createEntity();
+        intersect.addComponent<engine::component::Hitbox>(40, 40);
+        intersect.addComponent<engine::component::Size>(40, 40);
+        intersect.addComponent<engine::component::Transform>(engine::type::Vector2D(pacgumsSpecialPosition[i].first, pacgumsSpecialPosition[i].second), 1);
+        mainGame.addToGroup(intersect, "intersect");
     }
 
     mainGame.addToGroup(pacmanEntity, "pacman");
