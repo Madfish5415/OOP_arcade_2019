@@ -14,6 +14,7 @@
 #include "../../../engine/ecs/Entity.hpp"
 #include "../../../engine/ecs/World.hpp"
 #include "../component/Render.hpp"
+#include "../component/Text.hpp"
 
 using namespace sdl;
 using namespace system;
@@ -30,28 +31,49 @@ void Render::init()
 
 void Render::update()
 {
-    auto entities_transform = _world.getEntities<component::Render, engine::component::Transform>();
-    auto entities_size = _world.getEntities<component::Render, engine::component::Size>();
+
+    auto entities_transform = _world.getEntities<engine::component::Transform>();
+    auto entities_size = _world.getEntities<engine::component::Size>();
 
     for (auto& i : entities_transform) {
-        auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
-        auto& pos = i.get().getComponent<engine::component::Transform>();
+        if (i.get().hasComponents<engine::component::ARender>()) {
+            auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
+            auto& pos = i.get().getComponent<engine::component::Transform>();
 
-        render.destRect.x = pos.position.x;
-        render.destRect.y = pos.position.y;
+            render.destRect.x = pos.position.x;
+            render.destRect.y = pos.position.y;
+        }
+        if (i.get().hasComponents<engine::component::AText>()) {
+            auto& text = dynamic_cast<component::Text&>(i.get().getComponent<engine::component::AText>());
+            auto& pos = i.get().getComponent<engine::component::Transform>();
+
+            text.destRect.x = pos.position.x;
+            text.destRect.y = pos.position.y;
+        }
     }
-    for (auto& i : entities_size) {
-        auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
-        auto& size = i.get().getComponent<engine::component::Size>();
 
-        render.destRect.w = size.width;
-        render.destRect.h = size.height;
+    for (auto& i : entities_size) {
+        if (i.get().hasComponents<engine::component::ARender>()) {
+            auto& render = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
+            auto& size = i.get().getComponent<engine::component::Size>();
+
+            render.destRect.w = size.width;
+            render.destRect.h = size.height;
+        }
+        if (i.get().hasComponents<engine::component::AText>()) {
+            auto &text = dynamic_cast<component::Text &>(i.get().getComponent<engine::component::AText>());
+            auto &size = i.get().getComponent<engine::component::Size>();
+
+
+            text.destRect.w = size.width;
+            text.destRect.h = size.height;
+        }
     }
 }
 
 void Render::render()
 {
-    auto entities = _world.getEntities<Render, engine::component::Transform>();
+    auto entities = _world.getEntities<engine::component::Transform>();
 
     std::sort(entities.begin(), entities.end(), [](const engine::ecs::Entity& lhs, const engine::ecs::Entity& rhs) {
         return lhs.getComponent<engine::component::Transform>().layer < rhs.getComponent<engine::component::Transform>().layer;
@@ -59,8 +81,14 @@ void Render::render()
 
     SDL_RenderClear(&renderer);
     for (auto& i : entities) {
-        auto& comp = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
-        SDL_RenderCopyEx(&renderer, comp.texture, &(comp.srcRect), &(comp.destRect), comp.angle, nullptr, comp.spriteFlip);
+        if (i.get().hasComponents<engine::component::ARender>()) {
+            auto& comp = dynamic_cast<component::Render&>(i.get().getComponent<engine::component::ARender>());
+            SDL_RenderCopyEx(&renderer, comp.texture, &(comp.srcRect), &(comp.destRect), comp.angle, nullptr, comp.spriteFlip);
+        }
+        if (i.get().hasComponents<engine::component::AText>()) {
+            auto& text = dynamic_cast<component::Text&>(i.get().getComponent<engine::component::AText>());
+            SDL_RenderCopyEx(&renderer, text.texture, &(text.srcRect), &(text.destRect), text.angle, nullptr, text.spriteFlip);
+        }
     }
     SDL_RenderPresent(&renderer);
 }
