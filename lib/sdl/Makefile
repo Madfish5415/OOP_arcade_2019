@@ -45,6 +45,7 @@ PROJ_SRC			=		../../graphical/AGraphical.cpp				\
 							$(ENGINE_DIR)/ecs/Universe.cpp				\
 							$(ENGINE_DIR)/ecs/World.cpp					\
 							$(ENGINE_DIR)/event/Input.cpp				\
+							$(ENGINE_DIR)/event/Close.cpp				\
 							$(ENGINE_DIR)/eventbus/AEvent.cpp			\
 							$(ENGINE_DIR)/eventbus/EventBus.cpp			\
 							$(ENGINE_DIR)/system/AAnimations.cpp		\

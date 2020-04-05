@@ -33,12 +33,11 @@ int main()
 
     universe.init();
 
-    core.setCurrentGraphical("sfml");
-
     while (core._run) {
         core.getCurrentGraphical().dispatchEvent();
         universe.update();
         universe.render();
+        core.switchChecker();
     }
 
     core.getCurrentGraphical().destroy();

@@ -11,11 +11,13 @@
 #include <map>
 #include <string>
 
-#include "DynamicLib.hpp"
 #include "../../../engine/ecs/Universe.hpp"
 #include "../../../engine/event/Close.hpp"
+#include "../../../engine/event/Switch.hpp"
 #include "../../../games/game/IGame.hpp"
 #include "../../../lib/graphical/IGraphical.hpp"
+#include "DynamicLib.hpp"
+#include "switchHandler.hpp"
 
 namespace core {
 
@@ -57,6 +59,13 @@ class Core {
 
    public:
     void closeSubscriber(engine::event::Close& event);
+    void switchSubscriber(engine::event::Switch& event);
+
+   public:
+    void switchChecker();
+
+   private:
+    switchHandler sHandler;
 };
 
 }  // namespace core

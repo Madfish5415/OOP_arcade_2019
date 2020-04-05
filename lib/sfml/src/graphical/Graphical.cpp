@@ -38,8 +38,7 @@ void Graphical::dispatchEvent()
 {
     sf::Event event;
 
-    while (_window->pollEvent(event))
-    {
+    while (_window->pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
             _window->close();
             auto evt = new engine::event::Close();
@@ -48,24 +47,16 @@ void Graphical::dispatchEvent()
         }
 
         if (event.type == sf::Event::KeyPressed) {
-            for (auto& i : KEYSCORR) {
-                if (event.key.code == i.first) {
-                    auto evt = new engine::event::Input();
-                    evt->code = i.second;
-                    _eventBus.publish(*evt);
-                    delete evt;
-                }
-            }
+            auto evt = new engine::event::Input();
+            evt->code = KEYSCORR.at(event.key.code);
+            _eventBus.publish(*evt);
         }
-
-
     }
 }
 
 void Graphical::destroy()
 {
-    if (_window->isOpen())
-        _window->close();
+    if (_window->isOpen()) _window->close();
     delete _window;
 }
 
@@ -104,4 +95,3 @@ engine::system::AAnimations& Graphical::createAnimationsSystem(engine::ecs::Worl
     auto anim = new system::Animations(world);
     return *anim;
 }
-

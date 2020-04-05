@@ -18,6 +18,7 @@
 #include "../system/Animations.hpp"
 #include "../system/Audio.hpp"
 #include "../system/Render.hpp"
+#include "../../../../engine/event/Close.hpp"
 
 using namespace sdl;
 
@@ -38,24 +39,28 @@ void Graphical::init()
 
 void Graphical::dispatchEvent()
 {
-    SDL_Event e;
+    SDL_Event event;
 
-    while (SDL_PollEvent(&e)) {
-        for (auto &i : KEYSCORR) {
-            if (e.key.keysym.sym == i.first) {
-                auto evt = new engine::event::Input();
-                evt->code = i.second;
-                _eventBus.publish(*evt);
-                delete evt;
-            }
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            auto evt = new engine::event::Close();
+            _eventBus.publish(*evt);
+            delete evt;
+        }
+        if (event.type == SDL_KEYDOWN) {
+            auto evt = new engine::event::Input();
+            evt->code = KEYSCORR.at(event.key.keysym.sym);
+            _eventBus.publish(*evt);
+            delete evt;
         }
     }
 }
 
+
 void Graphical::destroy()
 {
-    SDL_DestroyWindow(_window);
     SDL_DestroyRenderer(_renderer);
+    SDL_DestroyWindow(_window);
     IMG_Quit();
     SDL_Quit();
 }

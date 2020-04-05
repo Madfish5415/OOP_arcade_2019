@@ -26,6 +26,7 @@ MAIN_SRC			=		main.cpp
 
 PROJ_SRC			=		core/Core.cpp				\
 							core/DynamicLib.cpp			\
+							core/switchHandler.cpp		\
 							menu/Menu.cpp				\
 							menu/component/User.cpp		\
 							menu/system/User.cpp		\
@@ -49,6 +50,7 @@ ENGINE_SRC			=		component/AAI.cpp			\
 							event/Close.cpp				\
 							event/Collision.cpp			\
 							event/Input.cpp				\
+							event/Switch.cpp			\
 							eventbus/AEvent.cpp			\
 							eventbus/EventBus.cpp		\
 							system/AAI.cpp				\

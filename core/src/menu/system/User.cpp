@@ -148,6 +148,50 @@ void User::inputSubscriber(engine::event::Input& event)
                 transformCmp.position.x = transformBut.position.x - 15;
                 transformCmp.position.y = transformBut.position.y - 15;
             }
+        } else if (event.code == event.KEY_ENTER || event.code == event.KEY_SPACE) {
+            auto& userCmp = ent.get().getComponent<component::User>();
+
+            int i = 0;
+            auto button = ent;
+            for (auto& group : _world.getGroup(userCmp.currentObserved.first)) {
+                button = group;
+                if (i == userCmp.currentObserved.second) break;
+                i++;
+            }
+
+            if (&button == &ent)
+                continue;
+
+            std::string libname;
+            std::string cmp = button.get().getComponent<engine::component::AText>().text;
+
+            if (userCmp.currentObserved.first == "graph") {
+                for (auto& graph : _world.getUniverse().getCore().getGraphicals()) {
+                    std::string tmp = graph.first;
+                    std::for_each(tmp.begin(), tmp.end(), [](char& c) {
+                      c = ::toupper(c);
+                    });
+
+                    if (tmp == cmp)
+                        libname = graph.first;
+                }
+            } else if (userCmp.currentObserved.first == "game") {
+                for (auto& game : _world.getUniverse().getCore().getGames()) {
+                    std::string tmp = game.first;
+                    std::for_each(tmp.begin(), tmp.end(), [](char& c) {
+                      c = ::toupper(c);
+                    });
+
+                    if (tmp == cmp)
+                        libname = game.first;
+                }
+            }
+
+            auto eventSwitch = new engine::event::Switch(userCmp.currentObserved.first, libname);
+
+            _world.getUniverse().getEventBus().publish(*eventSwitch);
+
+            delete eventSwitch;
         }
     }
 }

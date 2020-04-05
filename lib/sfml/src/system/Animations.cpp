@@ -57,8 +57,6 @@ void Animations::update()
             render.srcRect.left = 0;
         }
 
-        //std::cout << "srcRect : {'left : " << render.srcRect.left << "', 'top : " << render.srcRect.top << "', 'width : " << render.srcRect.width << "', 'height : " << render.srcRect.height << "'}" << std::endl;
-
         render.sprite.setTextureRect(render.srcRect);
     }
 }

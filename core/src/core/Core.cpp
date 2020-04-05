@@ -25,6 +25,7 @@ Core::Core()
     _run = true;
 
     _universe->getEventBus().subscribe(*this, &Core::closeSubscriber);
+    _universe->getEventBus().subscribe(*this, &Core::switchSubscriber);
 }
 
 Core::~Core()
@@ -57,7 +58,6 @@ void Core::loadGames()
 
     _games.emplace("test1", new DynamicLib<game::IGame>(_universe));
     _games.emplace("test2", new DynamicLib<game::IGame>(_universe));
-    _games.emplace("test3", new DynamicLib<game::IGame>(_universe));
     _games.emplace("Menu", new DynamicLib<game::IGame>(_universe));
 
     _currentGame = "Menu";
@@ -115,6 +115,7 @@ void Core::setCurrentGame(const std::string& name)
     _games[_currentGame]->get().destroy();
 
     _universe->getEventBus().subscribe(*this, &Core::closeSubscriber);
+    _universe->getEventBus().subscribe(*this, &Core::switchSubscriber);
 
     _games[name]->get().init();
 
@@ -182,7 +183,7 @@ void Core::setCurrentGraphical(const std::string& name)
         for (auto& ent_ref : world.getEntities<engine::component::AText>()) {
             textComponent.push_back(new componentStore<engine::component::AText, std::string, std::vector<std::string>>(ent_ref.get(),
                 ent_ref.get().getComponent<engine::component::AText>().text, ent_ref.get().getComponent<engine::component::AText>().paths));
-            ent_ref.get().removeComponent<engine::component::AAudio>();
+            ent_ref.get().removeComponent<engine::component::AText>();
         }
 
         if (world.hasSystems<engine::system::AAnimations>()) {
@@ -249,7 +250,26 @@ std::map<std::string, DynamicLib<graphical::IGraphical>*>& Core::getGraphicals()
 
 void Core::closeSubscriber(engine::event::Close& event)
 {
-    (void)event;
+    (void) event;
 
     _run = false;
+}
+
+void Core::switchSubscriber(engine::event::Switch& event)
+{
+    sHandler.state = true;
+    sHandler.type = event.type;
+    sHandler.name = event.name;
+}
+
+void Core::switchChecker()
+{
+    if (sHandler.state) {
+        sHandler.state = false;
+        if (sHandler.type == "graph") {
+            setCurrentGraphical(sHandler.name);
+        } else if (sHandler.type == "game") {
+            setCurrentGame(sHandler.name);
+        }
+    }
 }
