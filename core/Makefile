@@ -69,7 +69,7 @@ CFLAGS				+=		-I $(INCL_DIR)
 CFLAGS				+=		-W -Wall -Wextra -Werror
 CFLAGS				+=		-fPIC
 
-LDFLAGS				+= 		-ldl
+LDFLAGS				+= 		-ldl -rdynamic
 
 MAIN_OBJ			=		$(MAIN_SRC:%.cpp=$(OBJ_DIR)/%.o)
 

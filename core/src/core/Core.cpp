@@ -50,7 +50,7 @@ void Core::loadGames()
 
     for (auto& file : std::filesystem::directory_iterator(path)) {
         if (std::regex_match(file.path().string(), regex)) {
-            std::string name = file.path().string().substr(23, (file.path().string().length() - 26));
+            std::string name = file.path().string().substr(19, (file.path().string().length() - 22));
 
             _games.emplace(name, new DynamicLib<game::IGame>(file.path().string(), _universe));
         }

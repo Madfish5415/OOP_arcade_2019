@@ -42,17 +42,17 @@ graphicals:
 			#$(CP) $(DIR_LIB_NCURSES)/$(BIN_LIB_NCURSES) ./lib/
 
 games:
-			#$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib
+			$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib
 			#$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) lib
-			#$(CP) $(DIR_GAME_PACMAN)/$(BIN_GAME_PACMAN) ./
-			#$(CP) $(DIR_GAME_NIBBLER)/$(BIN_GAME_NIBBLER) ./
+			$(CP) $(DIR_GAME_PACMAN)/$(BIN_GAME_PACMAN) ./games/
+			#$(CP) $(DIR_GAME_NIBBLER)/$(BIN_GAME_NIBBLER) ./games/
 
 clean:
 			$(CD) $(DIR_CORE) && $(MAKE) clean
 			$(CD) $(DIR_LIB_SDL) && $(MAKE) lib_clean
 			$(CD) $(DIR_LIB_SFML) && $(MAKE) lib_clean
 			#$(CD) $(DIR_LIB_NCURSES) && $(MAKE) lib_clean
-			#$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib_clean
+			$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib_clean
 			#$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) lib_clean
 
 fclean:
@@ -60,7 +60,7 @@ fclean:
 			$(CD) $(DIR_LIB_SDL) && $(MAKE) lib_fclean
 			$(CD) $(DIR_LIB_SFML) && $(MAKE) lib_fclean
 			#$(CD) $(DIR_LIB_NCURSES) && $(MAKE) lib_fclean
-			#$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib_fclean
+			$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib_fclean
 			#$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) lib_fclean
 
 debug:
@@ -70,6 +70,10 @@ debug:
 			$(CP) $(DIR_LIB_SDL)/$(BIN_LIB_SDL) ./lib/
 			$(CP) $(DIR_LIB_SFML)/$(BIN_LIB_SFML) ./lib/
 			#$(CP) $(DIR_LIB_NCURSES)/$(BIN_LIB_NCURSES) ./lib/
+			$(CD) $(DIR_GAME_PACMAN) && $(MAKE) lib_debug
+			#$(CD) $(DIR_GAME_NIBBLER) && $(MAKE) lib_debug
+			$(CP) $(DIR_GAME_PACMAN)/$(BIN_GAME_PACMAN) ./games/
+			#$(CP) $(DIR_GAME_NIBBLER)/$(BIN_GAME_NIBBLER) ./games/
 			$(CD) $(DIR_CORE) && $(MAKE) debug
 			$(CP) $(DIR_CORE)/$(BIN_CORE) ./
 

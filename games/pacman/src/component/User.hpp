@@ -8,8 +8,8 @@
 #ifndef USER_HPP_
 #define USER_HPP_
 
-#include "../../../engine/component/AUser.hpp"
-#include "../../../engine/ecs/Entity.hpp"
+#include "../../../../engine/component/AUser.hpp"
+#include "../../../../engine/ecs/Entity.hpp"
 
 namespace pacman {
     namespace component {

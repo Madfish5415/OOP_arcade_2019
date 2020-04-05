@@ -33,7 +33,7 @@ PROJ_SRC			=		../../graphical/AGraphical.cpp				\
 							system/Audio.cpp							\
 							system/Render.cpp							\
 							create.cpp									\
-							$(ENGINE_DIR)/component/AAudio.cpp			\
+							#$(ENGINE_DIR)/component/AAudio.cpp			\
 							$(ENGINE_DIR)/component/Animations.cpp		\
 							$(ENGINE_DIR)/component/ARender.cpp			\
 							$(ENGINE_DIR)/component/AText.cpp			\

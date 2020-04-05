@@ -9,7 +9,7 @@
 
 using namespace game;
 
-AGame::AGame(engine::ecs::Universe& universe, const std::string name): _universe(universe), _name(name) {}
+AGame::AGame(engine::ecs::Universe& universe, const std::string& name): _universe(universe), _name(name) {}
 
 AGame::~AGame() = default;
 

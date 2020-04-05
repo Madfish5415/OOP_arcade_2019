@@ -6,15 +6,18 @@
 */
 
 #include "AI.hpp"
+
+#include "../../../../engine/component/Motion.hpp"
+#include "../../../../engine/component/Transform.hpp"
 #include "../component/AI.hpp"
 #include "../component/User.hpp"
-#include "../../../engine/component/Transform.hpp"
-#include "../../../engine/component/Motion.hpp"
 
 using namespace pacman;
 using namespace system;
 
-AI::AI(engine::ecs::World& world): AAI(world) {}
+AI::AI(engine::ecs::World& world) : AAI(world)
+{
+}
 
 AI::~AI()
 {
@@ -30,7 +33,7 @@ void AI::update()
     auto aiList = _world.getEntities<component::AI>();
 
     for (auto& player : playerList) {
-        auto& pacmanEntity = player.get(); 
+        auto& pacmanEntity = player.get();
         auto& pacmanPosition = pacmanEntity.getComponent<engine::component::Transform>();
 
         for (auto& aiRefWrap : aiList) {
@@ -45,18 +48,15 @@ void AI::update()
                 if (diffX > 0) {
                     aiEntityMotion.velocity.x = 1;
                     aiEntityMotion.velocity.y = 0;
-                }
-                else {
+                } else {
                     aiEntityMotion.velocity.x = -1;
                     aiEntityMotion.velocity.y = 0;
                 }
-            }
-            else {
+            } else {
                 if (diffY > 0) {
                     aiEntityMotion.velocity.x = 0;
                     aiEntityMotion.velocity.y = 1;
-                }
-                else {
+                } else {
                     aiEntityMotion.velocity.x = 0;
                     aiEntityMotion.velocity.y = -1;
                 }

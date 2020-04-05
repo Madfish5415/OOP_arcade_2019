@@ -8,6 +8,7 @@
 #include "Movement.hpp"
 
 #include <vector>
+#include <iostream>
 
 #include "../component/Motion.hpp"
 #include "../component/Transform.hpp"
