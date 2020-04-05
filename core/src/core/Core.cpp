@@ -109,8 +109,6 @@ void Core::setCurrentGame(const std::string& name)
 {
     if (!_games.count(name)) throw std::exception();
 
-    if (_currentGame == name) return;
-
     _games[_currentGame]->get().destroy();
 
     _currentGame = name;
@@ -269,9 +267,64 @@ void Core::switchChecker()
     if (sHandler.state) {
         sHandler.state = false;
         if (sHandler.type == "graph") {
-            setCurrentGraphical(sHandler.name);
+            if (sHandler.name == "previous") {
+                for (auto it = _graphicals.begin(); it != _graphicals.end(); it++) {
+                    if (it->first == _currentGraphical) {
+                        if (it == _graphicals.begin()) {
+                            it = _graphicals.end();
+                            it--;
+                        } else {
+                            it--;
+                        }
+                        setCurrentGraphical(it->first);
+                        return;
+                    }
+                }
+            } else if (sHandler.name == "next") {
+                for (auto it = _graphicals.begin(); it != _graphicals.end(); it++) {
+                    if (it->first == _currentGraphical) {
+                        it++;
+                        if (it == _graphicals.end()) {
+                            it = _graphicals.begin();
+                        }
+                        setCurrentGraphical(it->first);
+                        return;
+                    }
+                }
+            } else {
+                setCurrentGraphical(sHandler.name);
+                return;
+            }
         } else if (sHandler.type == "game") {
-            setCurrentGame(sHandler.name);
+            if (sHandler.name == "restart") {
+                setCurrentGame(_currentGame);
+            } else if (sHandler.name == "previous") {
+                for (auto it = _games.begin(); it != _games.end(); it++) {
+                    if (it->first == _currentGame) {
+                        if (it == _games.begin()) {
+                            it = _games.end();
+                            it--;
+                        } else {
+                            it--;
+                        }
+                        setCurrentGame(it->first);
+                        return;
+                    }
+                }
+            } else if (sHandler.name == "next") {
+                for (auto it = _games.begin(); it != _games.end(); it++) {
+                    if (it->first == _currentGame) {
+                        it++;
+                        if (it == _games.end()) {
+                            it = _games.begin();
+                        }
+                        setCurrentGame(it->first);
+                        return;
+                    }
+                }
+            }else {
+                setCurrentGame(sHandler.name);
+            }
         }
     }
 }

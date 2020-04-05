@@ -192,6 +192,30 @@ void User::inputSubscriber(engine::event::Input& event)
             _world.getUniverse().getEventBus().publish(*eventSwitch);
 
             delete eventSwitch;
+        } else if (event.code == event.KEY_ESCAPE) {
+            auto eventClose = new engine::event::Close();
+            _world.getUniverse().getEventBus().publish(*eventClose);
+            delete eventClose;
+        } else if (event.code == event.KEY_P) {
+            auto eventSwitch = new engine::event::Switch("game", "previous");
+            _world.getUniverse().getEventBus().publish(*eventSwitch);
+            delete eventSwitch;
+        } else if (event.code == event.KEY_M) {
+            auto eventSwitch = new engine::event::Switch("game", "next");
+            _world.getUniverse().getEventBus().publish(*eventSwitch);
+            delete eventSwitch;
+        } else if (event.code == event.KEY_O) {
+            auto eventSwitch = new engine::event::Switch("graph", "previous");
+            _world.getUniverse().getEventBus().publish(*eventSwitch);
+            delete eventSwitch;
+        } else if (event.code == event.KEY_L) {
+            auto eventSwitch = new engine::event::Switch("graph", "next");
+            _world.getUniverse().getEventBus().publish(*eventSwitch);
+            delete eventSwitch;
+        } else if (event.code == event.KEY_R) {
+            auto eventSwitch = new engine::event::Switch("game", "restart");
+            _world.getUniverse().getEventBus().publish(*eventSwitch);
+            delete eventSwitch;
         }
     }
 }

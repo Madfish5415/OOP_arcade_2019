@@ -10,6 +10,7 @@
 
 #include "../../../../engine/ecs/World.hpp"
 #include "../../../../engine/system/AAI.hpp"
+#include "../../../../engine/event/Collision.hpp"
 
 namespace pacman {
 
@@ -24,6 +25,13 @@ class AI : public engine::system::AAI {
     void init() override;
     void update() override;
     void render() override;
+
+   public:
+    void receiveIntersectCollision(engine::event::Collision& event);
+
+   private:
+    int initialized;
+    clock_t clk;
 };
 
 };  // namespace system

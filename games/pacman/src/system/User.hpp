@@ -9,6 +9,7 @@
 #define USER_SYS_HPP_
 
 #include "../../../../engine/ecs/World.hpp"
+#include "../../../../engine/event/Collision.hpp"
 #include "../../../../engine/event/Input.hpp"
 #include "../../../../engine/system/AUser.hpp"
 
@@ -26,6 +27,8 @@ class User : public engine::system::AUser {
 
    public:
     void inputSubscriber(engine::event::Input& event);
+    void receivePacGumCollision(engine::event::Collision& event);
+    void receiveGhostCollision(engine::event::Collision& event);
 };
 };  // namespace system
 };  // namespace pacman

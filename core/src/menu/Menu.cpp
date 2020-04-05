@@ -8,7 +8,7 @@
 #include "Menu.hpp"
 
 #include <iostream>
-
+#include <ctime>
 
 #include "../../../engine/component/ARender.hpp"
 #include "../../../engine/component/Animations.hpp"
@@ -56,7 +56,7 @@ void Menu::init()
         entity.addComponent<engine::component::Size>(400, 150);
         x = 440;
         y = (1080 - gridSize) / 2 + (gridSize / libSize) / 2 - 150 / 2 + (gridSize / libSize * (i));
-        entity.addComponent<engine::component::Transform>(engine::type::Vector2D(x, y), 1);
+        entity.addComponent<engine::component::Transform>(engine::type::Vector2D(x, y), 10);
 
         world.addToGroup(entity, "graph");
         i++;
@@ -91,7 +91,7 @@ void Menu::init()
         entity.addComponent<engine::component::Size>(400, 150);
         x = 1920 - 440 - 400;
         y = (1080 - gridSize) / 2 + (gridSize / libSize) / 2 - 150 / 2 + (gridSize / libSize * (i));
-        entity.addComponent<engine::component::Transform>(engine::type::Vector2D(x, y), 1);
+        entity.addComponent<engine::component::Transform>(engine::type::Vector2D(x, y), 10);
 
         world.addToGroup(entity, "game");
         i++;
@@ -104,18 +104,24 @@ void Menu::init()
     auto& graphGroup = world.getGroup("graph");
     int x = graphGroup.begin()->get().getComponent<engine::component::Transform>().position.x - 15;
     int y = graphGroup.begin()->get().getComponent<engine::component::Transform>().position.y - 15;
-    selector.addComponent<engine::component::Transform>(engine::type::Vector2D(x, y), 2);
-
+    selector.addComponent<engine::component::Transform>(engine::type::Vector2D(x, y), 11);
     auto list = new const std::map<std::string, engine::type::Animation> {std::make_pair("OnSelect", engine::type::Animation(0, 5, 200))};
     selector.addComponent<engine::component::Animations>(*list);
     selector.addComponent<menu::component::User>();
 
+    auto& wallpaper = world.createEntity();
+    const std::vector<std::string> wppaths {"./assets/arcade-wp.jpg", "./assets/arcade-wp.jpg", "ressource_selector"};
+    wallpaper.addComponent<engine::component::ARender>(wppaths);
+    wallpaper.addComponent<engine::component::Size>(1920, 1080);
+    wallpaper.addComponent<engine::component::Transform>(engine::type::Vector2D(0, 0), 1);
 
     world.addSystem<menu::system::User>();
     world.addSystem<engine::system::AAnimations>();
     world.addSystem<engine::system::ARender>();
     world.addSystem<engine::system::Movement>();
     world.addSystem<engine::system::Physics>();
+
+    std::srand(std::time(NULL));
 
     _universe.setCurrentWorld(getName());
 }

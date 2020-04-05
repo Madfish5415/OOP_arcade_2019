@@ -23,7 +23,7 @@ class Game : public game::AGame {
     void destroy() override;
 
    public:
-    void receiveCollision(engine::event::Collision& event);
+    void receiveWallCollision(engine::event::Collision& event);
 };
 
 };  // namespace pacman
