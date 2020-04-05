@@ -56,8 +56,8 @@ void Core::loadGames()
         }
     }
 
-    _games.emplace("test1", new DynamicLib<game::IGame>(_universe, "test1"));
-    _games.emplace("test2", new DynamicLib<game::IGame>(_universe, "test2"));
+    _games.emplace("Menuv2", new DynamicLib<game::IGame>(_universe, "Menuv2"));
+    _games.emplace("Menuv3", new DynamicLib<game::IGame>(_universe, "Menuv3"));
     _games.emplace("Menu", new DynamicLib<game::IGame>(_universe, "Menu"));
 
     _currentGame = "Menu";
