@@ -53,7 +53,7 @@ void Game::init()
     pacmanEntity.addComponent<engine::component::Hitbox>(40, 40);
     pacmanEntity.addComponent<engine::component::Motion>(engine::type::Vector2D(1, 0), engine::type::Vector2D(0, 0));
     pacmanEntity.addComponent<engine::component::Size>(40, 40);
-    pacmanEntity.addComponent<engine::component::Transform>(engine::type::Vector2D(40, 40), 2);
+    pacmanEntity.addComponent<engine::component::Transform>(engine::type::Vector2D(40, 40), 3);
     pacmanEntity.addComponent<component::User>();
 
     engine::ecs::Entity& redGhost = mainGame.createEntity();
@@ -62,7 +62,7 @@ void Game::init()
     redGhost.addComponent<engine::component::Hitbox>(40, 40);
     redGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, 1), engine::type::Vector2D(0, 0));
     redGhost.addComponent<engine::component::Size>(40, 40);
-    redGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(200, 400), 1);
+    redGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(200, 400), 2);
     redGhost.addComponent<component::AI>();
 
     engine::ecs::Entity& blueGhost = mainGame.createEntity();
@@ -71,7 +71,7 @@ void Game::init()
     blueGhost.addComponent<engine::component::Hitbox>(40, 40);
     blueGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, 1), engine::type::Vector2D(0, 0));
     blueGhost.addComponent<engine::component::Size>(40, 40);
-    blueGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(500, 800), 1);
+    blueGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(500, 800), 2);
     blueGhost.addComponent<component::AI>();
 
     engine::ecs::Entity& pinkGhost = mainGame.createEntity();
@@ -80,7 +80,7 @@ void Game::init()
     pinkGhost.addComponent<engine::component::Hitbox>(40, 40);
     pinkGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, 1), engine::type::Vector2D(0, 0));
     pinkGhost.addComponent<engine::component::Size>(40, 40);
-    pinkGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(1400, 300), 1);
+    pinkGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(1400, 300), 2);
     pinkGhost.addComponent<component::AI>();
 
     engine::ecs::Entity& orangeGhost = mainGame.createEntity();
@@ -89,7 +89,7 @@ void Game::init()
     orangeGhost.addComponent<engine::component::Hitbox>(40, 40);
     orangeGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, 1), engine::type::Vector2D(0, 0));
     orangeGhost.addComponent<engine::component::Size>(40, 40);
-    orangeGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(1100, 900), 1);
+    orangeGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(1100, 900), 2);
     orangeGhost.addComponent<component::AI>();
 
     const std::vector<std::string> pathsWall{"assets/wall.png", "assets/wall.png", "ressource_wall"};
