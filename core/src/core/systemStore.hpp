@@ -33,7 +33,7 @@ class systemStore {
     }
 
    private:
-    engine::ecs::World &_world;
+    engine::ecs::World& _world;
     std::tuple<TArgs...> _args;
 };
 

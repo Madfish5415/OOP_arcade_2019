@@ -139,7 +139,7 @@ template <>
 engine::system::AAudio& World::addSystem<engine::system::AAudio>() {
     std::type_index id = typeid(engine::system::AAudio);
 
-    for (auto &s : _systems) {
+    for (auto& s : _systems) {
         if (s.first == id)
             throw std::exception();
     }
@@ -157,7 +157,7 @@ template <>
 engine::system::AAnimations& World::addSystem<engine::system::AAnimations>() {
     std::type_index id = typeid(engine::system::AAnimations);
 
-    for (auto &s : _systems) {
+    for (auto& s : _systems) {
         if (s.first == id)
             throw std::exception();
     }
@@ -175,7 +175,7 @@ template <>
 engine::system::ARender& World::addSystem<engine::system::ARender>() {
     std::type_index id = typeid(engine::system::ARender);
 
-    for (auto &s : _systems) {
+    for (auto& s : _systems) {
         if (s.first == id)
             throw std::exception();
     }

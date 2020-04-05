@@ -62,8 +62,8 @@ void Render::update()
             render.destRect.h = size.height;
         }
         if (i.get().hasComponents<engine::component::AText>()) {
-            auto &text = dynamic_cast<component::Text &>(i.get().getComponent<engine::component::AText>());
-            auto &size = i.get().getComponent<engine::component::Size>();
+            auto& text = dynamic_cast<component::Text&>(i.get().getComponent<engine::component::AText>());
+            auto& size = i.get().getComponent<engine::component::Size>();
 
 
             text.destRect.w = int(float(size.width) / 3);

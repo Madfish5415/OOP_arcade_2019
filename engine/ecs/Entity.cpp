@@ -18,7 +18,7 @@ Entity::Entity(World& world) : _world(world)
 
 Entity::~Entity() {
     for (auto& pair : _components) {
-        delete &pair.second.get();
+        delete& pair.second.get();
     }
     _components.clear();
 }
@@ -32,7 +32,7 @@ template <>
 engine::component::AAudio& Entity::addComponent<engine::component::AAudio>(const std::vector<std::string>& paths) {
     std::type_index id = typeid(engine::component::AAudio);
 
-    for (auto &c : _components) {
+    for (auto& c : _components) {
         if (c.first == id)
             throw std::exception();
     }
@@ -50,7 +50,7 @@ template <>
 engine::component::ARender& Entity::addComponent<engine::component::ARender>(const std::vector<std::string>& paths) {
     std::type_index id = typeid(engine::component::ARender);
 
-    for (auto &c : _components) {
+    for (auto& c : _components) {
         if (c.first == id)
             throw std::exception();
     }
@@ -69,7 +69,7 @@ engine::component::AText& Entity::addComponent<engine::component::AText>(const s
 {
     std::type_index id = typeid(engine::component::AText);
 
-    for (auto &c : _components) {
+    for (auto& c : _components) {
         if (c.first == id)
             throw std::exception();
     }

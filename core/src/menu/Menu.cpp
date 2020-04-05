@@ -37,7 +37,7 @@ void Menu::init()
     int i = 0;
 
     for (auto& graph : _universe.getCore().getGraphicals()) {
-        auto &entity = world.createEntity();
+        auto& entity = world.createEntity();
         int x = 0;
         int y = 0;
         int libSize = _universe.getCore().getGraphicals().size();
@@ -48,7 +48,7 @@ void Menu::init()
         entity.addComponent<engine::component::ARender>(pathsRender);
         const std::vector<std::string> pathsText {"./assets/game_over.ttf", "./assets/game_over.ttf", "font_button"};
         std::string name = graph.first;
-        std::for_each(name.begin(), name.end(), [](char & c) {
+        std::for_each(name.begin(), name.end(), [](char& c) {
           c = ::toupper(c);
         });
         const std::string text = name;
@@ -72,7 +72,7 @@ void Menu::init()
     }
 
     for (auto& game : games) {
-        auto &entity = world.createEntity();
+        auto& entity = world.createEntity();
         int x = 0;
         int y = 0;
         int libSize = games.size();
@@ -83,7 +83,7 @@ void Menu::init()
         entity.addComponent<engine::component::ARender>(pathsRender);
         const std::vector<std::string> pathsText {"./assets/game_over.ttf", "./assets/game_over.ttf", "font_button"};
         std::string name = game.first;
-        std::for_each(name.begin(), name.end(), [](char & c) {
+        std::for_each(name.begin(), name.end(), [](char& c) {
           c = ::toupper(c);
         });
         const std::string text = name;

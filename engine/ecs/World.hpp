@@ -72,7 +72,7 @@ class World {
     T& addSystem(TArgs&&... mArgs) {
         std::type_index id = typeid(T);
 
-        for (auto &s : _systems) {
+        for (auto& s : _systems) {
             if (s.first == id)
                 throw std::exception();
         }
@@ -99,7 +99,7 @@ class World {
     T& getSystem() const {
         std::type_index id = typeid(T);
 
-        for (auto &s : _systems) {
+        for (auto& s : _systems) {
             if (s.first == id)
                 return static_cast<T>(s.second.get());
         }

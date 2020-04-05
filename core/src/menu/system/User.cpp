@@ -72,7 +72,7 @@ void User::inputSubscriber(engine::event::Input& event)
             }
 
             if (&button != &ent) {
-                auto &transformBut = button.get().getComponent<engine::component::Transform>();
+                auto& transformBut = button.get().getComponent<engine::component::Transform>();
 
                 transformCmp.position.x = transformBut.position.x - 15;
                 transformCmp.position.y = transformBut.position.y - 15;
@@ -108,7 +108,7 @@ void User::inputSubscriber(engine::event::Input& event)
             }
 
             if (&button != &ent) {
-                auto &transformBut = button.get().getComponent<engine::component::Transform>();
+                auto& transformBut = button.get().getComponent<engine::component::Transform>();
 
                 transformCmp.position.x = transformBut.position.x - 15;
                 transformCmp.position.y = transformBut.position.y - 15;
@@ -143,7 +143,7 @@ void User::inputSubscriber(engine::event::Input& event)
             }
 
             if (&button != &ent) {
-                auto &transformBut = button.get().getComponent<engine::component::Transform>();
+                auto& transformBut = button.get().getComponent<engine::component::Transform>();
 
                 transformCmp.position.x = transformBut.position.x - 15;
                 transformCmp.position.y = transformBut.position.y - 15;

@@ -40,8 +40,8 @@ int main()
         core->switchChecker();
     }
 
-    //core.getCurrentGame().destroy();
-    //core.getCurrentGraphical().destroy();
+    core->getCurrentGame().destroy();
+    core->getCurrentGraphical().destroy();
 
     delete core;
 
