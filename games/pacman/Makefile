@@ -23,7 +23,12 @@ RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=
+PROJ_SRC			=		../game/AGame.cpp 			\
+							component/AI.cpp 			\
+							component/User.cpp 			\
+							src/Game.cpp 				\
+							system/AI.cpp 				\
+							system/User.cpp 			\
 
 TEST_SRC			=
 
