@@ -28,13 +28,15 @@ PROJ_SRC			=		../../graphical/AGraphical.cpp				\
 							graphical/Graphical.cpp						\
 							component/Audio.cpp							\
 							component/Render.cpp						\
+							component/Text.cpp							\
 							system/Animations.cpp						\
 							system/Audio.cpp							\
 							system/Render.cpp							\
 							create.cpp									\
-							$(ENGINE_DIR)/component/AAudio.cpp			\
+							#$(ENGINE_DIR)/component/AAudio.cpp			\
 							$(ENGINE_DIR)/component/Animations.cpp		\
 							$(ENGINE_DIR)/component/ARender.cpp			\
+							$(ENGINE_DIR)/component/AText.cpp			\
 							$(ENGINE_DIR)/component/Transform.cpp		\
 							$(ENGINE_DIR)/component/Size.cpp			\
 							$(ENGINE_DIR)/ecs/AComponent.cpp			\
@@ -42,6 +44,7 @@ PROJ_SRC			=		../../graphical/AGraphical.cpp				\
 							$(ENGINE_DIR)/ecs/Entity.cpp				\
 							$(ENGINE_DIR)/ecs/Universe.cpp				\
 							$(ENGINE_DIR)/ecs/World.cpp					\
+							$(ENGINE_DIR)/event/Close.cpp				\
 							$(ENGINE_DIR)/event/Input.cpp				\
 							$(ENGINE_DIR)/eventbus/AEvent.cpp			\
 							$(ENGINE_DIR)/eventbus/EventBus.cpp			\
@@ -118,7 +121,7 @@ debug_sweet:		CFLAGS += -g3
 debug_sweet:		sweet
 
 $(LIB_NAME):		CFLAGS += -fPIC
-$(LIB_NAME):		LDFLAGS += -shared
+$(LIB_NAME):		LDFLAGS += -shared -rdynamic
 $(LIB_NAME):		$(PROJ_OBJ) $(ENGINE_OBJ)
 					$(CC) $(PROJ_OBJ) $(ENGINE_OBJ) -o $(LIB_NAME) $(LDFLAGS) $(LDLIBS) \
 					&& echo "$(GREEN_B_COLOR)$(LIB_NAME) successfully created$(NO_COLOR)" \

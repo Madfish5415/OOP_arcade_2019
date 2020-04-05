@@ -9,9 +9,10 @@
 #define OOP_ARCADE_2019_DYNAMICLIB_HPP
 
 #include <dlfcn.h>
-
 #include <exception>
 #include <string>
+
+#include "../menu/Menu.hpp"
 
 namespace core {
 
@@ -37,9 +38,16 @@ class DynamicLib {
 
         _lib = createFunc(args...);
     };
+    DynamicLib(engine::ecs::Universe* universe, std::string name) {
+        _handle = nullptr;
+        _path = "";
+        _lib = new menu::Menu(*universe, name);
+    };
+
     ~DynamicLib() {
         delete _lib;
-        dlclose(_handle);
+        if (_handle)
+            dlclose(_handle);
     };
 
    public:

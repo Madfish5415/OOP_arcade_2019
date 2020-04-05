@@ -24,13 +24,19 @@ RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=		core/Core.cpp					\
-							core/DynamicLib.cpp				\
+PROJ_SRC			=		core/Core.cpp				\
+							core/DynamicLib.cpp			\
+							core/switchHandler.cpp		\
+							menu/Menu.cpp				\
+							menu/component/User.cpp		\
+							menu/system/User.cpp		\
+							../../games/game/AGame.cpp	\
 
 ENGINE_SRC			=		component/AAI.cpp			\
 							component/AAudio.cpp		\
 							component/Animations.cpp	\
 							component/ARender.cpp		\
+							component/AText.cpp			\
 							component/AUser.cpp			\
 							component/Hitbox.cpp		\
 							component/Motion.cpp		\
@@ -41,8 +47,10 @@ ENGINE_SRC			=		component/AAI.cpp			\
 							ecs/Entity.cpp				\
 							ecs/Universe.cpp			\
 							ecs/World.cpp				\
+							event/Close.cpp				\
 							event/Collision.cpp			\
 							event/Input.cpp				\
+							event/Switch.cpp			\
 							eventbus/AEvent.cpp			\
 							eventbus/EventBus.cpp		\
 							system/AAI.cpp				\
@@ -59,8 +67,9 @@ TEST_SRC			=
 
 CFLAGS				+=		-I $(INCL_DIR)
 CFLAGS				+=		-W -Wall -Wextra -Werror
+CFLAGS				+=		-fPIC
 
-LDFLAGS				+= 		-ldl
+LDFLAGS				+= 		-ldl -rdynamic
 
 MAIN_OBJ			=		$(MAIN_SRC:%.cpp=$(OBJ_DIR)/%.o)
 

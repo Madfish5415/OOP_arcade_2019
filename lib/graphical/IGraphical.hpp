@@ -13,6 +13,7 @@
 
 #include "../../engine/component/AAudio.hpp"
 #include "../../engine/component/ARender.hpp"
+#include "../../engine/component/AText.hpp"
 #include "../../engine/system/AAnimations.hpp"
 #include "../../engine/system/AAudio.hpp"
 #include "../../engine/system/ARender.hpp"
@@ -37,6 +38,7 @@ class IGraphical {
    public:
     virtual engine::component::AAudio& createAudio(engine::ecs::Entity& entity, const std::vector<std::string>& paths) = 0;
     virtual engine::component::ARender& createRender(engine::ecs::Entity& entity, const std::vector<std::string>& paths) = 0;
+    virtual engine::component::AText& createText(engine::ecs::Entity& entity, const std::string& text, const std::vector<std::string>& paths) = 0;
 
    public:
     virtual engine::system::AAudio& createAudioSystem(engine::ecs::World& world) = 0;

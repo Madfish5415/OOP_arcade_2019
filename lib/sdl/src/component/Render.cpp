@@ -8,7 +8,6 @@
 #include <SDL2/SDL_image.h>
 #include "Render.hpp"
 
-#include "../../../engine/component/ARender.hpp"
 
 using namespace sdl;
 using namespace component;

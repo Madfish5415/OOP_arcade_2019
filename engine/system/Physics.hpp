@@ -17,14 +17,25 @@ namespace engine {
 
 namespace system {
 
+    /** \brief The Abstract Class used to manage all the Physics components */
 class Physics : public ecs::ASystem {
    public:
+    /** \brief Constructor of the Physics
+    * \param world the world which the system belongs to
+    **/
     explicit Physics(ecs::World& world);
+
+    /** \brief Destructor of the Movement set as default*/
     ~Physics() override;
 
    public:
+    /** \brief Initialize the system*/
     void init() override;
+
+    /** \brief Update the system and its User component*/
     void update() override;
+
+    /** \brief Render of the system, not used here */
     void render() override;
 };
 

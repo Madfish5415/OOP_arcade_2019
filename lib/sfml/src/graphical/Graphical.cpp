@@ -13,6 +13,7 @@
 #include "../../graphical/AGraphical.hpp"
 #include "../component/Audio.hpp"
 #include "../component/Render.hpp"
+#include "../component/Text.hpp"
 #include "../system/Animations.hpp"
 #include "../system/Audio.hpp"
 #include "../system/Render.hpp"
@@ -29,23 +30,35 @@ Graphical::~Graphical() = default;
 void Graphical::init()
 {
     _window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Arcade");
+    _window->setVerticalSyncEnabled(true);
+    _window->setFramerateLimit(60);
 }
 
 void Graphical::dispatchEvent()
 {
-    for (auto& i : KEYSCORR) {
-        if (sf::Keyboard::isKeyPressed(i.first)) {
-            auto evt = new engine::event::Input();
-            evt->code = i.second;
+    sf::Event event;
+
+    while (_window->pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            _window->close();
+            auto evt = new engine::event::Close();
             _eventBus.publish(*evt);
             delete evt;
+        }
+
+        if (event.type == sf::Event::KeyPressed) {
+            auto evt = new engine::event::Input();
+            evt->code = KEYSCORR.at(event.key.code);
+            _eventBus.publish(*evt);
         }
     }
 }
 
 void Graphical::destroy()
 {
-    delete _window;
+    if (!_window)
+        return;
+    if (_window->isOpen()) _window->close();
 }
 
 engine::component::ARender& Graphical::createRender(engine::ecs::Entity& entity, const std::vector<std::string>& paths)
@@ -58,6 +71,12 @@ engine::component::AAudio& Graphical::createAudio(engine::ecs::Entity& entity, c
 {
     auto audio = new component::Audio(entity, paths);
     return *audio;
+}
+
+engine::component::AText& Graphical::createText(engine::ecs::Entity& entity, const std::string& text, const std::vector<std::string>& paths)
+{
+    auto cmptext = new component::Text(entity, text, paths);
+    return *cmptext;
 }
 
 engine::system::ARender& Graphical::createRenderSystem(engine::ecs::World& world)

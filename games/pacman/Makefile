@@ -16,14 +16,50 @@ INCL_DIR			=		src
 OBJ_DIR				=		obj
 SRC_DIR				=		src
 TEST_DIR			=		tests
+ENGINE_DIR			= 		../../../engine
 
 AR					=		ar rcs
-CC					=		g++
+CC					=		g++ -std=c++17
 RM					=		rm -rf
 
 MAIN_SRC			=		main.cpp
 
-PROJ_SRC			=
+PROJ_SRC			=		../../game/AGame.cpp						\
+							game/Game.cpp								\
+							component/AI.cpp							\
+							component/User.cpp							\
+							system/AI.cpp								\
+							system/User.cpp								\
+							create.cpp									\
+							#$(ENGINE_DIR)/component/AAudio.cpp			\
+							$(ENGINE_DIR)/component/Animations.cpp		\
+							$(ENGINE_DIR)/component/ARender.cpp			\
+							$(ENGINE_DIR)/component/AText.cpp			\
+							$(ENGINE_DIR)/component/AAI.cpp				\
+							$(ENGINE_DIR)/component/AUser.cpp			\
+							$(ENGINE_DIR)/component/Transform.cpp		\
+							$(ENGINE_DIR)/component/Hitbox.cpp			\
+							$(ENGINE_DIR)/component/Motion.cpp			\
+							$(ENGINE_DIR)/component/Size.cpp			\
+							$(ENGINE_DIR)/ecs/AComponent.cpp			\
+							$(ENGINE_DIR)/ecs/ASystem.cpp				\
+							$(ENGINE_DIR)/ecs/Entity.cpp				\
+							$(ENGINE_DIR)/ecs/Universe.cpp				\
+							$(ENGINE_DIR)/ecs/World.cpp					\
+							$(ENGINE_DIR)/event/Close.cpp				\
+							$(ENGINE_DIR)/event/Input.cpp				\
+							$(ENGINE_DIR)/event/Collision.cpp			\
+							$(ENGINE_DIR)/eventbus/AEvent.cpp			\
+							$(ENGINE_DIR)/eventbus/EventBus.cpp			\
+							$(ENGINE_DIR)/system/AAnimations.cpp		\
+							$(ENGINE_DIR)/system/AAudio.cpp				\
+							$(ENGINE_DIR)/system/ARender.cpp			\
+							$(ENGINE_DIR)/system/AUser.cpp				\
+							$(ENGINE_DIR)/system/AAI.cpp				\
+							$(ENGINE_DIR)/system/Movement.cpp			\
+							$(ENGINE_DIR)/system/Physics.cpp			\
+							$(ENGINE_DIR)/type/Animation.cpp			\
+							$(ENGINE_DIR)/type/Vector2D.cpp				\
 
 TEST_SRC			=
 
@@ -89,7 +125,7 @@ debug_sweet:		CFLAGS += -g3
 debug_sweet:		sweet
 
 $(LIB_NAME):		CFLAGS += -fPIC
-$(LIB_NAME):		LDFLAGS += -shared
+$(LIB_NAME):		LDFLAGS += -shared -rdynamic
 $(LIB_NAME):		$(PROJ_OBJ)
 					$(CC) $(PROJ_OBJ) -o $(LIB_NAME) $(LDFLAGS) $(LDLIBS) \
 					&& echo "$(GREEN_B_COLOR)$(LIB_NAME) successfully created$(NO_COLOR)" \
@@ -106,6 +142,9 @@ lib_fclean:			lib_clean
 lib_re:				lib_fclean lib
 
 lib_sweet:			lib lib_clean
+
+lib_debug:			CFLAGS += -g3
+lib_debug:			lib
 
 $(LIB_ST_NAME):		$(PROJ_OBJ)
 					$(AR) $(LIB_ST_NAME) $(PROJ_OBJ) \
@@ -173,7 +212,7 @@ full_sweet:			sweet lib_sweet lib_st_sweet
 
 .PHONY:				all clean fclean re sweet											\
 					debug debug_re debug_sweet											\
-					lib lib_clean lib_fclean lib_re lib_sweet							\
+					lib lib_clean lib_fclean lib_re lib_sweet lib_debug					\
 					lib_st lib_st_clean lib_st_fclean lib_st_re lib_st_sweet			\
 					tests_run tests_clean tests_fclean tests_re tests_sweet tests_sh	\
 					full full_clean full_fclean full_re full_sweet						\

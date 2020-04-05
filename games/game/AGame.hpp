@@ -16,8 +16,8 @@
 namespace game {
     class AGame : public IGame {
         public:
-            AGame(engine::ecs::Universe& universe, const std::string name);
-            virtual ~AGame() = 0;
+            AGame(engine::ecs::Universe& universe, const std::string& name);
+            ~AGame() override = 0;
     
             std::string getName() override;
     
