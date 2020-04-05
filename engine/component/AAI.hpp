@@ -14,9 +14,15 @@ namespace engine {
 
 namespace component {
 
+    /** \brief The Abstract Class used to create the AI component */
 class AAI : public ecs::AComponent {
    public:
+    /** \brief Constructor of the AAI
+     * \param entity the Entity which the component belongs to
+    **/
     explicit AAI(ecs::Entity& entity);
+
+    /** \brief Destructor of the AAI set as default*/
     ~AAI() override = 0;
 };
 

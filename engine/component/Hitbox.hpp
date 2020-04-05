@@ -14,13 +14,24 @@ namespace engine {
 
 namespace component {
 
+    /** \brief The Class used to manage the hitbox of entities */
 class Hitbox : public ecs::AComponent {
    public:
+    /** \brief Constructor of the Hitbox
+     * \param entity the Entity which the component belongs to
+     * \param width the size of the width of the hitbox
+     * \param height the size of the height of the hitbox
+     **/
     explicit Hitbox(ecs::Entity& entity, int width = 0, int height = 0);
+
+    /** \brief Destructor of the Hitbox set as default*/
     ~Hitbox() override;
 
    public:
+    /** \param width the size of the width of the hitbox */
     int width;
+
+    /** \param height the size of the height of the hitbox */
     int height;
 };
 

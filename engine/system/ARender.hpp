@@ -14,14 +14,25 @@ namespace engine {
 
 namespace system {
 
+    /** \brief The Abstract Class used to manage all the Render components */
 class ARender : public ecs::ASystem {
    public:
+    /** \brief Constructor of the ARender
+   * \param world the world which the system belongs to
+   **/
     explicit ARender(ecs::World& world);
+
+    /** \brief Destructor of the ARender set as default*/
     ~ARender() override = 0;
 
    public:
+    /** \brief Initialize the system*/
     void init() override = 0;
+
+    /** \brief Update the system and its Render component*/
     void update() override = 0;
+
+    /** \brief Render of the system, used to draw the sprites */
     void render() override = 0;
 };
 

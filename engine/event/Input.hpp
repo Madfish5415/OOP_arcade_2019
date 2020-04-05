@@ -14,8 +14,10 @@ namespace engine {
 
 namespace event {
 
+    /** \brief The class used to signal that the user pressed on the  */
 class Input : public eventbus::AEvent {
    public:
+    /** \brief The enum representing all the keycode on the keyboard */
     enum KEYCODE {
         KEY_UNKNOWN = -1,
         KEY_A, KEY_B, KEY_C, KEY_D, KEY_E,
@@ -43,10 +45,17 @@ class Input : public eventbus::AEvent {
     };
 
    public:
+
+    /** \brief Constructor of the Input class used to signal that the user pressed on a key
+    * \param code A key code based on an enum representing the key pressed
+    * */
     Input(KEYCODE code = KEY_UNKNOWN);
+
+    /** \brief Destructor of Input set as default*/
     ~Input() override;
 
    public:
+    /** \brief The key that was pressed by the user */
     KEYCODE code;
 };
 

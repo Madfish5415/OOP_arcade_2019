@@ -13,10 +13,15 @@
 namespace engine {
 
 namespace component {
-
+    /** \brief The Abstract Class used to let the User play the games */
 class AUser : public ecs::AComponent {
    public:
+    /** \brief Constructor of the AUser
+    * \param entity the Entity which the component belongs to
+   **/
     explicit AUser(ecs::Entity& entity);
+
+    /** \brief Destructor of the AUser set as default*/
     ~AUser() override = 0;
 };
 

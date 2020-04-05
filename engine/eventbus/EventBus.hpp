@@ -21,6 +21,7 @@ namespace eventbus {
 template <typename T, typename E>
 using Callback = void (T::*)(E&);
 
+/** \brief The class used to manage all the events that may occur during the execution */
 class EventBus {
    private:
     class ICallbackHandler {
@@ -38,10 +39,17 @@ class EventBus {
         Callback<T, E> _callback;
 
        public:
+        /** \brief Constructor of the CallbackHandler class
+         * \param subscriber A reference to the entity that subscribe to the event
+         *  \param callback A pointer to a method to call when the event is encountered
+         */
         CallbackHandler(T& subscriber, Callback<T, E> callback) : _subscriber(subscriber), _callback(callback) {};
         ~CallbackHandler() override = default;
 
        public:
+        /** \brief Method used to call the method linked to an event when the event is encountered
+        * \param event The event encountered
+        */
         void call(AEvent& event) override
         {
             (_subscriber.*_callback)(dynamic_cast<E&>(event));
@@ -56,6 +64,10 @@ class EventBus {
     ~EventBus();
 
    public:
+    /** \brief Link the subscriber to the method to call for the event
+    * \param subscriber A reference to the entity that subscribe to the event
+    *  \param callback A pointer to a method to call when the event is encountered
+    */
     template <typename T, typename E>
     void subscribe(T& subscriber, Callback<T, E> callback){
         std::vector<ICallbackHandler*> *handlers = _subscribers[typeid(E)];
@@ -68,8 +80,12 @@ class EventBus {
         handlers->push_back(new CallbackHandler<T, E>(subscriber, callback));
     };
 
+    /** \brief Remove every subscribers and callbacks */
     void unsubscribe();
 
+    /** \brief Add the event to the eventbus when it's encountered during the execution of the program
+    * \param event A reference to the event encountered
+    */
     template <typename E>
     void publish(E& event) {
         std::vector<ICallbackHandler*> *handlers = _subscribers[typeid(E)];
