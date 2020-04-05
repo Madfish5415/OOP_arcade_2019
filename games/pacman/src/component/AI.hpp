@@ -10,6 +10,7 @@
 
 #include "../../../../engine/component/AAI.hpp"
 #include "../../../../engine/ecs/Entity.hpp"
+#include "../../../../engine/type/Vector2D.hpp"
 
 namespace pacman {
 
@@ -17,8 +18,11 @@ namespace component {
 
 class AI : public engine::component::AAI {
    public:
-    AI(engine::ecs::Entity& entity);
-    ~AI();
+    explicit AI(engine::ecs::Entity& entity);
+    ~AI() override;
+
+   public:
+    engine::type::Vector2D oldVelocity;
 };
 
 };  // namespace component
