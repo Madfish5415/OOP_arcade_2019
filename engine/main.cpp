@@ -19,7 +19,7 @@ using namespace engine;
 
 int main()
 {
-    std::string name = "menu";
+    std::string name = "Menu";
     ecs::Universe universe = ecs::Universe();
 
     ecs::World& world = universe.createWorld(name);

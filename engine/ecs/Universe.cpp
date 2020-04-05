@@ -127,3 +127,14 @@ void Universe::deleteWorld(const std::string& name)
     delete _worlds[name];
     _worlds.erase(name);
 }
+
+std::vector<std::string> Universe::getWorldNames() const
+{
+    std::vector<std::string> names;
+
+    for (auto& pair: _worlds) {
+        names.push_back(pair.first);
+    }
+
+    return names;
+}

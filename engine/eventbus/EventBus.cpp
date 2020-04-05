@@ -16,7 +16,8 @@ EventBus::~EventBus() { this->unsubscribe(); }
 
 void EventBus::unsubscribe() {
     for (auto& i : _subscribers) {
-        i.second->clear();
+        if (i.second != nullptr)
+            i.second->clear();
     }
     _subscribers.clear();
 }

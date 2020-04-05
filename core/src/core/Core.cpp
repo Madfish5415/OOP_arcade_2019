@@ -8,10 +8,12 @@
 #include "Core.hpp"
 
 #include <dlfcn.h>
-
 #include <filesystem>
-#include <regex>
 #include <iostream>
+#include <regex>
+
+#include "componentStore.hpp"
+#include "systemStore.hpp"
 
 using namespace core;
 
@@ -20,6 +22,10 @@ Core::Core()
     _currentGame = "";
     _currentGraphical = "";
     _universe = new engine::ecs::Universe(*this);
+    _run = true;
+
+    _universe->getEventBus().subscribe(*this, &Core::closeSubscriber);
+    _universe->getEventBus().subscribe(*this, &Core::switchSubscriber);
 }
 
 Core::~Core()
@@ -44,15 +50,17 @@ void Core::loadGames()
 
     for (auto& file : std::filesystem::directory_iterator(path)) {
         if (std::regex_match(file.path().string(), regex)) {
-            std::string name = file.path().string().substr(23, (file.path().string().length() - 26));
+            std::string name = file.path().string().substr(19, (file.path().string().length() - 22));
 
             _games.emplace(name, new DynamicLib<game::IGame>(file.path().string(), _universe));
         }
     }
 
-    if (_games.size()) {
-        _currentGame = _games.begin()->first;
-    }
+    _games.emplace("test1", new DynamicLib<game::IGame>(_universe, "test1"));
+    _games.emplace("test2", new DynamicLib<game::IGame>(_universe, "test2"));
+    _games.emplace("Menu", new DynamicLib<game::IGame>(_universe, "Menu"));
+
+    _currentGame = "Menu";
 }
 
 void Core::loadGraphics()
@@ -68,8 +76,8 @@ void Core::loadGraphics()
         }
     }
 
-    if (_graphicals.size()) {
-        _currentGraphical = _graphicals.begin()->first;
+    if (!_graphicals.empty()) {
+        for (auto& graph : _graphicals) _currentGraphical = graph.first;
     }
 }
 
@@ -85,26 +93,40 @@ bool Core::hasGame(const std::string& name) const
 
 game::IGame& Core::getGame(const std::string& name) const
 {
-    if (hasGame(name))
-        return _games.at(name)->get();
+    if (hasGame(name)) return _games.at(name)->get();
 
     throw std::exception();
 }
 
 game::IGame& Core::getCurrentGame() const
 {
-    if (hasGame(_currentGame))
-        return _games.at(_currentGame)->get();
+    if (hasGame(_currentGame)) return _games.at(_currentGame)->get();
 
     throw std::exception();
 }
 
 void Core::setCurrentGame(const std::string& name)
 {
-    if (!_games.count(name))
-        throw std::exception();
+    if (!_games.count(name)) throw std::exception();
+
+    if (_currentGame == name) return;
+
+    _games[_currentGame]->get().destroy();
 
     _currentGame = name;
+
+    _universe->getEventBus().unsubscribe();
+    _universe->getEventBus().subscribe(*this, &Core::closeSubscriber);
+    _universe->getEventBus().subscribe(*this, &Core::switchSubscriber);
+
+    _games[name]->get().init();
+
+    _universe->init();
+}
+
+std::map<std::string, DynamicLib<game::IGame>*>& Core::getGames()
+{
+    return _games;
 }
 
 bool Core::hasGraphical(const std::string& name) const
@@ -114,67 +136,142 @@ bool Core::hasGraphical(const std::string& name) const
 
 graphical::IGraphical& Core::getGraphical(const std::string& name) const
 {
-    if (hasGame(name))
-        return _graphicals.at(name)->get();
+    if (hasGame(name)) return _graphicals.at(name)->get();
 
     throw std::exception();
 }
 
 graphical::IGraphical& Core::getCurrentGraphical() const
 {
-    if (hasGraphical(_currentGraphical))
-        return _graphicals.at(_currentGraphical)->get();
+    if (hasGraphical(_currentGraphical)) return _graphicals.at(_currentGraphical)->get();
 
     throw std::exception();
 }
 
 void Core::setCurrentGraphical(const std::string& name)
 {
-    if (!_graphicals.count(name))
-        throw std::exception();
+    if (!_graphicals.count(name)) throw std::exception();
 
-    if (name == _currentGraphical)
-        return;
+    if (name == _currentGraphical) return;
 
     auto& lib = _graphicals[name]->get();
     auto& oldlib = _graphicals[_currentGraphical]->get();
 
     _currentGraphical = name;
 
-    lib.init();
+    std::vector<componentStore<engine::component::AAudio, std::vector<std::string>>*> audioComponent;
+    std::vector<componentStore<engine::component::ARender, std::vector<std::string>>*> renderComponent;
+    std::vector<componentStore<engine::component::AText, std::string, std::vector<std::string>>*> textComponent;
 
-    auto entities = _universe->getCurrentWorld().getEntities<engine::component::AAudio>();
+    std::vector<systemStore<engine::system::AAnimations>*> animationsSystem;
+    std::vector<systemStore<engine::system::AAudio>*> audioSystem;
+    std::vector<systemStore<engine::system::ARender>*> renderSystem;
 
-    for (auto& ent_ref : entities) {
-        auto& audio = ent_ref.get().getComponent<engine::component::AAudio>();
-        const std::vector<std::string> path = audio.paths;
-        ent_ref.get().removeComponent<engine::component::AAudio>();
-        ent_ref.get().addComponent<engine::component::AAudio>(path);
-    }
+    for (auto& worldName : _universe->getWorldNames()) {
+        auto& world = _universe->getWorld(worldName);
 
-    entities = _universe->getCurrentWorld().getEntities<engine::component::ARender>();
+        for (auto& ent_ref : world.getEntities<engine::component::AAudio>()) {
+            audioComponent.push_back(new componentStore<engine::component::AAudio, std::vector<std::string>>(
+                ent_ref.get(), ent_ref.get().getComponent<engine::component::AAudio>().paths));
+            ent_ref.get().removeComponent<engine::component::AAudio>();
+        }
 
-    for (auto& ent_ref : entities) {
-        auto& render = ent_ref.get().getComponent<engine::component::ARender>();
-        const std::vector<std::string> path = render.paths;
-        ent_ref.get().removeComponent<engine::component::ARender>();
-        ent_ref.get().addComponent<engine::component::ARender>(path);
-    }
+        for (auto& ent_ref : world.getEntities<engine::component::ARender>()) {
+            renderComponent.push_back(new componentStore<engine::component::ARender, std::vector<std::string>>(
+                ent_ref.get(), ent_ref.get().getComponent<engine::component::ARender>().paths));
+            ent_ref.get().removeComponent<engine::component::ARender>();
+        }
 
-    if (_universe->getCurrentWorld().hasSystems<engine::system::AAudio>()) {
-        _universe->getCurrentWorld().removeSystem<engine::system::AAudio>();
-        _universe->getCurrentWorld().addSystem<engine::system::AAudio>();
-    }
+        for (auto& ent_ref : world.getEntities<engine::component::AText>()) {
+            textComponent.push_back(new componentStore<engine::component::AText, std::string, std::vector<std::string>>(ent_ref.get(),
+                ent_ref.get().getComponent<engine::component::AText>().text, ent_ref.get().getComponent<engine::component::AText>().paths));
+            ent_ref.get().removeComponent<engine::component::AText>();
+        }
 
-    if (_universe->getCurrentWorld().hasSystems<engine::system::AAnimations>()) {
-        _universe->getCurrentWorld().removeSystem<engine::system::AAnimations>();
-        _universe->getCurrentWorld().addSystem<engine::system::AAnimations>();
-    }
+        if (world.hasSystems<engine::system::AAnimations>()) {
+            animationsSystem.push_back(new systemStore<engine::system::AAnimations>(world));
+            world.removeSystem<engine::system::AAnimations>();
+        }
 
-    if (_universe->getCurrentWorld().hasSystems<engine::system::ARender>()) {
-        _universe->getCurrentWorld().removeSystem<engine::system::ARender>();
-        _universe->getCurrentWorld().addSystem<engine::system::ARender>();
+        if (world.hasSystems<engine::system::AAudio>()) {
+            audioSystem.push_back(new systemStore<engine::system::AAudio>(world));
+            world.removeSystem<engine::system::AAudio>();
+        }
+
+        if (world.hasSystems<engine::system::ARender>()) {
+            renderSystem.push_back(new systemStore<engine::system::ARender>(world));
+            world.removeSystem<engine::system::ARender>();
+        }
     }
 
     oldlib.destroy();
+
+    lib.init();
+
+    for (auto component : audioComponent) {
+        component->addToEntity();
+        delete component;
+    }
+    audioComponent.clear();
+
+    for (auto component : renderComponent) {
+        component->addToEntity();
+        delete component;
+    }
+    renderComponent.clear();
+
+    for (auto component : textComponent) {
+        component->addToEntity();
+        delete component;
+    }
+    textComponent.clear();
+
+    for (auto system : audioSystem) {
+        system->addToWorld();
+        delete system;
+    }
+    audioSystem.clear();
+
+    for (auto system : renderSystem) {
+        system->addToWorld();
+        delete system;
+    }
+    renderSystem.clear();
+
+    for (auto system : animationsSystem) {
+        system->addToWorld();
+        delete system;
+    }
+    animationsSystem.clear();
+}
+
+std::map<std::string, DynamicLib<graphical::IGraphical>*>& Core::getGraphicals()
+{
+    return _graphicals;
+}
+
+void Core::closeSubscriber(engine::event::Close& event)
+{
+    (void) event;
+
+    _run = false;
+}
+
+void Core::switchSubscriber(engine::event::Switch& event)
+{
+    sHandler.state = true;
+    sHandler.type = event.type;
+    sHandler.name = event.name;
+}
+
+void Core::switchChecker()
+{
+    if (sHandler.state) {
+        sHandler.state = false;
+        if (sHandler.type == "graph") {
+            setCurrentGraphical(sHandler.name);
+        } else if (sHandler.type == "game") {
+            setCurrentGame(sHandler.name);
+        }
+    }
 }

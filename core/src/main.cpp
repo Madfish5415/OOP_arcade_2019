@@ -21,60 +21,29 @@
 
 int main()
 {
-    core::Core core = core::Core();
+    core::Core* core = new core::Core();
 
-    core.loadGames();
-    core.loadGraphics();
+    core->loadGames();
+    core->loadGraphics();
 
-    engine::ecs::Universe& universe = core.getUniverse();
+    engine::ecs::Universe& universe = core->getUniverse();
 
-    core.getCurrentGraphical().init();
+    core->getCurrentGraphical().init();
+    core->getCurrentGame().init();
 
-    std::string name = "menu";
+    universe.init();
 
-    engine::ecs::World& world = universe.createWorld(name);
-    engine::ecs::World& worldGet = universe.getWorld(name);
-    universe.setCurrentWorld(name);
-    engine::ecs::World& worldCur = universe.getCurrentWorld();
+    while (core->_run) {
+        core->getCurrentGraphical().dispatchEvent();
+        universe.update();
+        universe.render();
+        core->switchChecker();
+    }
 
-    if (&world != &worldGet)
-        throw std::exception();
+    core->getCurrentGame().destroy();
+    core->getCurrentGraphical().destroy();
 
-    if (&world != &worldCur)
-        throw std::exception();
-
-    if (!universe.hasWorld(name))
-        throw std::exception();
-
-    engine::ecs::Entity& pacman = world.createEntity();
-
-    auto& pacmanMotion = pacman.addComponent<engine::component::Motion>();
-    auto& motionTest = pacman.getComponent<engine::component::Motion>();
-
-    if (&motionTest != &pacmanMotion)
-        throw std::exception();
-
-    world.addToGroup(pacman, "player");
-    if (!world.hasGroup(pacman, "player"))
-        throw std::exception();
-
-    world.removeFromGroup(pacman, "player");
-    if (world.hasGroup(pacman, "player"))
-        throw std::exception();
-
-    pacman.addComponent<engine::component::Hitbox>();
-    pacman.addComponent<engine::component::Size>();
-    pacman.addComponent<engine::component::Transform>();
-
-    const std::vector<std::string> paths {"./assets/pacman.jpg", "./assets/pacman.jpg", "./assets/pacman.jpg"};
-    auto &renderPacman = pacman.addComponent<engine::component::ARender>(paths);
-
-    if (&renderPacman != &pacman.getComponent<engine::component::ARender>())
-        throw std::exception();
-
-    core.setCurrentGraphical("sdl2");
-
-    universe.deleteWorld(name);
+    delete core;
 
     return 0;
 }

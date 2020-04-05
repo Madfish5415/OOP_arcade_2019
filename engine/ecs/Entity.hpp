@@ -43,7 +43,7 @@ class Entity {
     T& addComponent(TArgs&&... mArgs) {
         std::type_index id = typeid(T);
 
-        for (auto &c : _components) {
+        for (auto& c : _components) {
             if (c.first == id)
                 throw std::exception();
         }
@@ -70,7 +70,7 @@ class Entity {
     T& getComponent() const {
         std::type_index id = typeid(T);
 
-        for (auto &c : _components) {
+        for (auto& c : _components) {
             if (c.first == id)
                 return static_cast<T&>(const_cast<AComponent&>(c.second.get()));
         }
@@ -81,7 +81,7 @@ class Entity {
     void removeComponent() {
         std::type_index id = typeid(T);
 
-        auto itr = std::find_if(_components.begin(), _components.end(), [&id](auto &c){
+        auto itr = std::find_if(_components.begin(), _components.end(), [&id](auto& c){
           return c.first == id;
         });
 
@@ -98,6 +98,8 @@ template <>
 engine::component::ARender& Entity::addComponent<engine::component::ARender>(const std::vector<std::string>& paths);
 template <>
 engine::component::AAudio& Entity::addComponent<engine::component::AAudio>(const std::vector<std::string>& paths);
+template <>
+engine::component::AText& Entity::addComponent<engine::component::AText>(const std::string& text, const std::vector<std::string>& paths);
 
 }  // namespace ecs
 
