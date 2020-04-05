@@ -93,8 +93,8 @@ void Game::init()
     engine::ecs::Entity& pacmanEntity = mainGame.createEntity();
     const std::vector<std::string> pathsPacman {"assets/test_pacman.png", "assets/test_pacman.png", "ressource_pacman"};
     pacmanEntity.addComponent<engine::component::ARender>(pathsPacman);
-    pacmanEntity.addComponent<engine::component::Hitbox>(40, 40);
-    pacmanEntity.addComponent<engine::component::Motion>(engine::type::Vector2D(1, 0), engine::type::Vector2D(0, 0));
+    pacmanEntity.addComponent<engine::component::Hitbox>(38, 38);
+    pacmanEntity.addComponent<engine::component::Motion>(engine::type::Vector2D(0, 0), engine::type::Vector2D(0, 0));
     pacmanEntity.addComponent<engine::component::Size>(40, 40);
     pacmanEntity.addComponent<engine::component::Transform>(engine::type::Vector2D(960, 670), 3);
     pacmanEntity.addComponent<component::User>();
@@ -102,37 +102,37 @@ void Game::init()
     engine::ecs::Entity& redGhost = mainGame.createEntity();
     const std::vector<std::string> pathsRed {"assets/test_red.png", "assets/test_red.png", "ressource_red_ghost"};
     redGhost.addComponent<engine::component::ARender>(pathsRed);
-    redGhost.addComponent<engine::component::Hitbox>(40, 40);
-    redGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, 1), engine::type::Vector2D(0, 0));
+    redGhost.addComponent<engine::component::Hitbox>(38, 38);
+    redGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, -1), engine::type::Vector2D(0, 0));
     redGhost.addComponent<engine::component::Size>(40, 40);
-    redGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(920, 470), 2);
+    redGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(960, 550), 2);
     redGhost.addComponent<component::AI>();
 
     engine::ecs::Entity& blueGhost = mainGame.createEntity();
     const std::vector<std::string> pathsBlue {"assets/test_blue.png", "assets/test_blue.png", "ressource_blue_ghost"};
     blueGhost.addComponent<engine::component::ARender>(pathsBlue);
-    blueGhost.addComponent<engine::component::Hitbox>(40, 40);
-    blueGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, 1), engine::type::Vector2D(0, 0));
+    blueGhost.addComponent<engine::component::Hitbox>(38, 38);
+    blueGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, -1), engine::type::Vector2D(0, 0));
     blueGhost.addComponent<engine::component::Size>(40, 40);
-    blueGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(1040, 470), 2);
+    blueGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(960, 590), 2);
     blueGhost.addComponent<component::AI>();
 
     engine::ecs::Entity& pinkGhost = mainGame.createEntity();
     const std::vector<std::string> pathsPink {"assets/test_pink.png", "assets/test_pink.png", "ressource_pink_ghost"};
     pinkGhost.addComponent<engine::component::ARender>(pathsPink);
-    pinkGhost.addComponent<engine::component::Hitbox>(40, 40);
-    pinkGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, 1), engine::type::Vector2D(0, 0));
+    pinkGhost.addComponent<engine::component::Hitbox>(38, 38);
+    pinkGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, -1), engine::type::Vector2D(0, 0));
     pinkGhost.addComponent<engine::component::Size>(40, 40);
-    pinkGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(880, 550), 2);
+    pinkGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(960, 510), 2);
     pinkGhost.addComponent<component::AI>();
 
     engine::ecs::Entity& orangeGhost = mainGame.createEntity();
     const std::vector<std::string> pathsOrange {"assets/test_orange.png", "assets/test_orange.png", "ressource_orange_ghost"};
     orangeGhost.addComponent<engine::component::ARender>(pathsOrange);
-    orangeGhost.addComponent<engine::component::Hitbox>(40, 40);
-    orangeGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, 1), engine::type::Vector2D(0, 0));
+    orangeGhost.addComponent<engine::component::Hitbox>(38, 38);
+    orangeGhost.addComponent<engine::component::Motion>(engine::type::Vector2D(0, -1), engine::type::Vector2D(0, 0));
     orangeGhost.addComponent<engine::component::Size>(40, 40);
-    orangeGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(1000, 550), 2);
+    orangeGhost.addComponent<engine::component::Transform>(engine::type::Vector2D(960, 470), 2);
     orangeGhost.addComponent<component::AI>();
 
     const std::vector<std::string> pathsWall {"assets/wall.png", "assets/wall.png", "ressource_wall"};
@@ -191,35 +191,55 @@ void Game::destroy()
 
 void Game::receiveCollision(engine::event::Collision& event)
 {
+    if (!event.entity1.getWorld().hasGroup(event.entity1, "wall") && !event.entity2.getWorld().hasGroup(event.entity2, "wall"))
+        return;
+
     if (event.entity1.hasComponents<engine::component::Motion>()) {
         auto& motion = event.entity1.getComponent<engine::component::Motion>();
         auto& transform = event.entity1.getComponent<engine::component::Transform>();
+        auto& hitbox = event.entity1.getComponent<engine::component::Hitbox>();
+        auto& transform2 = event.entity2.getComponent<engine::component::Transform>();
+        auto& hitbox2 = event.entity2.getComponent<engine::component::Hitbox>();
 
-        motion.velocity.x -= motion.acceleration.x;
-        motion.velocity.y -= motion.acceleration.y;
+        if (transform.position.x + 2 < transform2.position.x + hitbox2.width &&
+            transform2.position.x < transform.position.x + hitbox.width - 2 &&
+            transform.position.y + 2 < transform2.position.y + hitbox2.height &&
+            transform2.position.y < transform.position.y + hitbox.height - 2) {
+            motion.velocity.x -= motion.acceleration.x;
+            motion.velocity.y -= motion.acceleration.y;
 
-        transform.position.x -= motion.velocity.x;
-        transform.position.y -= motion.velocity.y;
+            transform.position.x -= motion.velocity.x;
+            transform.position.y -= motion.velocity.y;
 
-        motion.velocity.x = 0;
-        motion.acceleration.x = 0;
-        motion.velocity.y = 0;
-        motion.acceleration.y = 0;
+            motion.velocity.x = 0;
+            motion.acceleration.x = 0;
+            motion.velocity.y = 0;
+            motion.acceleration.y = 0;
+        }
     }
 
     if (event.entity2.hasComponents<engine::component::Motion>()) {
-        auto& motion2 = event.entity2.getComponent<engine::component::Motion>();
-        auto& transform2 = event.entity2.getComponent<engine::component::Transform>();
+        auto& transform = event.entity2.getComponent<engine::component::Transform>();
+        auto& hitbox = event.entity2.getComponent<engine::component::Hitbox>();
+        auto& motion = event.entity2.getComponent<engine::component::Motion>();
+        auto& transform2 = event.entity1.getComponent<engine::component::Transform>();
+        auto& hitbox2 = event.entity1.getComponent<engine::component::Hitbox>();
 
-        motion2.velocity.x -= motion2.acceleration.x;
-        motion2.velocity.y -= motion2.acceleration.y;
 
-        transform2.position.x -= motion2.velocity.x;
-        transform2.position.y -= motion2.velocity.y;
+        if (transform.position.x + 2 < transform2.position.x + hitbox2.width &&
+            transform2.position.x < transform.position.x + hitbox.width - 2 &&
+            transform.position.y + 2 < transform2.position.y + hitbox2.height &&
+            transform2.position.y < transform.position.y + hitbox.height - 2) {
+            motion.velocity.x -= motion.acceleration.x;
+            motion.velocity.y -= motion.acceleration.y;
 
-        motion2.velocity.x = 0;
-        motion2.acceleration.x = 0;
-        motion2.velocity.y = 0;
-        motion2.acceleration.y = 0;
+            transform.position.x -= motion.velocity.x;
+            transform.position.y -= motion.velocity.y;
+
+            motion.velocity.x = 0;
+            motion.acceleration.x = 0;
+            motion.velocity.y = 0;
+            motion.acceleration.y = 0;
+        }
     }
 }

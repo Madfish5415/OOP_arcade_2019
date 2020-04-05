@@ -32,11 +32,14 @@ void Physics::update()
 {
     std::vector<std::reference_wrapper<ecs::Entity>> entities = _world.getEntities<component::Hitbox, component::Transform>();
 
-    for (std::reference_wrapper<ecs::Entity>& ent : entities) {
+    for (std::size_t i = 0; i < entities.size(); i++) {
+        auto& ent = entities[i];
         auto& transform = (ent.get()).getComponent<component::Transform>();
         auto& hitbox = (ent.get()).getComponent<component::Hitbox>();
 
-        for (std::reference_wrapper<ecs::Entity>& ent2 : entities) {
+        for (std::size_t j = i + 1; j < entities.size(); j++) {
+            auto& ent2 = entities[j];
+
             if (&ent.get() == &ent2.get())
                 continue;
 
