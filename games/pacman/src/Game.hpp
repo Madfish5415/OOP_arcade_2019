@@ -19,8 +19,6 @@ namespace pacman {
     
             void init() override;
             void destroy() override;
-        protected:
-        private:
     };
 };
 

@@ -23,8 +23,7 @@ namespace pacman {
                 void update() override;
                 void render() override;
                 void inputSubscriber(engine::event::Input& event);
-            protected:
-            private:
+                void collideSubscriber();
         };
     };
 };

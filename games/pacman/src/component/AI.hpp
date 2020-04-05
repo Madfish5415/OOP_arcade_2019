@@ -17,9 +17,6 @@ namespace pacman {
             public:
                 AI(engine::ecs::Entity& entity);
                 ~AI();
-    
-            protected:
-            private:
         };
     };
 };

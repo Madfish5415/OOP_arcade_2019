@@ -21,8 +21,6 @@ namespace pacman {
                 void init() override;
                 void update() override;
                 void render() override;
-            protected:
-            private:
         };
     };
 };

@@ -56,3 +56,17 @@ void User::inputSubscriber(engine::event::Input& event)
         }
     }
 }
+
+void User::collideSubscriber()
+{
+    // je catch la collision avec un mur
+    // je check dans quelle direction j'allais au moment de collide
+    // je fais reculer mon pacman dans la position opposée
+    // je mets le vecteur position à 0
+    
+    // je check la collision avec un ghost
+    // je mets le isAlive du pacman à false
+
+    // je check la collision avec un pacGum
+    // je mets le isAlive du pacGum à false
+}

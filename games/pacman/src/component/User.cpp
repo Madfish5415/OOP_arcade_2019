@@ -10,7 +10,7 @@
 using namespace pacman;
 using namespace component;
 
-User::User(engine::ecs::Entity& entity): AUser(entity) {}
+User::User(engine::ecs::Entity& entity): AUser(entity), isAlive(true) {}
 
 User::~User()
 {

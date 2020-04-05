@@ -17,9 +17,8 @@ namespace pacman {
             public:
                 User(engine::ecs::Entity& entity);
                 ~User();
-    
-            protected:
-            private:
+
+                bool isAlive;
         };
     };
 };
