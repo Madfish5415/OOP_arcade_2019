@@ -21,6 +21,7 @@ User::~User()
 void User::init()
 {
     this->_world.getUniverse().getEventBus().subscribe(*this, &User::inputSubscriber);
+    // faire subscribe à la collide
 }
 
 void User::update()
