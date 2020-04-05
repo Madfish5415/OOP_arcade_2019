@@ -8,6 +8,7 @@
 #include "Render.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 #include "../../../engine/component/Transform.hpp"
 #include "../../../engine/component/Size.hpp"
@@ -65,8 +66,11 @@ void Render::update()
             auto &size = i.get().getComponent<engine::component::Size>();
 
 
-            text.destRect.w = size.width;
-            text.destRect.h = size.height;
+            text.destRect.w = int(float(size.width) / 3);
+            text.destRect.h = int(float(size.height) / 2);
+
+            text.destRect.x = text.destRect.x + ((size.width / 2) - (text.destRect.w / 2));
+            text.destRect.y = text.destRect.y + ((size.height / 2) - (text.destRect.h / 2));
         }
     }
 }
@@ -87,7 +91,8 @@ void Render::render()
         }
         if (i.get().hasComponents<engine::component::AText>()) {
             auto& text = dynamic_cast<component::Text&>(i.get().getComponent<engine::component::AText>());
-            SDL_RenderCopyEx(&renderer, text.texture, &(text.srcRect), &(text.destRect), text.angle, nullptr, text.spriteFlip);
+
+            SDL_RenderCopyEx(&renderer, text.texture, nullptr, &(text.destRect), text.angle, nullptr, text.spriteFlip);
         }
     }
     SDL_RenderPresent(&renderer);

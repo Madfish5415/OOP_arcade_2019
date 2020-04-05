@@ -23,6 +23,9 @@ class Animations : public engine::system::AAnimations {
     void init() override;
     void update() override;
     void render() override;
+
+   private:
+    unsigned int lastTime;
 };
 }  // namespace system
 }  // namespace sdl

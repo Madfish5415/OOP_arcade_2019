@@ -57,7 +57,6 @@ void Graphical::dispatchEvent()
 void Graphical::destroy()
 {
     if (_window->isOpen()) _window->close();
-    delete _window;
 }
 
 engine::component::ARender& Graphical::createRender(engine::ecs::Entity& entity, const std::vector<std::string>& paths)

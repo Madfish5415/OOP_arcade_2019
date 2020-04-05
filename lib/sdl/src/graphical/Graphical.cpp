@@ -31,8 +31,8 @@ Graphical::~Graphical() = default;
 
 void Graphical::init()
 {
-    IMG_Init(IMG_INIT_PNG);
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     _window = SDL_CreateWindow("Arcade", 0, 0, 1920, 1080, 0);
     _renderer = SDL_CreateRenderer(_window, -1, 0);
@@ -62,8 +62,8 @@ void Graphical::destroy()
 {
     SDL_DestroyRenderer(_renderer);
     SDL_DestroyWindow(_window);
-    IMG_Quit();
     TTF_Quit();
+    IMG_Quit();
     SDL_Quit();
 }
 

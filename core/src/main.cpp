@@ -21,27 +21,29 @@
 
 int main()
 {
-    core::Core core = core::Core();
+    core::Core* core = new core::Core();
 
-    core.loadGames();
-    core.loadGraphics();
+    core->loadGames();
+    core->loadGraphics();
 
-    engine::ecs::Universe& universe = core.getUniverse();
+    engine::ecs::Universe& universe = core->getUniverse();
 
-    core.getCurrentGraphical().init();
-    core.getCurrentGame().init();
+    core->getCurrentGraphical().init();
+    core->getCurrentGame().init();
 
     universe.init();
 
-    while (core._run) {
-        core.getCurrentGraphical().dispatchEvent();
+    while (core->_run) {
+        core->getCurrentGraphical().dispatchEvent();
         universe.update();
         universe.render();
-        core.switchChecker();
+        core->switchChecker();
     }
 
-    core.getCurrentGraphical().destroy();
-    core.getCurrentGame().destroy();
+    //core.getCurrentGame().destroy();
+    //core.getCurrentGraphical().destroy();
+
+    delete core;
 
     return 0;
 }
