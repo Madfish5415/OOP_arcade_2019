@@ -83,6 +83,12 @@ tests_sh:
 			echo "OK"
 
 tests_run:
-			echo "OK"
+			$(CD) $(DIR_CORE) && $(MAKE) tests_run
 
-.PHONY: all core graphicals games debug re tests_sh tests_run
+tests_clean:
+			$(CD) $(DIR_CORE) && $(MAKE) tests_clean
+
+tests_fclean:
+			$(CD) $(DIR_CORE) && $(MAKE) tests_fclean
+
+.PHONY: all core graphicals games debug re tests_sh tests_run tests_clean tests_fclean

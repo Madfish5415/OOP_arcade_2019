@@ -63,7 +63,10 @@ ENGINE_SRC			=		component/AAI.cpp			\
 							type/Animation.cpp			\
 							type/Vector2D.cpp			\
 
-TEST_SRC			=
+TEST_SRC			=		core/core/test_Core.cpp			\
+							engine/ecs/test_Entity.cpp		\
+							engine/ecs/test_Universe.cpp	\
+							engine/ecs/test_World.cpp		\
 
 CFLAGS				+=		-I $(INCL_DIR)
 CFLAGS				+=		-W -Wall -Wextra -Werror
@@ -77,7 +80,7 @@ PROJ_OBJ			=		$(PROJ_SRC:%.cpp=$(OBJ_DIR)/%.o)
 
 ENGINE_OBJ			=		$(ENGINE_SRC:%.cpp=$(ENGINE_DIR)/%.o)
 
-TEST_OBJ			=		$(TEST_SRC:%.cpp=$(OBJ_DIR)/%.o)
+TEST_OBJ			=		$(TEST_SRC:%.cpp=$(TEST_DIR)/%.o)
 
 TEST_COV			=		$(PROJ_SRC:%.cpp=$(COV_DIR)/%.gcda)	\
 							$(PROJ_SRC:%.cpp=$(COV_DIR)/%.gcno)	\
@@ -99,7 +102,7 @@ $(OBJ_DIR)/%.o:		$(SRC_DIR)/%.cpp
 					&& echo "$< $(GREEN_COLOR)successfully compiled$(NO_COLOR)" \
 					|| { echo "$< $(RED_COLOR)couldn't be compiled$(NO_COLOR)"; exit 1; }
 
-$(OBJ_DIR)/%.o:		$(TEST_DIR)/%.cpp
+$(TEST_DIR)%.o:		$(TEST_DIR)/%.cpp
 					mkdir -p $(@D)
 					$(CC) $(CFLAGS) -c $< -o $@ \
 					&& echo "$< $(GREEN_COLOR)successfully compiled$(NO_COLOR)" \
@@ -174,9 +177,9 @@ lib_st_sweet:		lib_st lib_st_clean
 
 $(TEST_NAME):		CFLAGS += -fprofile-arcs -ftest-coverage
 $(TEST_NAME):		LDLIBS += -lgcov -lcriterion
-$(TEST_NAME):		$(PROJ_OBJ) $(TEST_OBJ)
+$(TEST_NAME):		$(PROJ_OBJ) $(ENGINE_OBJ) $(TEST_OBJ)
 					if [ -d $(TEST_DIR) ]; then \
-						$(CC) $(PROJ_OBJ) $(TEST_OBJ) -o $(TEST_NAME) $(LDFLAGS) $(LDLIBS) \
+						$(CC) $(PROJ_OBJ) $(ENGINE_OBJ) $(TEST_OBJ) -o $(TEST_NAME) $(LDFLAGS) $(LDLIBS) \
 						&& echo "$(GREEN_B_COLOR)$(TEST_NAME) successfully created$(NO_COLOR)" \
 						|| { echo "$(RED_B_COLOR)$(TEST_NAME) couldn't be created$(NO_COLOR)"; exit 1; } \
 					fi

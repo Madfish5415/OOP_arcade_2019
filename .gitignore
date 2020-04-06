@@ -1,6 +1,7 @@
 # Binaries
 a.out
 arcade
+unit_tests
 
 # Objects
 *.o
