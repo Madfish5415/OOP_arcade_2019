@@ -72,6 +72,8 @@ TEST_SRC			=		core/core/test_Core.cpp					\
 							engine/component/test_Hitbox.cpp		\
 							engine/component/test_Size.cpp			\
 							engine/component/test_Transform.cpp		\
+							engine/system/test_Movement.cpp			\
+							engine/system/test_Physics.cpp			\
 
 CFLAGS				+=		-I $(INCL_DIR)
 CFLAGS				+=		-W -Wall -Wextra -Werror
