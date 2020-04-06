@@ -63,10 +63,15 @@ ENGINE_SRC			=		component/AAI.cpp			\
 							type/Animation.cpp			\
 							type/Vector2D.cpp			\
 
-TEST_SRC			=		core/core/test_Core.cpp			\
-							engine/ecs/test_Entity.cpp		\
-							engine/ecs/test_Universe.cpp	\
-							engine/ecs/test_World.cpp		\
+TEST_SRC			=		core/core/test_Core.cpp					\
+							engine/ecs/test_Entity.cpp				\
+							engine/ecs/test_Universe.cpp			\
+							engine/ecs/test_World.cpp				\
+							engine/component/test_Motion.cpp		\
+							engine/component/test_Animations.cpp	\
+							engine/component/test_Hitbox.cpp		\
+							engine/component/test_Size.cpp			\
+							engine/component/test_Transform.cpp		\
 
 CFLAGS				+=		-I $(INCL_DIR)
 CFLAGS				+=		-W -Wall -Wextra -Werror
