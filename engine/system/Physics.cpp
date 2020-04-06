@@ -40,9 +40,6 @@ void Physics::update()
         for (std::size_t j = i + 1; j < entities.size(); j++) {
             auto& ent2 = entities[j];
 
-            if (&ent.get() == &ent2.get())
-                continue;
-
             auto& transform2 = (ent2.get()).getComponent<component::Transform>();
             auto& hitbox2 = (ent2.get()).getComponent<component::Hitbox>();
 

@@ -159,7 +159,7 @@ class World {
 
         for (auto& s : _systems) {
             if (s.first == id)
-                return static_cast<T>(s.second.get());
+                return static_cast<T&>(const_cast<ASystem&>(s.second.get()));
         }
 
         throw std::exception();
