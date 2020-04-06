@@ -50,3 +50,14 @@ Test(Movement, TestUpdateMovementAcceleration)
     cr_assert_eq(pacmanTransform.position.x, 8);
     cr_assert_eq(pacmanTransform.position.y, 11);
 }
+
+Test(Movement, TestRenderMovement)
+{
+    ecs::Universe universe = ecs::Universe();
+    std::string name = "test";
+    ecs::World& world = universe.createWorld(name);
+
+    auto& movementSystem = world.addSystem<system::Movement>();
+    movementSystem.render();
+    cr_assert_eq(&movementSystem, &movementSystem);
+}
