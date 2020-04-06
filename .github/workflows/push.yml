@@ -17,10 +17,10 @@ jobs:
       run: make
 
     - name: Functional tests
-      run: make tests_sh
+      run: make fclean && make tests_sh
 
     - name: Unit tests
-      run: make tests_run
+      run: make fclean && make tests_run
 
   ubuntu:
     runs-on: ubuntu-latest
@@ -33,10 +33,10 @@ jobs:
       run: make
 
     - name: Functional tests
-      run: make tests_sh
+      run: make fclean && make tests_sh
 
     - name: Unit tests
-      run: make tests_run
+      run: make fclean && make tests_run
 
   push:
     needs: [fedora, ubuntu]
